@@ -1,0 +1,195 @@
+{
+  "timestamp": "2026-04-29T02:46:57.332804+00:00",
+  "price_data": {
+    "spot_price_usd": 76444.85,
+    "ohlc_interval": "1h",
+    "ohlc_last_close_usd": 76435.99,
+    "rolling_volatility_annualized": 0.21170639393268334,
+    "market_cap_usd": 1530211162971.0,
+    "fdv_usd": 1530211162971.0,
+    "source": "coinbase_spot_ticker",
+    "as_of": "2026-04-29T02:47:27.494925+00:00"
+  },
+  "volume_data": {
+    "volume_24h_usd": 503446101.5614219,
+    "volume_change_pct_vs_prev_window": -25.972753726597215,
+    "pair_volumes_usd": {},
+    "volume_spike_detected": false,
+    "source": "coinbase_spot_ticker",
+    "as_of": "2026-04-29T02:47:27.494928+00:00"
+  },
+  "liquidity_data": {
+    "best_bid": 76440.69,
+    "best_ask": 76440.7,
+    "spread_abs": 0.00999999999476131,
+    "spread_pct": 1.308203613357977e-05,
+    "order_book_depth_usd": 191921.95445098233,
+    "buy_wall_usd_top10": 63915.29585136541,
+    "sell_wall_usd_top10": 31388.82327322,
+    "buy_sell_pressure_ratio": 1.8510660264608418,
+    "slippage_pct_for_notional": 0.01505769810207776,
+    "real_time_trade_flow_note": "Estimated from recent Binance trades; proxy only.",
+    "source": "coinbase_spot_book+trades",
+    "as_of": "2026-04-29T02:47:27.674875+00:00"
+  },
+  "derivatives_data": {
+    "open_interest_usd": null,
+    "funding_rate": null,
+    "recent_liquidations_usd": null,
+    "options_implied_volatility": null,
+    "put_call_ratio": null,
+    "max_pain": null,
+    "source": "binance_futures_public",
+    "as_of": "2026-04-29T02:47:27.674898+00:00"
+  },
+  "on_chain_data": {
+    "transaction_count": 566274.0,
+    "active_addresses": null,
+    "hash_rate": 936923644.3419911,
+    "circulating_supply_btc": 20022131.0,
+    "exchange_inflow_btc": null,
+    "exchange_outflow_btc": null,
+    "dormant_supply_ratio": null,
+    "whale_movement_note": "TODO: integrate Glassnode/CryptoQuant/Santiment for exchange flows, dormant supply, whale movements.",
+    "source": "coingecko_markets",
+    "as_of": "2026-04-29T02:47:27.674894+00:00"
+  },
+  "sentiment_data": {
+    "fear_greed_value": 26.0,
+    "fear_greed_classification": "Fear",
+    "social_sentiment_score": null,
+    "social_volume": null,
+    "news_sentiment_score": null,
+    "source": "alternative_fng",
+    "as_of": "2026-04-29T02:47:27.674905+00:00"
+  },
+  "macro_data": {
+    "corr_btc_spx": -0.051698040332016824,
+    "corr_btc_gold": null,
+    "corr_btc_qqq": 0.007195602619977911,
+    "etf_net_flow_usd": null,
+    "etf_flow_note": "TODO: integrate reliable ETF flow feed (e.g., issuer reports/paid aggregators) for robust daily net flows.",
+    "source": "coingecko+fred",
+    "as_of": "2026-04-29T02:47:27.683499+00:00"
+  },
+  "signals": {
+    "high_open_interest": null,
+    "extreme_funding": null,
+    "exchange_outflow_bullish": null,
+    "low_liquidity_warning": false,
+    "volume_spike": false
+  },
+  "source_health": {
+    "binance_spot_ticker": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:47:00.383612+00:00"
+    },
+    "binance_spot_klines": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=240'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:47:03.171896+00:00"
+    },
+    "binance_spot_depth": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=100'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:47:05.971386+00:00"
+    },
+    "binance_spot_trades": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/trades?symbol=BTCUSDT&limit=500'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:47:08.762134+00:00"
+    },
+    "coinbase_spot_ticker": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:08.882288+00:00",
+      "latency_ms": 120.11
+    },
+    "coinbase_spot_candles": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:08.919075+00:00",
+      "latency_ms": 36.59
+    },
+    "coinbase_spot_book": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:09.037251+00:00",
+      "latency_ms": 117.51
+    },
+    "coinbase_spot_trades": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:09.113664+00:00",
+      "latency_ms": 60.98
+    },
+    "binance_pair_volumes": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/ticker/24hr'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:47:11.911161+00:00"
+    },
+    "coingecko_markets": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:12.014800+00:00",
+      "latency_ms": 103.59
+    },
+    "binance_futures_open_interest": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:47:14.904210+00:00"
+    },
+    "binance_futures_funding": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://fapi.binance.com/fapi/v1/fundingRate?symbol=BTCUSDT&limit=1'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:47:17.701053+00:00"
+    },
+    "binance_futures_liquidations": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://fapi.binance.com/fapi/v1/allForceOrders?symbol=BTCUSDT&limit=100'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:47:20.506255+00:00"
+    },
+    "blockchaincom_transactions": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:21.203404+00:00",
+      "latency_ms": 697.1
+    },
+    "blockchaincom_hashrate": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:21.796357+00:00",
+      "latency_ms": 592.72
+    },
+    "alternative_fng": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:22.006797+00:00",
+      "latency_ms": 210.3
+    },
+    "coingecko_btc_series": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:22.132462+00:00",
+      "latency_ms": 125.57
+    },
+    "fred_sp500": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:22.721691+00:00",
+      "latency_ms": 567.18
+    },
+    "fred_gold": {
+      "status": "error",
+      "message": "Client error '404 Not Found' for url 'https://fred.stlouisfed.org/graph/fredgraph.csv?id=GOLDAMGBD228NLBM'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404",
+      "last_updated": "2026-04-29T02:47:25.845739+00:00"
+    },
+    "fred_nasdaq": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:47:27.482710+00:00",
+      "latency_ms": 1636.77
+    }
+  }
+}

@@ -1,0 +1,6 @@
+pandas
+numpy<2
+matplotlib
+scipy<1.17
+scikit-learn<1.8
+joblib

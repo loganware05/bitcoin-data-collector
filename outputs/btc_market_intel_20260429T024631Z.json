@@ -1,0 +1,212 @@
+{
+  "timestamp": "2026-04-29T02:45:41.213713+00:00",
+  "price_data": {
+    "spot_price_usd": 76447.8,
+    "ohlc_interval": "1h",
+    "ohlc_last_close_usd": 76435.99,
+    "rolling_volatility_annualized": 0.21170639393268334,
+    "market_cap_usd": 1530211162971.0,
+    "fdv_usd": 1530211162971.0,
+    "source": "coinbase_spot_ticker",
+    "as_of": "2026-04-29T02:46:31.625862+00:00"
+  },
+  "volume_data": {
+    "volume_24h_usd": 503029868.3626711,
+    "volume_change_pct_vs_prev_window": -25.972753726597215,
+    "pair_volumes_usd": {},
+    "volume_spike_detected": false,
+    "source": "coinbase_spot_ticker",
+    "as_of": "2026-04-29T02:46:31.625866+00:00"
+  },
+  "liquidity_data": {
+    "best_bid": 76443.11,
+    "best_ask": 76443.12,
+    "spread_abs": 0.00999999999476131,
+    "spread_pct": 1.3081621988690821e-05,
+    "order_book_depth_usd": 355489.1207309164,
+    "buy_wall_usd_top10": 73447.3003987766,
+    "sell_wall_usd_top10": 18122.8535531221,
+    "buy_sell_pressure_ratio": 2.231122180155061,
+    "slippage_pct_for_notional": 0.02350065359517012,
+    "real_time_trade_flow_note": "Estimated from recent Binance trades; proxy only.",
+    "source": "coinbase_spot_book+trades",
+    "as_of": "2026-04-29T02:46:31.708646+00:00"
+  },
+  "derivatives_data": {
+    "open_interest_usd": null,
+    "funding_rate": null,
+    "recent_liquidations_usd": null,
+    "options_implied_volatility": null,
+    "put_call_ratio": null,
+    "max_pain": null,
+    "source": "binance_futures_public",
+    "as_of": "2026-04-29T02:46:31.708672+00:00"
+  },
+  "on_chain_data": {
+    "transaction_count": 566274.0,
+    "active_addresses": null,
+    "hash_rate": 936923644.3419911,
+    "circulating_supply_btc": 20022131.0,
+    "exchange_inflow_btc": null,
+    "exchange_outflow_btc": null,
+    "dormant_supply_ratio": null,
+    "whale_movement_note": "TODO: integrate Glassnode/CryptoQuant/Santiment for exchange flows, dormant supply, whale movements.",
+    "source": "coingecko_markets",
+    "as_of": "2026-04-29T02:46:31.708667+00:00"
+  },
+  "sentiment_data": {
+    "fear_greed_value": 26.0,
+    "fear_greed_classification": "Fear",
+    "social_sentiment_score": null,
+    "social_volume": null,
+    "news_sentiment_score": null,
+    "source": "alternative_fng",
+    "as_of": "2026-04-29T02:46:31.708679+00:00"
+  },
+  "macro_data": {
+    "corr_btc_spx": null,
+    "corr_btc_gold": null,
+    "corr_btc_qqq": null,
+    "etf_net_flow_usd": null,
+    "etf_flow_note": "TODO: integrate reliable ETF flow feed (e.g., issuer reports/paid aggregators) for robust daily net flows.",
+    "source": "yahoo_public_or_stooq_fallback",
+    "as_of": "2026-04-29T02:46:31.708867+00:00"
+  },
+  "signals": {
+    "high_open_interest": null,
+    "extreme_funding": null,
+    "exchange_outflow_bullish": null,
+    "low_liquidity_warning": false,
+    "volume_spike": false
+  },
+  "source_health": {
+    "binance_spot_ticker": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:45:44.186061+00:00"
+    },
+    "binance_spot_klines": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=240'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:45:46.968701+00:00"
+    },
+    "binance_spot_depth": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=100'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:45:49.761388+00:00"
+    },
+    "binance_spot_trades": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/trades?symbol=BTCUSDT&limit=500'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:45:52.683211+00:00"
+    },
+    "coinbase_spot_ticker": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:45:52.885282+00:00",
+      "latency_ms": 202.04
+    },
+    "coinbase_spot_candles": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:45:52.927948+00:00",
+      "latency_ms": 42.6
+    },
+    "coinbase_spot_book": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:45:53.042443+00:00",
+      "latency_ms": 113.77
+    },
+    "coinbase_spot_trades": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:45:53.123080+00:00",
+      "latency_ms": 66.73
+    },
+    "binance_pair_volumes": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://api.binance.com/api/v3/ticker/24hr'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:45:55.905967+00:00"
+    },
+    "coingecko_markets": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:45:56.026852+00:00",
+      "latency_ms": 120.84
+    },
+    "binance_futures_open_interest": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:45:59.065010+00:00"
+    },
+    "binance_futures_funding": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://fapi.binance.com/fapi/v1/fundingRate?symbol=BTCUSDT&limit=1'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:46:01.876733+00:00"
+    },
+    "binance_futures_liquidations": {
+      "status": "error",
+      "message": "Client error '451 ' for url 'https://fapi.binance.com/fapi/v1/allForceOrders?symbol=BTCUSDT&limit=100'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/451",
+      "last_updated": "2026-04-29T02:46:04.669598+00:00"
+    },
+    "blockchaincom_transactions": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:46:05.411805+00:00",
+      "latency_ms": 742.15
+    },
+    "blockchaincom_hashrate": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:46:05.971491+00:00",
+      "latency_ms": 559.56
+    },
+    "alternative_fng": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-04-29T02:46:06.236345+00:00",
+      "latency_ms": 264.73
+    },
+    "yahoo_btc": {
+      "status": "error",
+      "message": "HTTP 429",
+      "last_updated": "2026-04-29T02:46:12.284097+00:00"
+    },
+    "yahoo_spx": {
+      "status": "error",
+      "message": "HTTP 429",
+      "last_updated": "2026-04-29T02:46:18.260321+00:00"
+    },
+    "yahoo_gld": {
+      "status": "error",
+      "message": "HTTP 429",
+      "last_updated": "2026-04-29T02:46:24.324593+00:00"
+    },
+    "yahoo_qqq": {
+      "status": "error",
+      "message": "HTTP 429",
+      "last_updated": "2026-04-29T02:46:30.328560+00:00"
+    },
+    "stooq_btc": {
+      "status": "error",
+      "message": "parse failed: Error tokenizing data. C error: Expected 1 fields in line 6, saw 2\n",
+      "last_updated": "2026-04-29T02:46:31.199444+00:00"
+    },
+    "stooq_spx": {
+      "status": "error",
+      "message": "parse failed: Error tokenizing data. C error: Expected 1 fields in line 6, saw 2\n",
+      "last_updated": "2026-04-29T02:46:31.342706+00:00"
+    },
+    "stooq_gld": {
+      "status": "error",
+      "message": "parse failed: Error tokenizing data. C error: Expected 1 fields in line 6, saw 2\n",
+      "last_updated": "2026-04-29T02:46:31.483770+00:00"
+    },
+    "stooq_qqq": {
+      "status": "error",
+      "message": "parse failed: Error tokenizing data. C error: Expected 1 fields in line 6, saw 2\n",
+      "last_updated": "2026-04-29T02:46:31.625111+00:00"
+    }
+  }
+}

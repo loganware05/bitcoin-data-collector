@@ -1,0 +1,31 @@
+{
+  "signal_score": 46,
+  "direction": "NEUTRAL",
+  "confidence": 0.6322,
+  "probabilities": {
+    "up_move_12h": 0.1964,
+    "down_move_12h": 0.2324,
+    "range_bound_12h": 0.5712,
+    "up_move_24h": 0.2531,
+    "down_move_24h": 0.2994,
+    "range_bound_24h": 0.4475,
+    "range_bound": 0.4475
+  },
+  "key_drivers": [
+    "Buy wall dominates sell wall (imbalance 0.26): bullish support.",
+    "Sell pressure > buy pressure (ratio 0.56).",
+    "Spread: 0.0000%",
+    "Fear & Greed 26 (<30): contrarian bullish tilt.",
+    "1h ret: 0.08% \u2192 momentum 0.19",
+    "Volume change vs prior window: -16.8% \u2192 -0.59"
+  ],
+  "warnings": [
+    "Order book depth looks thin; price can gap (confidence haircut).",
+    "Derivatives data missing (OI/funding/liquidations); confidence reduced.",
+    "Derivatives source failed: binance_futures_open_interest",
+    "Derivatives source failed: binance_futures_funding",
+    "Derivatives source failed: binance_futures_liquidations"
+  ],
+  "kalshi_trade_insight": "Signal 46/100 (NEUTRAL), confidence 0.63. 12h range(\u00b10.50%)=0.57, 24h range=0.45. Primary drivers: Buy wall dominates sell wall (imbalance 0.26): bullish support., Sell pressure > buy pressure (ratio 0.56)., Spread: 0.0000%. Best fit: range-style contracts."
+}
+
