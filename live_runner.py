@@ -11,6 +11,7 @@ import pandas as pd
 
 from backtester import _find_future_index, label_outcome
 from feature_engineering import FeatureConfig, build_features
+from decision_utils import combined_model_confidence, extract_rule_probs
 from kalshi_mapper import FusionConfig, fuse_probabilities, map_to_kalshi_decision
 from ml_model import TrainedArtifact, load_artifact
 from signal_engine import SignalEngineConfig, generate_signal
@@ -31,18 +32,6 @@ def _load_latest_model(models_dir: Path) -> Path | None:
         return None
     candidates = sorted(models_dir.glob("model_*.joblib"))
     return candidates[-1] if candidates else None
-
-
-def _extract_rule_probs(sig: dict[str, Any]) -> dict[str, float]:
-    probs = (sig.get("probabilities") or {}) if isinstance(sig, dict) else {}
-    # signal_engine names
-    p_up = float(probs.get("up_move_24h", 0.0))
-    p_down = float(probs.get("down_move_24h", 0.0))
-    p_range = float(probs.get("range_bound", 0.0))
-    s = p_up + p_down + p_range
-    if s <= 0:
-        return {"up": 1 / 3, "down": 1 / 3, "range": 1 / 3}
-    return {"up": p_up / s, "down": p_down / s, "range": p_range / s}
 
 
 @dataclass(frozen=True)
@@ -116,7 +105,7 @@ def run_once(cfg: LiveConfig, model: TrainedArtifact | None = None) -> dict[str,
 
     # Rule engine baseline
     rule_out = generate_signal(snapshot, cfg.signal_cfg)
-    p_rule = _extract_rule_probs(rule_out)
+    p_rule = extract_rule_probs(rule_out)
     rule_conf = float(rule_out.get("confidence", 0.0))
 
     # ML inference (degraded mode if missing model/candles)
@@ -148,9 +137,7 @@ def run_once(cfg: LiveConfig, model: TrainedArtifact | None = None) -> dict[str,
         w_ml=cfg.fusion_cfg.w_ml,
     )
 
-    # Confidence: conservative min of available sources (rule always available)
-    ml_conf = 1.0 if p_ml is not None else 0.0
-    combined_conf = float(min(rule_conf, ml_conf if ml_conf > 0 else rule_conf))
+    combined_conf = combined_model_confidence(rule_conf, ml_available=p_ml is not None)
 
     decision = map_to_kalshi_decision(
         fused_probs=fused,

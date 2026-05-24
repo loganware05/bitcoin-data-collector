@@ -1,0 +1,2 @@
+timestamp,market_implied_prob,contract_hint,notes
+2026-05-01T21:28:56+00:00,0.52,up,manual Kalshi mid — copy rows to /Volumes/Verdant_AI/btc_kalshi/market_probs/market_probs.csv
