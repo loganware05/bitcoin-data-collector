@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-05-26T23:30:49.437997+00:00",
+  "btc_price": 75796.59,
+  "ranked_opportunities": [],
+  "scan_meta": {
+    "n_markets": 0,
+    "n_ranked": 0,
+    "rule_ml_disagreement": 0.0,
+    "kalshi_warnings": [
+      "no saved ML model; using rule engine only",
+      "Kalshi API credentials not set; using public market data only.",
+      "No BTC-related Kalshi markets found in API response."
+    ]
+  },
+  "model_summary": {
+    "rule_probabilities": {
+      "up": 0.2312,
+      "down": 0.4141,
+      "range": 0.3547
+    },
+    "ml_probabilities": null,
+    "fused_probabilities": {
+      "up": 0.27715999999999996,
+      "down": 0.37775500000000006,
+      "range": 0.34508500000000003
+    },
+    "rule_confidence": 0.7053,
+    "combined_confidence": 0.7053,
+    "pipeline_warnings": [
+      "no saved ML model; using rule engine only",
+      "Kalshi API credentials not set; using public market data only.",
+      "No BTC-related Kalshi markets found in API response."
+    ]
+  }
+}

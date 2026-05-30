@@ -1,0 +1,209 @@
+{
+  "timestamp": "2026-05-30T17:22:55.949357+00:00",
+  "market_data": {
+    "candles_15m": [],
+    "candles_15m_source": null,
+    "candles_15m_as_of": null
+  },
+  "price_data": {
+    "spot_price_usd": null,
+    "ohlc_interval": null,
+    "ohlc_last_close_usd": null,
+    "rolling_volatility_annualized": null,
+    "market_cap_usd": null,
+    "fdv_usd": null,
+    "source": null,
+    "as_of": null
+  },
+  "volume_data": {
+    "volume_24h_usd": null,
+    "volume_change_pct_vs_prev_window": null,
+    "pair_volumes_usd": {},
+    "volume_spike_detected": null,
+    "source": null,
+    "as_of": null
+  },
+  "liquidity_data": {
+    "best_bid": null,
+    "best_ask": null,
+    "spread_abs": null,
+    "spread_pct": null,
+    "order_book_depth_usd": null,
+    "buy_wall_usd_top10": null,
+    "sell_wall_usd_top10": null,
+    "buy_sell_pressure_ratio": null,
+    "slippage_pct_for_notional": null,
+    "real_time_trade_flow_note": null,
+    "source": null,
+    "as_of": null
+  },
+  "derivatives_data": {
+    "open_interest_usd": null,
+    "funding_rate": null,
+    "recent_liquidations_usd": null,
+    "options_implied_volatility": null,
+    "put_call_ratio": null,
+    "max_pain": null,
+    "source": null,
+    "as_of": null
+  },
+  "on_chain_data": {
+    "transaction_count": null,
+    "active_addresses": null,
+    "hash_rate": null,
+    "circulating_supply_btc": null,
+    "exchange_inflow_btc": null,
+    "exchange_outflow_btc": null,
+    "dormant_supply_ratio": null,
+    "whale_movement_note": null,
+    "source": null,
+    "as_of": null
+  },
+  "sentiment_data": {
+    "fear_greed_value": null,
+    "fear_greed_classification": null,
+    "social_sentiment_score": null,
+    "social_volume": null,
+    "news_sentiment_score": null,
+    "source": null,
+    "as_of": null
+  },
+  "macro_data": {
+    "corr_btc_spx": null,
+    "corr_btc_gold": null,
+    "corr_btc_qqq": null,
+    "etf_net_flow_usd": null,
+    "etf_flow_note": null,
+    "source": null,
+    "as_of": null
+  },
+  "signals": {
+    "high_open_interest": null,
+    "extreme_funding": null,
+    "exchange_outflow_bullish": null,
+    "low_liquidity_warning": null,
+    "volume_spike": null
+  },
+  "source_health": {
+    "binance_spot_ticker": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:22:56.079481+00:00",
+      "latency_ms": 118.51
+    },
+    "binance_spot_klines": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:22:56.104577+00:00",
+      "latency_ms": 25.06
+    },
+    "binance_spot_klines_15m": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:22:56.130620+00:00",
+      "latency_ms": 26.03
+    },
+    "binance_spot_depth": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:22:56.155517+00:00",
+      "latency_ms": 24.87
+    },
+    "binance_spot_trades": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:22:56.182168+00:00",
+      "latency_ms": 26.6
+    },
+    "coinbase_spot_ticker": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:56.285730+00:00",
+      "latency_ms": 103.46
+    },
+    "coinbase_spot_candles": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:56.324171+00:00",
+      "latency_ms": 37.95
+    },
+    "coinbase_spot_candles_15m": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:56.360363+00:00",
+      "latency_ms": 35.94
+    },
+    "coinbase_spot_book": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:56.471132+00:00",
+      "latency_ms": 96.17
+    },
+    "coinbase_spot_trades": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:56.508324+00:00",
+      "latency_ms": 35.74
+    },
+    "binance_pair_volumes": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:22:56.533041+00:00",
+      "latency_ms": 24.69
+    },
+    "coingecko_markets": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:56.626627+00:00",
+      "latency_ms": 93.52
+    },
+    "binance_futures_open_interest": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:22:56.783471+00:00",
+      "latency_ms": 156.82
+    },
+    "binance_futures_funding": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:22:56.818364+00:00",
+      "latency_ms": 34.86
+    },
+    "binance_futures_liquidations": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:22:56.841320+00:00",
+      "latency_ms": 22.94
+    },
+    "blockchaincom_transactions": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:57.011543+00:00",
+      "latency_ms": 170.06
+    },
+    "blockchaincom_hashrate": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:57.072778+00:00",
+      "latency_ms": 60.97
+    },
+    "alternative_fng": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:57.285416+00:00",
+      "latency_ms": 212.48
+    },
+    "coingecko_btc_series": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:22:57.357544+00:00",
+      "latency_ms": 70.85
+    },
+    "fred_sp500": {
+      "status": "error",
+      "message": "The read operation timed out",
+      "last_updated": "2026-05-30T17:23:36.491554+00:00"
+    }
+  },
+  "output_file_timestamp_utc": "20260530T172356Z"
+}

@@ -1,0 +1,204 @@
+{
+  "timestamp": "2026-05-30T17:24:25.385732+00:00",
+  "market_data": {
+    "candles_15m": [],
+    "candles_15m_source": null,
+    "candles_15m_as_of": null
+  },
+  "price_data": {
+    "spot_price_usd": null,
+    "ohlc_interval": null,
+    "ohlc_last_close_usd": null,
+    "rolling_volatility_annualized": null,
+    "market_cap_usd": null,
+    "fdv_usd": null,
+    "source": null,
+    "as_of": null
+  },
+  "volume_data": {
+    "volume_24h_usd": null,
+    "volume_change_pct_vs_prev_window": null,
+    "pair_volumes_usd": {},
+    "volume_spike_detected": null,
+    "source": null,
+    "as_of": null
+  },
+  "liquidity_data": {
+    "best_bid": null,
+    "best_ask": null,
+    "spread_abs": null,
+    "spread_pct": null,
+    "order_book_depth_usd": null,
+    "buy_wall_usd_top10": null,
+    "sell_wall_usd_top10": null,
+    "buy_sell_pressure_ratio": null,
+    "slippage_pct_for_notional": null,
+    "real_time_trade_flow_note": null,
+    "source": null,
+    "as_of": null
+  },
+  "derivatives_data": {
+    "open_interest_usd": null,
+    "funding_rate": null,
+    "recent_liquidations_usd": null,
+    "options_implied_volatility": null,
+    "put_call_ratio": null,
+    "max_pain": null,
+    "source": null,
+    "as_of": null
+  },
+  "on_chain_data": {
+    "transaction_count": null,
+    "active_addresses": null,
+    "hash_rate": null,
+    "circulating_supply_btc": null,
+    "exchange_inflow_btc": null,
+    "exchange_outflow_btc": null,
+    "dormant_supply_ratio": null,
+    "whale_movement_note": null,
+    "source": null,
+    "as_of": null
+  },
+  "sentiment_data": {
+    "fear_greed_value": null,
+    "fear_greed_classification": null,
+    "social_sentiment_score": null,
+    "social_volume": null,
+    "news_sentiment_score": null,
+    "source": null,
+    "as_of": null
+  },
+  "macro_data": {
+    "corr_btc_spx": null,
+    "corr_btc_gold": null,
+    "corr_btc_qqq": null,
+    "etf_net_flow_usd": null,
+    "etf_flow_note": null,
+    "source": null,
+    "as_of": null
+  },
+  "signals": {
+    "high_open_interest": null,
+    "extreme_funding": null,
+    "exchange_outflow_bullish": null,
+    "low_liquidity_warning": null,
+    "volume_spike": null
+  },
+  "source_health": {
+    "binance_spot_ticker": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:24:25.557673+00:00",
+      "latency_ms": 155.53
+    },
+    "binance_spot_klines": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:24:25.589832+00:00",
+      "latency_ms": 32.12
+    },
+    "binance_spot_klines_15m": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:24:25.613844+00:00",
+      "latency_ms": 23.98
+    },
+    "binance_spot_depth": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:24:25.640044+00:00",
+      "latency_ms": 26.13
+    },
+    "binance_spot_trades": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:24:25.674548+00:00",
+      "latency_ms": 34.45
+    },
+    "coinbase_spot_ticker": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:25.791630+00:00",
+      "latency_ms": 116.94
+    },
+    "coinbase_spot_candles": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:25.834734+00:00",
+      "latency_ms": 42.38
+    },
+    "coinbase_spot_candles_15m": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:25.874970+00:00",
+      "latency_ms": 39.53
+    },
+    "coinbase_spot_book": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:25.998314+00:00",
+      "latency_ms": 102.27
+    },
+    "coinbase_spot_trades": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:26.058147+00:00",
+      "latency_ms": 57.59
+    },
+    "binance_pair_volumes": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:24:26.084086+00:00",
+      "latency_ms": 25.9
+    },
+    "coingecko_markets": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:26.180662+00:00",
+      "latency_ms": 96.4
+    },
+    "binance_futures_open_interest": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:24:26.416568+00:00",
+      "latency_ms": 235.83
+    },
+    "binance_futures_funding": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:24:26.442820+00:00",
+      "latency_ms": 26.2
+    },
+    "binance_futures_liquidations": {
+      "status": "error",
+      "message": "HTTP 451 (no retry)",
+      "last_updated": "2026-05-30T17:24:26.469172+00:00",
+      "latency_ms": 26.3
+    },
+    "blockchaincom_transactions": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:27.206819+00:00",
+      "latency_ms": 737.46
+    },
+    "blockchaincom_hashrate": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:27.809272+00:00",
+      "latency_ms": 602.19
+    },
+    "alternative_fng": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:28.079782+00:00",
+      "latency_ms": 270.35
+    },
+    "coingecko_btc_series": {
+      "status": "ok",
+      "message": "fetched successfully",
+      "last_updated": "2026-05-30T17:24:28.218990+00:00",
+      "latency_ms": 137.0
+    }
+  },
+  "output_file_timestamp_utc": "20260530T172431Z"
+}

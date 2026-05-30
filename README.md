@@ -33,13 +33,12 @@ flowchart TD
 
 - Python 3.11+
 - See `requirements.txt` for core dependencies (`pandas`, `numpy<2`, `scikit-learn`, etc.)
-- Collector also needs: `httpx`, `python-dotenv`
+- `httpx`, `python-dotenv` (included in `requirements.txt`)
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-pip install httpx python-dotenv
 ```
 
 Optional: set `COINGECKO_API_KEY` in a `.env` file for higher CoinGecko rate limits.
@@ -106,7 +105,129 @@ python live_runner.py --interval-seconds 900 --market-implied-prob 0.52
 
 If no model exists or candles are missing, the runner degrades to rule-only and logs warnings.
 
-### 6. Evaluate live performance
+### 6. Scan live Kalshi BTC markets (recommendation only)
+
+Fetches open BTC-related Kalshi contracts, compares fused model probabilities to market-implied mids, and ranks opportunities. **Does not place trades.**
+
+```bash
+# Full scan: collect snapshot + Kalshi markets + rank
+python examples/run_kalshi_scan.py
+
+# Use an existing snapshot (faster)
+python examples/run_kalshi_scan.py --snapshot outputs/btc_market_intel_<timestamp>.json
+
+# Skip collector
+python examples/run_kalshi_scan.py --no-collect --snapshot outputs/btc_market_intel_<timestamp>.json
+```
+
+Output: `live_outputs/kalshi_scans/scan_<UTC>.json` plus a summary table (ticker, edge, recommendation).
+
+### 7. Hourly BTC event scanner (recommendation only)
+
+Level-3 automation for Kalshi **hourly BTC threshold** contracts such as `"BTC price today at 3 PM EDT"` or `"Bitcoin above $78,000 at 4 PM EDT"`. The scanner:
+
+1. Fetches active `KXBTCD` hourly markets
+2. Parses target time, strike, and direction
+3. Selects the best model horizon (15m / 30m / 60m / 4h / 24h) from time remaining
+4. Estimates fair-value YES/NO probability using strike-distance CDF + rule + ML + orderbook fusion
+5. Compares model probability to Kalshi market mid
+6. Outputs conservative **BUY YES**, **BUY NO**, or **NO TRADE** recommendations
+
+**Does not execute trades or connect to order placement.**
+
+```bash
+# Full hourly scan (collect snapshot + scan + rank)
+python hourly_event_scanner.py --event-filter "BTC price today" --conservative
+
+# Or via examples wrapper
+python examples/run_hourly_event_scan.py --conservative --once
+
+# Use existing snapshot
+python hourly_event_scanner.py --no-collect --snapshot outputs/btc_market_intel_<timestamp>.json
+```
+
+Optional flags: `--min-edge 0.10`, `--min-confidence 0.65`, `--max-spread 0.08`, `--min-liquidity-score 0.50`, `--output-dir hourly_outputs`.
+
+Output: `hourly_outputs/scan_<UTC>.json` and `.csv` with ranked `buy_yes`, `buy_no`, and `no_trade` buckets.
+
+#### How YES/NO edge is calculated
+
+- `yes_edge = model_yes_probability - market_yes_probability`
+- `no_edge = model_no_probability - market_no_probability`
+- **BUY YES** when `yes_edge > 10%` and confidence > 65% (and liquidity/spread guards pass)
+- **BUY NO** when `no_edge > 10%` and confidence > 65%
+- Otherwise **NO TRADE** (default)
+
+Strike probability uses a transparent lognormal approximation: scale annualized volatility to the selected horizon, apply directional drift from the rule engine composite score, then compute `P(price > strike)` via the normal CDF. Results are blended with rule (20%), ML (30%), strike-distance (40%), and orderbook quality (10%) — weights are configurable in `hourly_probability_model.FusionWeights`.
+
+#### Why NO TRADE is the default
+
+The hourly scanner is intentionally conservative. Recommendations are suppressed when edge or confidence is insufficient, the bid-ask spread is too wide, liquidity is poor, contract parsing is uncertain, or too little time remains before settlement. This reduces false positives from model/market mismatch or thin markets.
+
+#### Example JSON output (truncated)
+
+```json
+{
+  "timestamp": "2026-05-27T14:30:00+00:00",
+  "btc_price": 76448.91,
+  "ranked": {
+    "buy_yes": [{
+      "contract_ticker": "KXBTCD-26MAY2717-T77000.99",
+      "contract_title": "Bitcoin above $77,000 at 5 PM EDT",
+      "target_time_edt": "2026-05-27 05:00 PM EDT",
+      "time_to_expiry_minutes": 42,
+      "strike_price": 77000,
+      "selected_horizon": "60m",
+      "market_yes_probability": 0.37,
+      "model_yes_probability": 0.51,
+      "yes_edge": 0.14,
+      "confidence": 0.72,
+      "recommendation": "BUY YES",
+      "key_drivers": [
+        "Model YES probability is 14 percentage points above market YES price.",
+        "Liquidity is acceptable and spread is within threshold."
+      ],
+      "warnings": []
+    }],
+    "buy_no": [],
+    "no_trade": []
+  }
+}
+```
+
+**Disclaimer:** This tool produces research and decision-support signals only. It is not financial advice and does not place trades on Kalshi or any exchange.
+
+For general multi-contract scanning (all `KXBTC`/`KXBTCD` markets, 12h/24h proxies), use `examples/run_kalshi_scan.py` instead.
+
+#### Kalshi credentials (optional)
+
+Public market data works without credentials. For future authenticated endpoints, set in `.env`:
+
+| Variable | Description |
+|----------|-------------|
+| `KALSHI_API_BASE` | API base URL (default: `https://api.elections.kalshi.com/trade-api/v2`) |
+| `KALSHI_API_KEY_ID` | API key ID (optional) |
+| `KALSHI_PRIVATE_KEY_PATH` | Path to RSA private key PEM (optional) |
+| `KALSHI_BTC_SERIES_TICKER` | Optional single series filter; default scans `KXBTC` and `KXBTCD` |
+
+If credentials are missing, the client logs once and continues with public `GET /markets`.
+
+#### Edge and NO TRADE (general Kalshi scan)
+
+**Edge** = `model_probability - market_implied_probability` (YES mid from bid/ask). Positive edge means the model sees a higher chance than the market; negative edge favors **BUY NO**.
+
+**NO TRADE** is the conservative default when:
+
+- Market implied probability is missing
+- \|edge\| is below the minimum (default **3%**)
+- Model confidence is below **0.55**
+- Contract title parsing is uncertain (`unknown` type or low mapping confidence)
+- Liquidity is poor (wide spread or low liquidity score)
+- Rule and ML models disagree materially
+
+This matches the guardrails in `kalshi_mapper.py`. Rankings are research signals only — not execution instructions.
+
+### 8. Evaluate live performance
 
 After outcomes are backfilled (automatic in the live loop once the 24h horizon passes):
 
@@ -116,7 +237,7 @@ python eval_utils.py --predictions-log live_outputs/predictions_log.jsonl --outc
 
 Reports rolling accuracy, Brier score, log loss, calibration gaps, and `retrain_recommended` when drift thresholds are exceeded.
 
-### 7. Build labeled dataset on Verdant_AI
+### 9. Build labeled dataset on Verdant_AI
 
 Export ML training labels and a full decision dataset (rule + ML fusion, edge, recommendations) to the external volume. Requires enough snapshot history for your horizon (e.g. 24h labels need files spanning at least one day).
 
@@ -164,6 +285,14 @@ Use `--labeled-only` or `--decision-only` for partial exports. For a short bundl
 | `feature_engineering.py` | ML feature row from snapshot + candles + indicators |
 | `ml_model.py` | Dataset build, train/calibrate, persist, explain, importance |
 | `kalshi_mapper.py` | Fuse rule/ML probs → edge and recommendation |
+| `kalshi_client.py` | Kalshi API fetch + normalized market objects |
+| `contract_mapper.py` | Parse BTC contract titles → model probability keys |
+| `strategy_ranker.py` | Rank multi-contract opportunities vs market implied prob |
+| `event_target_parser.py` | Parse hourly BTC event titles → strike, time, direction |
+| `kalshi_orderbook_features.py` | Kalshi orderbook normalization, liquidity, guardrails |
+| `hourly_probability_model.py` | Multi-horizon strike CDF + rule/ML/orderbook fusion |
+| `hourly_fair_value_engine.py` | YES/NO edge, conservative BUY YES/NO/NO TRADE logic |
+| `hourly_event_scanner.py` | Hourly event scan orchestrator + CLI (recommendation only) |
 | `decision_utils.py` | Shared rule-probability extraction and confidence helper |
 | `dataset_builder.py` | Batch labeled/decision CSV export to Verdant_AI |
 | `live_runner.py` | Live loop, degraded mode, prediction/outcome logs |
@@ -225,7 +354,8 @@ Default fusion weights: **55% rule / 45% ML**. Minimum edge: **3%**, minimum con
 - Snapshots are point-in-time; backtests and ML training need enough historical files for your chosen horizon.
 - Binance endpoints may be blocked in some environments; Coinbase fallbacks apply.
 - Live runner invokes the collector as a subprocess; ensure the working directory is the repo root.
-- Recommendations require a manually supplied market-implied probability (no Kalshi API integration yet).
+- `live_runner.py` still accepts a manual `--market-implied-prob`; use `examples/run_kalshi_scan.py` for live multi-contract Kalshi scanning.
+- Kalshi contract strikes may not match rule-engine ±0.5% bands or ML ±1% labels; the ranker emits warnings when semantics diverge.
 
 ## License
 
