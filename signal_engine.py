@@ -615,7 +615,7 @@ def compute_kalshi_probabilities(
     snapshot: Mapping[str, Any],
     cfg: SignalEngineConfig,
     confidence: float,
-    horizon_hours: int,
+    horizon_hours: float,
 ) -> dict[str, float]:
     """
     Produce probabilities for up/down move vs a range band around spot.
