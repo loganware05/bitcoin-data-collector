@@ -12,7 +12,11 @@ from pathlib import Path
 from typing import Any
 
 from decision_utils import combined_model_confidence
-from event_target_parser import is_hourly_btc_event, parse_hourly_target
+from event_target_parser import (
+    is_hourly_btc_event,
+    matches_event_filter,
+    parse_hourly_target,
+)
 from feature_engineering import FeatureConfig, build_features
 from hourly_fair_value_engine import FairValueConfig, evaluate_contract, rank_evaluations
 from hourly_probability_model import FusionWeights, build_hourly_model_probs
@@ -109,10 +113,7 @@ def filter_hourly_markets(
             close_time=m.close_time,
         ):
             continue
-        haystack = " ".join(
-            t for t in (m.title, m.event_ticker, m.ticker) if t
-        ).lower()
-        if event_filter and event_filter.lower() not in haystack:
+        if not matches_event_filter(m, event_filter):
             continue
         out.append(m)
     return out
