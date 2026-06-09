@@ -5,6 +5,12 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Any, Literal
 
+from hourly_probability_model import (
+    _orderflow_adjustment,
+    estimate_probability_above_strike,
+    horizon_minutes,
+    select_best_horizon,
+)
 from kalshi_client import NormalizedMarket, is_btc_related_text
 
 TargetType = Literal[
@@ -260,6 +266,92 @@ def target_label(parsed: ParsedContract) -> str:
     return "_".join(parts)
 
 
+def _strike_cdf_yes_probability(
+    parsed: ParsedContract,
+    *,
+    spot_price_usd: float,
+    snapshot: dict[str, Any] | None,
+    rule_probs: dict[str, float],
+    p_ml: dict[str, float] | None,
+    fused: dict[str, float],
+    w_rule: float,
+    w_ml: float,
+    rule_composite: float = 0.0,
+) -> tuple[float | None, list[str]]:
+    """Strike-aware YES probability via lognormal CDF when strike and spot are known."""
+    strike = parsed.threshold_price
+    if strike is None or spot_price_usd <= 0:
+        return None, []
+
+    hm = parsed.horizon_hours
+    if hm is None or hm <= 0:
+        hm = 1.0
+    horizon_key = select_best_horizon(hm * 60.0)
+    hm_min = horizon_minutes(horizon_key)
+
+    vol = 0.28
+    if snapshot:
+        vol = float((snapshot.get("price_data") or {}).get("rolling_volatility_annualized") or vol)
+    composite = max(-1.0, min(1.0, float(rule_composite)))
+
+    key = parsed.compatible_probability_key
+    p_rule_up = float(rule_probs.get(key, fused.get("up", 1 / 3)))
+    p_ml_up = float((p_ml or {}).get("up", fused.get("up", 1 / 3)))
+    orderflow_adj = _orderflow_adjustment(snapshot or {})
+
+    p_above, drivers = estimate_probability_above_strike(
+        current_price=spot_price_usd,
+        strike_price=strike,
+        horizon_minutes=hm_min,
+        annualized_volatility=vol,
+        directional_bias=composite,
+        rule_probability_up=p_rule_up,
+        ml_probability_up=p_ml_up,
+        orderflow_adjustment=orderflow_adj,
+    )
+
+    wr, wm = w_rule, w_ml
+    s = wr + wm
+    if s > 0:
+        wr, wm = wr / s, wm / s
+    p_blend = wr * p_rule_up + wm * p_ml_up
+    p_strike = 0.65 * p_above + 0.35 * p_blend
+
+    warnings = [f"strike CDF path ({horizon_key}): P(above)={p_above:.3f}"] + drivers[:2]
+
+    if parsed.target_type == "below_threshold":
+        return float(max(0.01, min(0.99, 1.0 - p_strike))), warnings
+    if parsed.target_type == "range_bound":
+        low = strike
+        high = parsed.threshold_price_high or strike
+        p_below_low, _ = estimate_probability_above_strike(
+            current_price=spot_price_usd,
+            strike_price=low,
+            horizon_minutes=hm_min,
+            annualized_volatility=vol,
+            directional_bias=composite,
+            rule_probability_up=p_rule_up,
+            ml_probability_up=p_ml_up,
+            orderflow_adjustment=orderflow_adj,
+        )
+        p_above_high, _ = estimate_probability_above_strike(
+            current_price=spot_price_usd,
+            strike_price=high,
+            horizon_minutes=hm_min,
+            annualized_volatility=vol,
+            directional_bias=composite,
+            rule_probability_up=p_rule_up,
+            ml_probability_up=p_ml_up,
+            orderflow_adjustment=orderflow_adj,
+        )
+        p_range = max(0.01, min(0.99, p_below_low - p_above_high))
+        warnings.append(f"range contract: P(in [{low:,.0f}, {high:,.0f}]) ≈ {p_range:.3f}")
+        return p_range, warnings
+    if parsed.target_type in ("above_threshold", "daily_close", "weekly_close"):
+        return float(max(0.01, min(0.99, p_strike))), warnings
+    return None, warnings
+
+
 def model_probability_for_contract(
     parsed: ParsedContract,
     *,
@@ -267,20 +359,34 @@ def model_probability_for_contract(
     p_ml: dict[str, float] | None,
     fused: dict[str, float],
     spot_price_usd: float,
+    snapshot: dict[str, Any] | None = None,
+    rule_composite: float = 0.0,
     w_rule: float = 0.55,
     w_ml: float = 0.45,
 ) -> tuple[float, list[str]]:
     """Return model YES probability for this Kalshi contract and explanatory warnings."""
     warnings = list(parsed.parse_warnings)
 
+    if parsed.threshold_price is not None and spot_price_usd > 0:
+        strike_p, strike_warns = _strike_cdf_yes_probability(
+            parsed,
+            spot_price_usd=spot_price_usd,
+            snapshot=snapshot,
+            rule_probs=rule_probs,
+            p_ml=p_ml,
+            fused=fused,
+            w_rule=w_rule,
+            w_ml=w_ml,
+            rule_composite=rule_composite,
+        )
+        if strike_p is not None:
+            warnings.extend(strike_warns)
+            return strike_p, warnings
+
     key = parsed.compatible_probability_key
     p_from_rule = rule_probs.get(key)
-    if p_from_rule is not None:
-        p_rule_val = float(p_from_rule)
-    else:
-        p_rule_val = None
+    p_rule_val = float(p_from_rule) if p_from_rule is not None else None
 
-    # Fused directional proxy by target type
     if parsed.target_type == "below_threshold":
         p_fused = float(fused.get("down", 1 / 3))
         warnings.append("using fused down probability as YES proxy for below-threshold contract")
@@ -289,10 +395,7 @@ def model_probability_for_contract(
         warnings.append("rule range band is ±0.5%; ML labels use ±1% — not exact Kalshi range match")
     elif parsed.target_type in ("above_threshold", "daily_close", "weekly_close"):
         p_fused = float(fused.get("up", 1 / 3))
-        if parsed.target_type != "above_threshold":
-            warnings.append(f"{parsed.target_type} mapped to fused up-move proxy")
-        else:
-            warnings.append("Kalshi strike contract uses fused up-move proxy (not exact strike probability)")
+        warnings.append(f"{parsed.target_type} mapped to fused up-move proxy (no strike CDF)")
     else:
         p_fused = max(fused.values()) if fused else 1 / 3
         warnings.append("unknown contract type; using max fused outcome as weak proxy")

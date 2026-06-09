@@ -89,6 +89,43 @@ python ml_model.py outputs --model-family logreg --horizon-hours 24
 
 Model families: `logreg` (default), `decision_tree`, `hgb`.
 
+#### Multi-horizon training (hourly scanner)
+
+The hourly event scanner loads **one model per horizon** from subdirectories under a base models path. Train each horizon separately:
+
+| Horizon | `--horizon-hours` | `--models-dir` |
+|---------|-------------------|----------------|
+| 15m | `0.25` | `models/15m` |
+| 30m | `0.5` | `models/30m` |
+| 60m | `1` | `models/60m` |
+| 4h | `4` | `models/4h` |
+| 24h | `24` | `models/24h` |
+
+```bash
+python ml_model.py outputs --model-family logreg --horizon-hours 0.25 --models-dir models/15m
+python ml_model.py outputs --model-family logreg --horizon-hours 0.5  --models-dir models/30m
+python ml_model.py outputs --model-family logreg --horizon-hours 1    --models-dir models/60m
+python ml_model.py outputs --model-family logreg --horizon-hours 4    --models-dir models/4h
+python ml_model.py outputs --model-family logreg --horizon-hours 24   --models-dir models/24h
+```
+
+For production scans on Verdant storage, point the scanner at the shared base directory (see §7 and §10).
+
+### Verdant data root
+
+All Verdant paths resolve from `--data-root` or the `BTC_KALSHI_ROOT` environment variable (default: `/Volumes/Verdant_AI/btc_kalshi`):
+
+```
+/Volumes/Verdant_AI/btc_kalshi/
+  snapshots/          # btc_market_intel_*.json
+  models/15m..24h/    # per-horizon model_*.joblib + manifest.json
+  hourly_outputs/     # scan_*.json / scan_*.csv
+  datasets/           # labeled CSV exports
+  snapshot_daemon_health.jsonl
+```
+
+Use `python verdant_paths.py` is not needed — import from `verdant_paths` or pass `--data-root` on CLI tools.
+
 ### 5. Run the live loop
 
 Runs the collector, fuses rule + latest saved model, and appends to `live_outputs/predictions_log.jsonl`. Pass a manual market-implied probability to enable edge-based recommendations:
@@ -129,24 +166,45 @@ Level-3 automation for Kalshi **hourly BTC threshold** contracts such as `"BTC p
 1. Fetches active `KXBTCD` hourly markets
 2. Parses target time, strike, and direction
 3. Selects the best model horizon (15m / 30m / 60m / 4h / 24h) from time remaining
-4. Estimates fair-value YES/NO probability using strike-distance CDF + rule + ML + orderbook fusion
-5. Compares model probability to Kalshi market mid
-6. Outputs conservative **BUY YES**, **BUY NO**, or **NO TRADE** recommendations
+4. Loads the **horizon-matched** ML model from `{models_base_dir}/{horizon}/` (rule-only fallback if missing)
+5. Estimates fair-value YES/NO probability using strike-distance CDF + rule + ML + orderbook fusion
+6. Compares model probability to Kalshi market mid
+7. Outputs conservative **BUY YES**, **BUY NO**, or **NO TRADE** recommendations
 
 **Does not execute trades or connect to order placement.**
 
 ```bash
-# Full hourly scan (collect snapshot + scan + rank)
-python hourly_event_scanner.py --event-filter "BTC price today" --conservative
+# Full hourly scan (collect snapshot + scan + rank) — Verdant production paths
+python hourly_event_scanner.py \
+  --data-root /Volumes/Verdant_AI/btc_kalshi \
+  --event-filter "BTC price today" \
+  --conservative \
+  --min-edge 0.10 \
+  --min-confidence 0.65 \
+  --output-dir /Volumes/Verdant_AI/btc_kalshi/hourly_outputs
 
-# Or via examples wrapper
-python examples/run_hourly_event_scan.py --conservative --once
+# Explicit paths (equivalent)
+python hourly_event_scanner.py \
+  --event-filter "BTC price today" \
+  --conservative \
+  --min-edge 0.10 \
+  --min-confidence 0.65 \
+  --collect-output-dir /Volumes/Verdant_AI/btc_kalshi/snapshots \
+  --models-base-dir /Volumes/Verdant_AI/btc_kalshi/models \
+  --output-dir /Volumes/Verdant_AI/btc_kalshi/hourly_outputs
 
 # Use existing snapshot
-python hourly_event_scanner.py --no-collect --snapshot outputs/btc_market_intel_<timestamp>.json
+python hourly_event_scanner.py --no-collect --snapshot outputs/btc_market_intel_<timestamp>.json \
+  --models-base-dir /Volumes/Verdant_AI/btc_kalshi/models
 ```
 
-Optional flags: `--min-edge 0.10`, `--min-confidence 0.65`, `--max-spread 0.08`, `--min-liquidity-score 0.50`, `--output-dir hourly_outputs`.
+**Important:** `--models-base-dir` must point at trained per-horizon models. Without it, the scanner defaults to `{repo}/models/` and falls back to rule-only fusion.
+
+Optional flags: `--min-edge 0.10`, `--min-confidence 0.65`, `--max-spread 0.08`, `--min-liquidity-score 0.50`, `--collect-output-dir`, `--snapshots-dir` (alias), `--data-root`.
+
+`--models-dir` is a deprecated alias for `--models-base-dir`.
+
+When a horizon subdirectory has no saved model, the scanner falls back to rule-only fusion for that contract and logs a warning. Recommendations remain conservative (**NO TRADE** by default when edge/confidence guards fail).
 
 Output: `hourly_outputs/scan_<UTC>.json` and `.csv` with ranked `buy_yes`, `buy_no`, and `no_trade` buckets.
 
@@ -275,6 +333,60 @@ Use `--labeled-only` or `--decision-only` for partial exports. For a short bundl
 
 **Label vs rule band:** ML labels use ±1% (`TrainConfig.range_threshold_pct`); rule range probabilities use ±0.5% (`SignalEngineConfig.range_band_pct`). The manifest JSON records both.
 
+### 10. Verdant multi-horizon pipeline
+
+End-to-end orchestration for snapshot collection, multi-horizon training, hourly scanning, and interpretation on the Verdant volume.
+
+**Build snapshot history (15-minute cadence):**
+
+```bash
+# Daemon (runs until Ctrl+C)
+python snapshot_daemon.py --data-root /Volumes/Verdant_AI/btc_kalshi --interval-seconds 900
+
+# One-shot collection
+python snapshot_daemon.py --data-root /Volumes/Verdant_AI/btc_kalshi --once
+```
+
+**Preflight (check mount, snapshot span, per-horizon labeled row counts):**
+
+```bash
+python pipeline_preflight.py --data-root /Volumes/Verdant_AI/btc_kalshi
+```
+
+**Train all horizons on Verdant snapshots:**
+
+```bash
+python ml_model.py /Volumes/Verdant_AI/btc_kalshi/snapshots --model-family logreg --horizon-hours 0.25 --models-dir /Volumes/Verdant_AI/btc_kalshi/models/15m
+# ... repeat for 0.5, 1, 4, 24 → models/30m, 60m, 4h, 24h
+```
+
+Each train writes `manifest.json` in the horizon subdirectory alongside `model_*.joblib`.
+
+**Full pipeline (preflight → collect → train OK horizons → scan → interpret):**
+
+```bash
+python examples/run_verdant_pipeline.py --data-root /Volumes/Verdant_AI/btc_kalshi
+```
+
+**Interpret latest scan output:**
+
+```bash
+python scan_interpreter.py --data-root /Volumes/Verdant_AI/btc_kalshi
+# or: python scan_interpreter.py /Volumes/Verdant_AI/btc_kalshi/hourly_outputs/scan_<UTC>.json
+```
+
+The orchestrator uses horizon-aware `--range-threshold-pct` for short horizons (15m: 0.3%, 30m: 0.5%, 60m: 0.7%, 4h/24h: 1%).
+
+## Testing
+
+Run the pytest suite from the repo root:
+
+```bash
+pytest tests/
+```
+
+Hourly scanner tests cover horizon selection, multi-horizon model routing, ML penalty behavior, and safe NO TRADE fallback when models are unavailable.
+
 ## Project layout
 
 | Module | Role |
@@ -291,8 +403,14 @@ Use `--labeled-only` or `--decision-only` for partial exports. For a short bundl
 | `event_target_parser.py` | Parse hourly BTC event titles → strike, time, direction |
 | `kalshi_orderbook_features.py` | Kalshi orderbook normalization, liquidity, guardrails |
 | `hourly_probability_model.py` | Multi-horizon strike CDF + rule/ML/orderbook fusion |
+| `multi_horizon_model_router.py` | Route horizon keys to per-horizon model directories |
 | `hourly_fair_value_engine.py` | YES/NO edge, conservative BUY YES/NO/NO TRADE logic |
 | `hourly_event_scanner.py` | Hourly event scan orchestrator + CLI (recommendation only) |
+| `verdant_paths.py` | Resolve Verdant data root and directory layout |
+| `pipeline_preflight.py` | Snapshot audit and per-horizon training readiness |
+| `snapshot_daemon.py` | Scheduled snapshot collector for Verdant storage |
+| `scan_interpreter.py` | Interpret scan JSON: actionable recs + NO TRADE breakdown |
+| `examples/run_verdant_pipeline.py` | End-to-end Verdant pipeline orchestrator |
 | `decision_utils.py` | Shared rule-probability extraction and confidence helper |
 | `dataset_builder.py` | Batch labeled/decision CSV export to Verdant_AI |
 | `live_runner.py` | Live loop, degraded mode, prediction/outcome logs |

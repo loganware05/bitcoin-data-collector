@@ -79,6 +79,21 @@ def _label_to_name(i: int) -> str:
     return OUTCOMES[int(i)]
 
 
+def _align_proba_3class(estimator: Any, proba: np.ndarray) -> np.ndarray:
+    """Pad partial-class predict_proba output to fixed [0, 1, 2] columns."""
+    classes = getattr(estimator, "classes_", None)
+    if classes is None and hasattr(estimator, "named_steps"):
+        classes = getattr(estimator.named_steps.get("model"), "classes_", None)
+    if classes is None:
+        classes = np.array([0, 1, 2])
+    out = np.zeros((proba.shape[0], 3), dtype=float)
+    for i, c in enumerate(classes):
+        out[:, int(c)] = proba[:, i]
+    row_sums = out.sum(axis=1, keepdims=True)
+    row_sums = np.where(row_sums <= 0, 1.0, row_sums)
+    return out / row_sums
+
+
 def _safe_snapshot(obj: Any) -> dict[str, Any]:
     return obj if isinstance(obj, dict) else {}
 
@@ -304,7 +319,7 @@ def train_model(
     for tr_idx, te_idx in tscv.split(X_train):
         pipe_fold = _make_pipeline(feature_names, cfg)
         pipe_fold.fit(X_train.iloc[tr_idx], y_train[tr_idx])
-        p = pipe_fold.predict_proba(X_train.iloc[te_idx])
+        p = _align_proba_3class(pipe_fold, pipe_fold.predict_proba(X_train.iloc[te_idx]))
         yhat = np.argmax(p, axis=1)
         cv_acc.append(float(accuracy_score(y_train[te_idx], yhat)))
         cv_ll.append(float(log_loss(y_train[te_idx], p, labels=[0, 1, 2])))
@@ -327,7 +342,7 @@ def train_model(
         cal_method_used = "sigmoid"
 
     # Holdout metrics (cal chunk, post-calibration)
-    p_cal = final_model.predict_proba(X_cal)
+    p_cal = _align_proba_3class(final_model, final_model.predict_proba(X_cal))
     yhat_cal = np.argmax(p_cal, axis=1)
     metrics = {
         "n": int(n),
@@ -348,6 +363,48 @@ def train_model(
         trained_at_utc=_utc_stamp(),
         metrics=metrics,
     )
+
+
+def _git_commit_hash() -> str | None:
+    import subprocess
+
+    try:
+        out = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+        if out.returncode == 0 and out.stdout.strip():
+            return out.stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return None
+
+
+def write_model_manifest(
+    artifact: TrainedArtifact,
+    *,
+    dataset_meta: dict[str, Any] | None = None,
+    snapshot_date_range: dict[str, str | None] | None = None,
+) -> Path:
+    """Write models/{horizon_subdir}/manifest.json pointing at the latest artifact."""
+    manifest_path = artifact.cfg.models_dir / "manifest.json"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "trained_at_utc": artifact.trained_at_utc,
+        "model_family": artifact.cfg.model_family,
+        "horizon_hours": artifact.cfg.horizon_hours,
+        "range_threshold_pct": artifact.cfg.range_threshold_pct,
+        "metrics": artifact.metrics,
+        "git_commit": _git_commit_hash(),
+        "dataset_meta": dataset_meta or {},
+        "snapshot_date_range": snapshot_date_range or {},
+    }
+    with manifest_path.open("w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, sort_keys=False)
+    return manifest_path
 
 
 def save_artifact(artifact: TrainedArtifact) -> dict[str, str]:
@@ -388,6 +445,14 @@ def save_artifact(artifact: TrainedArtifact) -> dict[str, str]:
 
 
 def load_artifact(path: str | Path) -> TrainedArtifact:
+    # Artifacts saved via `python ml_model.py` pickle classes under __main__.
+    import sys
+
+    main = sys.modules.get("__main__")
+    if main is not None and main.__name__ == "__main__":
+        for name in ("TrainConfig", "TrainedArtifact"):
+            if not hasattr(main, name):
+                setattr(main, name, globals()[name])
     blob = joblib.load(path)
     return TrainedArtifact(
         pipeline=blob["pipeline"],
@@ -471,9 +536,29 @@ def main(argv: list[str] | None = None) -> int:
     dataset, meta = build_labeled_dataset(args.input, cfg=cfg)
     artifact = train_model(dataset, cfg=cfg)
     paths = save_artifact(artifact)
+    ts = pd.to_datetime(dataset["timestamp"], utc=True, errors="coerce")
+    date_range = {
+        "start": ts.min().isoformat() if len(ts) else None,
+        "end": ts.max().isoformat() if len(ts) else None,
+    }
+    manifest_path = write_model_manifest(
+        artifact,
+        dataset_meta=meta,
+        snapshot_date_range=date_range,
+    )
     compute_global_importance(artifact, dataset, args.importance_dir)
 
-    print(json.dumps({"dataset": meta, "trained": artifact.metrics, "saved": paths}, indent=2))
+    print(
+        json.dumps(
+            {
+                "dataset": meta,
+                "trained": artifact.metrics,
+                "saved": paths,
+                "manifest": str(manifest_path),
+            },
+            indent=2,
+        )
+    )
     return 0
 
 

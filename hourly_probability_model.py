@@ -110,26 +110,32 @@ def estimate_probability_above_strike(
     return float(p_strike), drivers
 
 
+def _pressure_ratio_adjustment(ratio: float) -> float:
+    """Map buy/sell or bid/ask pressure ratio to [-0.05, 0.05] adjustment."""
+    if ratio > 1.0:
+        return min(0.05, (ratio - 1.0) * 0.02)
+    if ratio < 1.0:
+        return max(-0.05, (ratio - 1.0) * 0.02)
+    return 0.0
+
+
 def _orderflow_adjustment(snapshot: dict[str, Any]) -> float:
     """Map snapshot liquidity imbalance to [-0.05, 0.05] probability adjustment."""
     imb = snapshot.get("liquidity_data") or {}
-    ratio = imb.get("bid_ask_volume_ratio")
+    ratio = imb.get("buy_sell_pressure_ratio")
     if ratio is None:
-        imbalance = imb.get("order_book_imbalance")
-        if imbalance is not None:
-            try:
-                return max(-0.05, min(0.05, float(imbalance) * 0.05))
-            except (TypeError, ValueError):
-                return 0.0
-        return 0.0
-    try:
-        r = float(ratio)
-    except (TypeError, ValueError):
-        return 0.0
-    if r > 1.0:
-        return min(0.05, (r - 1.0) * 0.02)
-    if r < 1.0:
-        return max(-0.05, (r - 1.0) * 0.02)
+        ratio = imb.get("bid_ask_volume_ratio")
+    if ratio is not None:
+        try:
+            return _pressure_ratio_adjustment(float(ratio))
+        except (TypeError, ValueError):
+            pass
+    imbalance = imb.get("order_book_imbalance")
+    if imbalance is not None:
+        try:
+            return max(-0.05, min(0.05, float(imbalance) * 0.05))
+        except (TypeError, ValueError):
+            return 0.0
     return 0.0
 
 
@@ -219,6 +225,7 @@ def build_hourly_model_probs(
     ob_features: OrderbookFeatures,
     weights: FusionWeights | None = None,
     signal_cfg: SignalEngineConfig | None = None,
+    ml_horizon_matched: bool = False,
 ) -> dict[str, Any]:
     """Full pipeline: horizon select → strike prob → fuse → confidence."""
     signal_cfg = signal_cfg or SignalEngineConfig()
@@ -245,7 +252,7 @@ def build_hourly_model_probs(
     p_rule_down = float(rule_horizon.get(key_down, rule_horizon.get("down_move_1h", 0.33)))
 
     p_ml_up = float((p_ml or {}).get("up", 0.33))
-    ml_penalty = selected != "24h"
+    ml_penalty = p_ml is not None and not ml_horizon_matched
     orderflow_adj = _orderflow_adjustment(snapshot)
     ob_adj = max(-0.05, min(0.05, orderflow_adj))
 
@@ -282,7 +289,7 @@ def build_hourly_model_probs(
 
     drivers = strike_drivers + fusion_drivers
     if ml_penalty and p_ml is not None:
-        drivers.append("ML model trained at 24h; confidence penalized for shorter horizon.")
+        drivers.append("No horizon-matched ML model; confidence penalized.")
 
     return {
         "selected_horizon": selected,
@@ -296,6 +303,7 @@ def build_hourly_model_probs(
         "confidence": confidence,
         "key_drivers": drivers,
         "ml_horizon_penalty": ml_penalty,
+        "ml_horizon_matched": ml_horizon_matched,
     }
 
 

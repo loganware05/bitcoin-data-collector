@@ -200,6 +200,20 @@ def main() -> int:
     with out_path.open("w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, sort_keys=False)
 
+    from market_probs_logger import append_market_probs, rows_from_general_scan
+    from verdant_paths import resolve_data_root
+
+    snap_ts = str(snapshot.get("timestamp") or result.get("timestamp") or "")
+    if snap_ts:
+        data_root = resolve_data_root()
+        mp_path = append_market_probs(
+            data_root=data_root,
+            snapshot_timestamp=snap_ts,
+            rows=rows_from_general_scan(result),
+            scan_type="general",
+        )
+        print(f"Market probs log: {mp_path}")
+
     print(f"BTC spot: {result.get('btc_price')}")
     print(f"Markets fetched: {len(fetch.markets)} | Ranked: {len(result.get('ranked_opportunities', []))}")
     print(f"Saved: {out_path}\n")

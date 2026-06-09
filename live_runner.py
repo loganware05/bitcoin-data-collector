@@ -38,6 +38,8 @@ def _load_latest_model(models_dir: Path) -> Path | None:
 class LiveConfig:
     interval_seconds: int = 60 * 15
     output_dir: Path = Path("live_outputs")
+    snapshots_dir: Path | None = None
+    collect_snapshots: bool = True
 
     models_dir: Path = Path("models")
     feature_cfg: FeatureConfig = FeatureConfig()
@@ -49,11 +51,16 @@ class LiveConfig:
     outcomes_log: Path = Path("live_outputs/outcomes_log.jsonl")
 
     # Labeling config (should match ml_model TrainConfig)
-    horizon_hours: float = 24.0
-    range_threshold_pct: float = 0.01
+    horizon_hours: float = 1.0
+    range_threshold_pct: float = 0.007
 
     # Market implied probability is manual for now; can be set per-run
     market_implied_prob: float | None = None
+
+    # Drift monitoring + optional weekly retrain
+    retrain_interval_hours: float = 168.0
+    retrain_on_drift: bool = True
+    snapshots_dir_for_retrain: Path | None = None
 
 
 def load_snapshot_json(path: str | Path) -> dict[str, Any]:
@@ -83,16 +90,25 @@ def _collect_snapshot_via_subprocess(output_dir: Path) -> dict[str, Any]:
     return load_snapshot_json(candidates[-1])
 
 
+def _load_latest_snapshot(snapshots_dir: Path) -> dict[str, Any]:
+    candidates = sorted(snapshots_dir.glob("btc_market_intel_*.json"))
+    if not candidates:
+        raise RuntimeError(f"No snapshot JSON files in {snapshots_dir}")
+    return load_snapshot_json(candidates[-1])
+
+
 def run_once(cfg: LiveConfig, model: TrainedArtifact | None = None) -> dict[str, Any]:
     """
     One iteration: collect snapshot -> rule signal -> ML features/proba -> fuse -> map -> log.
     Returns decision object.
     """
-    # Collect snapshot (subprocess) into output dir
-    snap_dir = cfg.output_dir / "snapshots"
+    snap_dir = cfg.snapshots_dir or (cfg.output_dir / "snapshots")
     snapshot: dict[str, Any]
     try:
-        snapshot = _collect_snapshot_via_subprocess(snap_dir)
+        if cfg.collect_snapshots:
+            snapshot = _collect_snapshot_via_subprocess(snap_dir)
+        else:
+            snapshot = _load_latest_snapshot(snap_dir)
     except Exception as exc:  # noqa: BLE001
         decision = {
             "timestamp": _now_iso(),
@@ -247,7 +263,52 @@ def backfill_outcomes(
     return {"n_predictions": int(len(df)), "n_outcomes_written": int(written)}
 
 
+def _maybe_retrain(cfg: LiveConfig, *, last_retrain_ts: float) -> float:
+    """Retrain horizon model if drift flagged or weekly interval elapsed."""
+    from eval_utils import EvalConfig, evaluate_live_logs
+
+    if not cfg.retrain_on_drift and cfg.retrain_interval_hours <= 0:
+        return last_retrain_ts
+
+    now = time.time()
+    due_by_interval = (
+        cfg.retrain_interval_hours > 0
+        and (now - last_retrain_ts) >= cfg.retrain_interval_hours * 3600.0
+    )
+    drift_flag = False
+    if cfg.retrain_on_drift:
+        eval_out = evaluate_live_logs(cfg.predictions_log, cfg.outcomes_log, cfg=EvalConfig())
+        drift_flag = bool(eval_out.get("retrain_recommended"))
+
+    if not due_by_interval and not drift_flag:
+        return last_retrain_ts
+
+    train_snapshots = cfg.snapshots_dir_for_retrain or cfg.snapshots_dir or (cfg.output_dir / "snapshots")
+    if not train_snapshots.exists():
+        return last_retrain_ts
+
+    import subprocess
+    import sys
+
+    cmd = [
+        sys.executable,
+        "ml_model.py",
+        str(train_snapshots),
+        "--model-family",
+        "logreg",
+        "--horizon-hours",
+        str(cfg.horizon_hours),
+        "--range-threshold-pct",
+        str(cfg.range_threshold_pct),
+        "--models-dir",
+        str(cfg.models_dir),
+    ]
+    subprocess.run(cmd, check=False, capture_output=True, text=True)
+    return now
+
+
 def run_loop(cfg: LiveConfig) -> None:
+    last_retrain_ts = 0.0
     while True:
         try:
             run_once(cfg)
@@ -265,6 +326,10 @@ def run_loop(cfg: LiveConfig) -> None:
             )
         except Exception:  # noqa: BLE001
             pass
+        try:
+            last_retrain_ts = _maybe_retrain(cfg, last_retrain_ts=last_retrain_ts)
+        except Exception:  # noqa: BLE001
+            pass
         time.sleep(max(15, int(cfg.interval_seconds)))
 
 
@@ -275,19 +340,75 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--interval-seconds", type=int, default=60 * 15)
     parser.add_argument("--models-dir", default="models")
     parser.add_argument("--output-dir", default="live_outputs")
+    parser.add_argument(
+        "--data-root",
+        type=Path,
+        default=None,
+        help="Verdant data root; snapshots go to {data_root}/snapshots when set",
+    )
+    parser.add_argument(
+        "--snapshots-dir",
+        type=Path,
+        default=None,
+        help="Read latest snapshot from this dir (use with --no-collect)",
+    )
+    parser.add_argument(
+        "--no-collect",
+        action="store_true",
+        help="Use latest snapshot from --snapshots-dir instead of running collector",
+    )
+    parser.add_argument("--horizon-hours", type=float, default=1.0)
+    parser.add_argument("--range-threshold-pct", type=float, default=0.007)
+    parser.add_argument("--retrain-interval-hours", type=float, default=168.0)
+    parser.add_argument("--no-retrain-on-drift", action="store_true")
     parser.add_argument("--market-implied-prob", type=float, default=None)
     parser.add_argument("--once", action="store_true", help="Run a single iteration then exit.")
+    parser.add_argument("--eval", action="store_true", help="Print rolling eval summary after run.")
     args = parser.parse_args(argv)
 
-    out_dir = Path(args.output_dir)
-    cfg = LiveConfig(
-        interval_seconds=int(args.interval_seconds),
-        output_dir=out_dir,
-        models_dir=Path(args.models_dir),
-        predictions_log=out_dir / "predictions_log.jsonl",
-        outcomes_log=out_dir / "outcomes_log.jsonl",
-        market_implied_prob=(None if args.market_implied_prob is None else float(args.market_implied_prob)),
-    )
+    from verdant_paths import resolve_layout
+
+    if args.data_root is not None:
+        layout = resolve_layout(args.data_root)
+        out_dir = layout.data_root
+        snapshots_dir = args.snapshots_dir or layout.snapshots_dir
+        models_dir = Path(args.models_dir) if args.models_dir != "models" else layout.models_dir / "60m"
+        if not models_dir.is_absolute():
+            models_dir = layout.data_root / models_dir
+        cfg = LiveConfig(
+            interval_seconds=int(args.interval_seconds),
+            output_dir=out_dir,
+            snapshots_dir=snapshots_dir,
+            collect_snapshots=not args.no_collect,
+            models_dir=models_dir,
+            predictions_log=layout.live_runner_dir / "predictions_log.jsonl",
+            outcomes_log=layout.live_runner_dir / "outcomes_log.jsonl",
+            horizon_hours=float(args.horizon_hours),
+            range_threshold_pct=float(args.range_threshold_pct),
+            retrain_interval_hours=float(args.retrain_interval_hours),
+            retrain_on_drift=not args.no_retrain_on_drift,
+            snapshots_dir_for_retrain=snapshots_dir,
+            market_implied_prob=(None if args.market_implied_prob is None else float(args.market_implied_prob)),
+        )
+    else:
+        out_dir = Path(args.output_dir)
+        snapshots_dir = args.snapshots_dir or (out_dir / "snapshots")
+        cfg = LiveConfig(
+            interval_seconds=int(args.interval_seconds),
+            output_dir=out_dir,
+            snapshots_dir=snapshots_dir,
+            collect_snapshots=not args.no_collect,
+            models_dir=Path(args.models_dir),
+            predictions_log=out_dir / "predictions_log.jsonl",
+            outcomes_log=out_dir / "outcomes_log.jsonl",
+            horizon_hours=float(args.horizon_hours),
+            range_threshold_pct=float(args.range_threshold_pct),
+            retrain_interval_hours=float(args.retrain_interval_hours),
+            retrain_on_drift=not args.no_retrain_on_drift,
+            snapshots_dir_for_retrain=snapshots_dir,
+            market_implied_prob=(None if args.market_implied_prob is None else float(args.market_implied_prob)),
+        )
+    cfg.predictions_log.parent.mkdir(parents=True, exist_ok=True)
     if args.once:
         run_once(cfg)
         backfill_outcomes(
@@ -296,6 +417,10 @@ def main(argv: list[str] | None = None) -> int:
             horizon_hours=cfg.horizon_hours,
             range_threshold_pct=cfg.range_threshold_pct,
         )
+        if args.eval:
+            from eval_utils import evaluate_live_logs
+
+            print(json.dumps(evaluate_live_logs(cfg.predictions_log, cfg.outcomes_log), indent=2))
         return 0
     run_loop(cfg)
     return 0
