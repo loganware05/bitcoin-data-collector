@@ -1,0 +1,19 @@
+
+# Captain's Compass
+.agent/evidence/private/
+.agent/budgets/private/
+.agent/sessions/private/
+.agent/runs/
+.env
+.env.*
+!.env.example
+
+# Python / OS junk
+__pycache__/
+*.py[cod]
+.DS_Store
+backtest_plots/
+backtest_summary.json
+
+# Noisy dry-scan logs (summaries kept under .agent/evidence/)
+.agent/evidence/**/*.log

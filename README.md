@@ -377,6 +377,68 @@ python scan_interpreter.py --data-root /Volumes/Verdant_AI/btc_kalshi
 
 The orchestrator uses horizon-aware `--range-threshold-pct` for short horizons (15m: 0.3%, 30m: 0.5%, 60m: 0.7%, 4h/24h: 1%).
 
+#### Scheduled automation (launchd)
+
+Shell scripts and macOS `launchd` plists live under [`scripts/verdant/`](scripts/verdant/). They use `BTC_KALSHI_ROOT` (default `/Volumes/Verdant_AI/btc_kalshi`) and Anaconda Python (`/opt/anaconda3/bin/python`).
+
+| Script | Role |
+|--------|------|
+| `scripts/verdant/snapshot_daemon.sh` | 15-minute snapshot collection |
+| `scripts/verdant/weekly_retrain.sh` | Preflight → multi-horizon train → dataset export → settlement eval → **fit probability calibrator** |
+| `scripts/verdant/hourly_scan.sh` | Hourly Kalshi scan + interpretation (uses latest snapshot) |
+| `scripts/verdant/install_launchd.sh` | Install plists into `~/Library/LaunchAgents/` |
+
+**Install plists (one-time):**
+
+```bash
+chmod +x scripts/verdant/*.sh
+./scripts/verdant/install_launchd.sh
+```
+
+**Activate scheduled jobs:**
+
+```bash
+launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.snapshot-daemon.plist
+launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.weekly-retrain.plist
+launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.hourly-scan.plist
+```
+
+**Schedules (UTC):**
+
+| Job | Schedule |
+|-----|----------|
+| Snapshot daemon | Always on (KeepAlive) |
+| Weekly retrain | Sunday 06:00 |
+| Hourly scan | Daily 12:00–23:00 (:00); Mon–Fri also 14:00–20:00 (:30). Logs: `~/Library/Logs/verdant/` |
+
+Logs: `$BTC_KALSHI_ROOT/logs/*.log`. Unload with `launchctl unload <plist-path>`.
+
+**Manual equivalents:**
+
+```bash
+./scripts/verdant/weekly_retrain.sh
+./scripts/verdant/hourly_scan.sh
+```
+
+#### Settlement probability calibration
+
+Historical scans were almost entirely **NO TRADE** (confidence guard), which inflated the reported calibration gap when those abstentions were scored like committed predictions.
+
+- **`kalshi_settlement_eval.py`** now reports calibration **slices**: `all_settled`, `actionable` (BUY YES/NO), and `no_trade_excluded` (primary metric).
+- **`probability_calibration.py`** fits an isotonic recalibrator on settled outcomes and saves it to `{models}/calibration/settlement_isotonic.joblib`.
+- The **hourly scanner** applies the calibrator to `model_yes_probability` before edge/confidence evaluation when the artifact exists.
+
+**Fit or refresh the calibrator** (also runs at end of `weekly_retrain.sh`):
+
+```bash
+python kalshi_settlement_eval.py \
+  --scan-dir /Volumes/Verdant_AI/btc_kalshi/hourly_outputs \
+  --models-base-dir /Volumes/Verdant_AI/btc_kalshi/models \
+  --fit-calibration
+```
+
+Use `--include-no-trade-calibration` only if you want NO TRADE rows in the primary gap metric (not recommended).
+
 ## Testing
 
 Run the pytest suite from the repo root:
@@ -415,6 +477,8 @@ Hourly scanner tests cover horizon selection, multi-horizon model routing, ML pe
 | `dataset_builder.py` | Batch labeled/decision CSV export to Verdant_AI |
 | `live_runner.py` | Live loop, degraded mode, prediction/outcome logs |
 | `eval_utils.py` | Rolling metrics and retrain warnings from live logs |
+| `probability_calibration.py` | Settlement isotonic recalibration for hourly YES probabilities |
+| `kalshi_settlement_eval.py` | Scan vs Kalshi settlement accuracy + calibrator fit/eval |
 | `backtester.py` | Historical evaluation of rule-engine probabilities |
 | `metrics.py` | Shared accuracy, Brier, log loss, calibration helpers |
 

@@ -25,6 +25,7 @@ from kalshi_orderbook_features import extract_orderbook_features
 from live_runner import load_snapshot_json
 from ml_model import TrainedArtifact
 from multi_horizon_model_router import load_model_for_horizon
+from probability_calibration import load_settlement_calibrator
 from signal_engine import SignalEngineConfig, generate_signal
 from verdant_paths import resolve_layout
 
@@ -46,6 +47,7 @@ class HourlyScanConfig:
     collect_output_dir: Path = Path("live_outputs/snapshots")
     models_base_dir: Path = Path("models")
     fetch_orderbook: bool = True
+    apply_settlement_calibration: bool = True
     fusion_weights: FusionWeights | None = None
     repo_root: Path | None = None
 
@@ -175,6 +177,10 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
     evaluations: list[dict[str, Any]] = []
     parse_skipped = 0
 
+    settlement_calibrator = None
+    if cfg.apply_settlement_calibration:
+        settlement_calibrator = load_settlement_calibrator(cfg.models_base_dir)
+
     for market in hourly_markets:
         parsed = parse_hourly_target(market, event_title=market.event_ticker)
         if parsed is None:
@@ -209,11 +215,20 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
             ml_horizon_matched=ml_matched,
         )
 
+        model_yes = float(model_probs["model_yes_probability"])
+        model_no = float(model_probs["model_no_probability"])
+        if settlement_calibrator is not None and settlement_calibrator.fitted:
+            raw_yes, raw_no = model_yes, model_no
+            model_yes, model_no = settlement_calibrator.calibrate_yes_no(model_yes)
+            model_probs["model_yes_probability_raw"] = raw_yes
+            model_probs["model_no_probability_raw"] = raw_no
+            model_probs["settlement_calibrated"] = True
+
         ev = evaluate_contract(
             parsed=parsed,
             ob=ob,
-            model_yes=model_probs["model_yes_probability"],
-            model_no=model_probs["model_no_probability"],
+            model_yes=model_yes,
+            model_no=model_no,
             confidence=model_probs["confidence"],
             selected_horizon=model_probs["selected_horizon"],
             current_btc_price=spot,
@@ -245,6 +260,9 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
             },
             "pipeline_warnings": warnings,
             "kalshi_api_available": fetch.api_available,
+            "settlement_calibrator_applied": bool(
+                settlement_calibrator is not None and settlement_calibrator.fitted
+            ),
         },
         "ranked": ranked,
         "model_summary": {
