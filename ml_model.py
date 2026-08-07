@@ -486,13 +486,18 @@ def compute_global_importance(
     y_hold = y[split:]
 
     rep = int(n_repeats or artifact.cfg.importance_n_repeats)
+
+    def _neg_log_loss_with_labels(estimator: Any, X: pd.DataFrame, y: np.ndarray) -> float:
+        y_proba = estimator.predict_proba(X)
+        return -float(log_loss(y, y_proba, labels=[0, 1, 2]))
+
     imp = permutation_importance(
         artifact.pipeline,
         X_hold,
         y_hold,
         n_repeats=rep,
         random_state=artifact.cfg.random_state,
-        scoring="neg_log_loss",
+        scoring=_neg_log_loss_with_labels,
     )
     df = pd.DataFrame(
         {

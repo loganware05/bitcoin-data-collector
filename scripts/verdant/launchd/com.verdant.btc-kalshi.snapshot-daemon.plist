@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.verdant.btc-kalshi.snapshot-daemon</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>REPO_ROOT_PLACEHOLDER/scripts/verdant/snapshot_daemon.sh</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>BTC_KALSHI_ROOT</key>
+    <string>/Volumes/Verdant_AI/btc_kalshi</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/Volumes/Verdant_AI/btc_kalshi/logs/snapshot_daemon.stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Volumes/Verdant_AI/btc_kalshi/logs/snapshot_daemon.stderr.log</string>
+  <key>WorkingDirectory</key>
+  <string>REPO_ROOT_PLACEHOLDER</string>
+</dict>
+</plist>

@@ -144,6 +144,14 @@ def _horizon_fit_score(selected_horizon: str, time_to_expiry_minutes: float) -> 
     return max(0.0, 1.0 - abs(time_to_expiry_minutes - target) / max(target, 1.0))
 
 
+def _soft_mapping_factor(mapping_confidence: float) -> float:
+    """Soft-land mapping so typical 0.75 mapping does not hard-cap confidence ~0.47.
+
+    Linear blend: 0.85 + 0.15 * mapping_confidence (0.75 → 0.9625).
+    """
+    return 0.85 + 0.15 * float(mapping_confidence)
+
+
 def compute_confidence(
     *,
     rule_confidence: float,
@@ -160,7 +168,7 @@ def compute_confidence(
         base *= 0.92
     if ml_horizon_penalty:
         base *= 0.85
-    base *= mapping_confidence
+    base *= _soft_mapping_factor(mapping_confidence)
     base *= orderbook_quality_adjustment(ob_features)
     base *= 0.5 + 0.5 * _horizon_fit_score(selected_horizon, time_to_expiry_minutes)
     return float(max(0.0, min(1.0, base)))

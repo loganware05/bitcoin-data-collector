@@ -4,7 +4,11 @@ from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from event_target_parser import ParsedHourlyTarget
-from hourly_probability_model import build_hourly_model_probs
+from hourly_probability_model import (
+    _soft_mapping_factor,
+    build_hourly_model_probs,
+    compute_confidence,
+)
 from kalshi_orderbook_features import OrderbookFeatures
 
 
@@ -115,3 +119,29 @@ def test_no_ml_rule_only_no_horizon_penalty():
     )
     assert out["ml_horizon_penalty"] is False
     assert out["ml_horizon_matched"] is False
+
+
+def test_soft_mapping_factor_typical_title_mapping():
+    # Typical title mapping_confidence ≈ 0.75 should soft-land near 0.96, not 0.75.
+    assert abs(_soft_mapping_factor(0.75) - 0.9625) < 1e-9
+    assert _soft_mapping_factor(1.0) == 1.0
+    assert _soft_mapping_factor(0.0) == 0.85
+
+
+def test_soft_mapping_raises_confidence_vs_hard_multiply():
+    """Phase 2 soft-land: structural mapping multiply no longer caps ~0.47."""
+    ob = _ob()
+    soft = compute_confidence(
+        rule_confidence=0.682,
+        ml_available=True,
+        mapping_confidence=0.75,
+        ob_features=ob,
+        selected_horizon="60m",
+        time_to_expiry_minutes=60.0,
+        ml_horizon_penalty=False,
+    )
+    hard = 0.682 * 0.75  # legacy raw mapping multiply before soft-land
+    # Soft-landed confidence should clear the old structural ceiling on strong signals.
+    assert soft > hard
+    assert soft >= 0.55
+    assert soft <= 1.0
