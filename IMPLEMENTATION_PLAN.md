@@ -4,7 +4,7 @@
 
 | Field | Value |
 |---|---|
-| Status | **AWAITING APPROVAL** |
+| Status | **APPROVED — IMPLEMENTING** |
 | Plan ID | `settlement-retrain-oom` |
 | Supersedes | `kalshi-confidence-guards-ws-a` (CLOSED — soft-land + paper trial shipped; archived at `docs/plans/kalshi-confidence-guards-ws-a.md`) |
 | Issue | https://github.com/loganware05/bitcoin-data-collector/issues/4 |
@@ -12,9 +12,9 @@
 | Base branch | `Kalshi-BTC-Hourly-Event-Scan` (production Verdant code; **not** GitHub default `cursor/kalshi-live-decision-system`) |
 | Created | 2026-09-13 |
 | Last updated | 2026-09-13 |
-| Approved by | |
-| Approval date | |
-| Approved revision | |
+| Approved by | Captain (Logan Ware) |
+| Approval date | 2026-09-13 |
+| Approved revision | plan id `settlement-retrain-oom` as written; also directed Aug 28+ window retrain after ~2 weeks of post-guard data |
 
 ## Request (Captain-level)
 

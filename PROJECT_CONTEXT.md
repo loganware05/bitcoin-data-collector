@@ -22,8 +22,8 @@ Captain's Compass v1.4.0 installed. Human user is Captain; coordinating agent is
 
 ## Active workstream
 
-`settlement-retrain-oom` — split weekly settlement eval from calibrator fit to stop OOM
-(AWAITING APPROVAL). Prior: `kalshi-confidence-guards-ws-a` (shipped soft-land + paper trial).
+`settlement-retrain-oom` — **APPROVED**; eval/fit process split + settlement cache shipped on
+`cursor/settlement-retrain-oom-5182`. Aug 28+ live retrain awaits Verdant-mounted Mac run.
 
 ## Branch note
 

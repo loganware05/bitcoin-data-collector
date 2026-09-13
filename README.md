@@ -424,17 +424,37 @@ Logs: `$BTC_KALSHI_ROOT/logs/*.log`. Unload with `launchctl unload <plist-path>`
 
 Historical scans were almost entirely **NO TRADE** (confidence guard), which inflated the reported calibration gap when those abstentions were scored like committed predictions.
 
-- **`kalshi_settlement_eval.py`** now reports calibration **slices**: `all_settled`, `actionable` (BUY YES/NO), and `no_trade_excluded` (primary metric).
-- **`probability_calibration.py`** fits an isotonic recalibrator on settled outcomes and saves it to `{models}/calibration/settlement_isotonic.joblib`.
-- The **hourly scanner** applies the calibrator to `model_yes_probability` before edge/confidence evaluation when the artifact exists.
+- **`kalshi_settlement_eval.py`** reports calibration **slices**: `all_settled`, `actionable` (BUY YES/NO), and `no_trade_excluded` (primary metric).
+- **`settlement_label_store.py`** batch-loads scans and caches **unique-ticker** settlement outcomes under `{data_root}/settlement_cache/`.
+- **`probability_calibration.py`** fits an isotonic recalibrator and saves it to `{models}/calibration/`.
+- **Eval and fit must run in separate processes** (avoids weekly-retrain OOM). `weekly_retrain.sh` always evals; fit is opt-in via `SETTLEMENT_FIT_ENABLE=1`.
 
-**Fit or refresh the calibrator** (also runs at end of `weekly_retrain.sh`):
+**Evaluate (and refresh cache)** — preferred weekly path:
 
 ```bash
 python kalshi_settlement_eval.py \
+  --mode eval \
   --scan-dir /Volumes/Verdant_AI/btc_kalshi/hourly_outputs \
   --models-base-dir /Volumes/Verdant_AI/btc_kalshi/models \
-  --fit-calibration
+  --cache-dir /Volumes/Verdant_AI/btc_kalshi/settlement_cache \
+  --since 2026-08-28 \
+  --report-out /Volumes/Verdant_AI/btc_kalshi/logs/settlement_eval.json
+```
+
+**Fit calibrator from cache only** (second process; after gate review):
+
+```bash
+python kalshi_settlement_eval.py \
+  --mode fit \
+  --models-base-dir /Volumes/Verdant_AI/btc_kalshi/models \
+  --cache-dir /Volumes/Verdant_AI/btc_kalshi/settlement_cache
+```
+
+Convenience wrapper for the Aug 28+ window:
+
+```bash
+./scripts/verdant/settlement_aug28_window.sh
+SETTLEMENT_FIT_ENABLE=1 ./scripts/verdant/settlement_aug28_window.sh
 ```
 
 Use `--include-no-trade-calibration` only if you want NO TRADE rows in the primary gap metric (not recommended).

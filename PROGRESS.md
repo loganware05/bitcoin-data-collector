@@ -4,36 +4,41 @@
 
 | Item | Value |
 |---|---|
-| Active plan | `settlement-retrain-oom` — **AWAITING APPROVAL** |
+| Active plan | `settlement-retrain-oom` — **APPROVED / implementing** |
 | Issue | [#4](https://github.com/loganware05/bitcoin-data-collector/issues/4) |
 | Branch | `cursor/settlement-retrain-oom-5182` |
 | Production base | `Kalshi-BTC-Hourly-Event-Scan` |
 | Prior plan | `kalshi-confidence-guards-ws-a` — CLOSED (archived `docs/plans/kalshi-confidence-guards-ws-a.md`) |
+| Rollback tag | `rollback/pre-settlement-retrain-oom` @ `ab64c67` |
 
-## Phase 1–2 roadmap (Captain 2026-09-13)
+## Phase 1–2 roadmap
 
 | Step | Status | Notes |
 |---|---|---|
-| Accumulate post-guard scans (BUY NO / guard fix) | **In progress (ops)** | ~7 post-guard files so far; need ~2 weeks; Captain plugs in Verdant drive for snapshots/retrain + local→Verdant sync |
-| Settlement eval on Aug 28+ slice | **Blocked on data** | Full-history eval-only done: 298 scans / ~34.8k settled / 6,939 actionable; raw gap ~81% FAIL vs 12%; mostly pre-guard BUY YES flood; manifest `20260828T003036Z` unchanged |
-| Fix weekly retrain OOM (eval ⊥ fit) | **Plan ready** | Awaiting Captain approval of `IMPLEMENTATION_PLAN.md` |
+| Accumulate post-guard scans (BUY NO / guard fix) | **Ops (Captain)** | Captain reports ~2 weeks of Aug 28+ data now available on Verdant |
+| Settlement eval/fit on Aug 28+ slice | **Blocked in Cloud** | Verdant `/Volumes/Verdant_AI` not mounted in this agent VM — cannot see live scans here. Helper: `scripts/verdant/settlement_aug28_window.sh` |
+| Fix weekly retrain OOM (eval ⊥ fit) | **Implemented (this branch)** | Cache + batch load + separate eval/fit processes; `SETTLEMENT_FIT_ENABLE=0` by default |
 
-## Completed
+## Completed this cycle
 
-- [x] Compass install + confidence-guard diagnosis + plan
-- [x] Captain approval Phase 1 paper + Phase 2 soft-land; Phase 3 defaults deferred
-- [x] Soft-land `_soft_mapping_factor`; paper flags in `hourly_scan.sh`
-- [x] Settlement eval-only full run (Captain) — report only, no calibrator refit
-- [x] Issue #4 + plan `settlement-retrain-oom` drafted
+- [x] Captain approved plan `settlement-retrain-oom`
+- [x] `settlement_label_store.py` — unique-ticker outcomes + batched scan load + parquet/jsonl cache
+- [x] `kalshi_settlement_eval.py` — `--mode eval|fit|refresh-cache`, `--since`, `--cache-dir`, `--report-out`
+- [x] `scripts/verdant/weekly_retrain.sh` — two-process settlement; fit gated
+- [x] `scripts/verdant/settlement_aug28_window.sh` — Aug 28+ eval (+ optional fit)
+- [x] Tests: `tests/test_settlement_eval_cache.py` (+ full suite 59 passed)
 
-## Next (after plan approval)
+## Captain Mac next (Verdant mounted)
 
-- [ ] Implement settlement cache + batched load + eval/fit process split
-- [ ] Wire `weekly_retrain.sh` two-step + `SETTLEMENT_FIT_ENABLE` gate
-- [ ] Unit tests + evidence package
-- [ ] ~2 weeks later: `--since 2026-08-28` eval; reconsider fit / Phase 3
+```bash
+# 1) Eval Aug 28+ window (writes report under $BTC_KALSHI_ROOT/logs)
+./scripts/verdant/settlement_aug28_window.sh
+
+# 2) If report gate_pass=true (max gap <= 12%), fit calibrator:
+SETTLEMENT_FIT_ENABLE=1 ./scripts/verdant/settlement_aug28_window.sh
+```
 
 ## Blockers
 
-- Verdant drive not mounted in Cloud — live OOM reproduction / full-scan smoke is Captain-side.
-- GitHub default branch (`cursor/kalshi-live-decision-system`) lacks Verdant/settlement modules (follow-up hygiene).
+- Cloud agent has no Verdant volume — live Aug 28+ retrain/check must run on Captain Mac (or after scan artifacts are synced into the environment).
+- GitHub default branch still lags production Kalshi branch (hygiene follow-up).

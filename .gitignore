@@ -17,3 +17,7 @@ backtest_summary.json
 
 # Noisy dry-scan logs (summaries kept under .agent/evidence/)
 .agent/evidence/**/*.log
+
+# Local Verdant settlement label cache (do not commit)
+settlement_cache/
+**/settlement_cache/
