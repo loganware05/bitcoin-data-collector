@@ -22,4 +22,10 @@ Captain's Compass v1.4.0 installed. Human user is Captain; coordinating agent is
 
 ## Active workstream
 
-`kalshi-confidence-guards-ws-a` — unlock actionable recommendations via careful confidence-guard relaxation (READY FOR APPROVAL).
+`settlement-retrain-oom` — split weekly settlement eval from calibrator fit to stop OOM
+(AWAITING APPROVAL). Prior: `kalshi-confidence-guards-ws-a` (shipped soft-land + paper trial).
+
+## Branch note
+
+Production Verdant/settlement code lives on `Kalshi-BTC-Hourly-Event-Scan`.
+GitHub default `cursor/kalshi-live-decision-system` is behind and missing those modules.
