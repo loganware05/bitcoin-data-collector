@@ -1,44 +1,31 @@
 # Progress
 
-## Current status
+## Current status (2026-09-15)
 
-| Item | Value |
-|---|---|
-| Active plan | `settlement-retrain-oom` — **APPROVED / implementing** |
-| Issue | [#4](https://github.com/loganware05/bitcoin-data-collector/issues/4) |
-| Branch | `cursor/settlement-retrain-oom-5182` |
-| Production base | `Kalshi-BTC-Hourly-Event-Scan` |
-| Prior plan | `kalshi-confidence-guards-ws-a` — CLOSED (archived `docs/plans/kalshi-confidence-guards-ws-a.md`) |
-| Rollback tag | `rollback/pre-settlement-retrain-oom` @ `ab64c67` |
+- Branch: `feature/buy-yes-strike-guards` (onto `Kalshi-BTC-Hourly-Event-Scan` after **PR #5 merged**)
+- PR #5 (settlement OOM / Phase 1–2 cache): **MERGED**
+- This branch adds: asymmetric BUY YES/NO guards (incl. BUY NO ITM fix), offline laptop staging (ADR-003), actionable gate helper
+- Aug 28+ gate: **FAIL** raw gap 0.813 (pre–ITM-fix BUY NO mix); `SETTLEMENT_FIT_ENABLE` stays 0
 
-## Phase 1–2 roadmap
+## Completed
 
-| Step | Status | Notes |
-|---|---|---|
-| Accumulate post-guard scans (BUY NO / guard fix) | **Ops (Captain)** | Captain reports ~2 weeks of Aug 28+ data now available on Verdant |
-| Settlement eval/fit on Aug 28+ slice | **Blocked in Cloud** | Verdant `/Volumes/Verdant_AI` not mounted in this agent VM — cannot see live scans here. Helper: `scripts/verdant/settlement_aug28_window.sh` |
-| Fix weekly retrain OOM (eval ⊥ fit) | **Implemented (this branch)** | Cache + batch load + separate eval/fit processes; `SETTLEMENT_FIT_ENABLE=0` by default |
+- [x] PR #5 merge into `Kalshi-BTC-Hourly-Event-Scan`
+- [x] BUY NO model-probability cap removal + ITM strike-guard fix (ADR-002)
+- [x] Offline staging sync LaunchAgent (ADR-003)
+- [x] `settlement_aug28_actionable.sh` lean gate eval
+- [x] Sep 13 multi-horizon retrain artifacts on Verdant
 
-## Completed this cycle
+## Next
 
-- [x] Captain approved plan `settlement-retrain-oom`
-- [x] `settlement_label_store.py` — unique-ticker outcomes + batched scan load + parquet/jsonl cache
-- [x] `kalshi_settlement_eval.py` — `--mode eval|fit|refresh-cache`, `--since`, `--cache-dir`, `--report-out`
-- [x] `scripts/verdant/weekly_retrain.sh` — two-process settlement; fit gated
-- [x] `scripts/verdant/settlement_aug28_window.sh` — Aug 28+ eval (+ optional fit)
-- [x] Tests: `tests/test_settlement_eval_cache.py` (+ full suite 59 passed)
+- [ ] Open / merge PR from this branch
+- [ ] Accumulate post–ITM-fix scans → re-run `./scripts/verdant/settlement_aug28_actionable.sh`
+- [ ] Fit calibrator only if `gate_pass`
+- [ ] Phase 3 `min_confidence` defaults deferred until gate passes 2+ weeks
 
-## Captain Mac next (Verdant mounted)
+## Commands
 
 ```bash
-# 1) Eval Aug 28+ window (writes report under $BTC_KALSHI_ROOT/logs)
-./scripts/verdant/settlement_aug28_window.sh
-
-# 2) If report gate_pass=true (max gap <= 12%), fit calibrator:
-SETTLEMENT_FIT_ENABLE=1 ./scripts/verdant/settlement_aug28_window.sh
+./scripts/verdant/settlement_aug28_actionable.sh
+./scripts/verdant/ensure_verdant_jobs.sh
+./scripts/verdant/sync_verdant_staging.sh --check
 ```
-
-## Blockers
-
-- Cloud agent has no Verdant volume — live Aug 28+ retrain/check must run on Captain Mac (or after scan artifacts are synced into the environment).
-- GitHub default branch still lags production Kalshi branch (hygiene follow-up).

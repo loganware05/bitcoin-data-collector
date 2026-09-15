@@ -1,0 +1,64 @@
+{
+  "n": 34251,
+  "brier_score": 0.2271,
+  "accuracy_at_50pct": 0.5306,
+  "max_calibration_gap": null,
+  "max_calibration_gap_raw_all": 0.8029629629629629,
+  "calibration_slices": {
+    "n_total": 34251,
+    "all_settled": {
+      "n": 34251,
+      "brier_score": 0.2271,
+      "max_calibration_gap_raw": 0.8029629629629629,
+      "max_calibration_gap_calibrated": 0.494949494949495,
+      "brier_score_calibrated": 0.4644
+    },
+    "actionable": {
+      "n": 6939,
+      "brier_score": 0.467,
+      "max_calibration_gap_raw": 0.8061016949152542,
+      "max_calibration_gap_calibrated": 0.8978433906207302,
+      "brier_score_calibrated": 0.8915
+    },
+    "no_trade_excluded": {
+      "n": 6939,
+      "brier_score": 0.467,
+      "max_calibration_gap_raw": 0.8061016949152542,
+      "max_calibration_gap_calibrated": 0.8978433906207302,
+      "brier_score_calibrated": 0.8915
+    },
+    "no_trade_only": {
+      "n": 27312,
+      "brier_score": 0.1662,
+      "max_calibration_gap_raw": 0.7945454545454546,
+      "max_calibration_gap_calibrated": 0.5,
+      "brier_score_calibrated": 0.3559
+    },
+    "max_calibration_gap": 0.8978433906207302,
+    "brier_score": 0.8915
+  },
+  "exclude_no_trade_for_eval": true,
+  "by_recommendation": {
+    "count": {
+      "BUY NO": 413,
+      "BUY YES": 6526,
+      "NO TRADE": 27312
+    },
+    "mean": {
+      "BUY NO": 0.9878934624697336,
+      "BUY YES": 0.039687404229236896,
+      "NO TRADE": 0.6223637961335676
+    }
+  },
+  "calibrator_loaded": true,
+  "calibrator_meta": {
+    "fitted_at_utc": "20260807T104858Z",
+    "n_fit": 413,
+    "n_total_settled": 2468,
+    "fit_source": "actionable_only",
+    "raw_max_calibration_gap": 0.8061016949152542,
+    "calibrated_max_calibration_gap": 0.0,
+    "exclude_no_trade_for_fit": true,
+    "exclude_no_trade_for_eval": true
+  }
+}
