@@ -29,6 +29,16 @@ launchctl bootout gui/$(id -u)/com.verdant.btc-kalshi.hourly-scan 2>/dev/null ||
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.verdant.btc-kalshi.hourly-scan.plist
 ```
 
+## Keep the timer healthy
+
+```bash
+./scripts/verdant/ensure_hourly_scan_schedule.sh        # reinstall + reload + health report
+./scripts/verdant/ensure_hourly_scan_schedule.sh --check # report only
+./scripts/verdant/ensure_hourly_scan_schedule.sh --kick  # reload + one immediate run
+```
+
+If `hourly_scan.stderr.log` shows `Operation not permitted` / exit **126**, grant **Full Disk Access** to `/bin/bash` (System Settings → Privacy & Security), then re-run with `--kick`. Repo under `~/Documents` is a common TCC blocker for LaunchAgents.
+
 ## Out of scope
 
 Sibling A (confidence guards): soft-land + paper trial approved 2026-08-05 — see ADR-001 / `IMPLEMENTATION_PLAN.md`.

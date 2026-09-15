@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "window": "2026-08-28+",
+  "mode": "actionable_only_deduped",
+  "n_scan_files": 249,
+  "n_actionable_unique": 1261,
+  "n_settled_actionable": 1252,
+  "raw_max_calibration_gap": 0.813082428115016,
+  "gate_max_calibration_gap": 0.12,
+  "gate_pass": false,
+  "by_recommendation": {
+    "count": {
+      "BUY NO": 1252
+    },
+    "mean": {
+      "BUY NO": 0.8234824281150159
+    }
+  },
+  "calibration_slices": {
+    "n_total": 1252,
+    "all_settled": {
+      "n": 1252,
+      "brier_score": 0.8065,
+      "max_calibration_gap_raw": 0.813082428115016,
+      "max_calibration_gap_calibrated": 0.8131000090113648,
+      "brier_score_calibrated": 0.8065
+    },
+    "actionable": {
+      "n": 1252,
+      "brier_score": 0.8065,
+      "max_calibration_gap_raw": 0.813082428115016,
+      "max_calibration_gap_calibrated": 0.8131000090113648,
+      "brier_score_calibrated": 0.8065
+    },
+    "no_trade_excluded": {
+      "n": 1252,
+      "brier_score": 0.8065,
+      "max_calibration_gap_raw": 0.813082428115016,
+      "max_calibration_gap_calibrated": 0.8131000090113648,
+      "brier_score_calibrated": 0.8065
+    },
+    "no_trade_only": {
+      "n": 0,
+      "warnings": [
+        "empty slice"
+      ]
+    },
+    "max_calibration_gap": 0.8131000090113648,
+    "brier_score": 0.8065
+  },
+  "calibrator_meta": {
+    "fitted_at_utc": "20260828T003036Z",
+    "n_fit": 6939,
+    "n_total_settled": 54547,
+    "fit_source": "actionable_only",
+    "raw_max_calibration_gap": 0.8061016949152542,
+    "calibrated_max_calibration_gap": 5.551115123125783e-17,
+    "exclude_no_trade_for_fit": true,
+    "exclude_no_trade_for_eval": true
+  },
+  "ticker_outcomes_path": "/Volumes/Verdant_AI/btc_kalshi/settlement_cache/ticker_outcomes.json",
+  "report_path": "/Volumes/Verdant_AI/btc_kalshi/logs/settlement_aug28_actionable_20260913T181605Z.json"
+}

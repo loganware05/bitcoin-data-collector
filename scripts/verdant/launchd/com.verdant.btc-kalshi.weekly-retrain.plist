@@ -13,6 +13,7 @@
     <key>BTC_KALSHI_ROOT</key>
     <string>/Volumes/Verdant_AI/btc_kalshi</string>
   </dict>
+  <!-- Sunday 06:00 UTC (no separate daily job in this stack). -->
   <key>StartCalendarInterval</key>
   <dict>
     <key>Weekday</key>
@@ -23,9 +24,9 @@
     <integer>0</integer>
   </dict>
   <key>StandardOutPath</key>
-  <string>/Volumes/Verdant_AI/btc_kalshi/logs/weekly_retrain.stdout.log</string>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/weekly_retrain.stdout.log</string>
   <key>StandardErrorPath</key>
-  <string>/Volumes/Verdant_AI/btc_kalshi/logs/weekly_retrain.stderr.log</string>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/weekly_retrain.stderr.log</string>
   <key>WorkingDirectory</key>
   <string>REPO_ROOT_PLACEHOLDER</string>
 </dict>

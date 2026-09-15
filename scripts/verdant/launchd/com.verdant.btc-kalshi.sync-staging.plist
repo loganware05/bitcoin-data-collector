@@ -3,25 +3,25 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.verdant.btc-kalshi.snapshot-daemon</string>
+  <string>com.verdant.btc-kalshi.sync-staging</string>
   <key>ProgramArguments</key>
   <array>
-    <string>REPO_ROOT_PLACEHOLDER/scripts/verdant/snapshot_daemon.sh</string>
+    <string>REPO_ROOT_PLACEHOLDER/scripts/verdant/sync_verdant_staging.sh</string>
   </array>
   <key>EnvironmentVariables</key>
   <dict>
-    <key>BTC_KALSHI_ROOT</key>
+    <key>BTC_KALSHI_REMOTE_ROOT</key>
     <string>/Volumes/Verdant_AI/btc_kalshi</string>
   </dict>
+  <!-- Run at login and every 10 minutes to push/pull when the drive reconnects. -->
   <key>RunAtLoad</key>
   <true/>
-  <key>KeepAlive</key>
-  <true/>
-  <!-- Local logs avoid launchd EX_CONFIG when Verdant volume log paths fail. -->
+  <key>StartInterval</key>
+  <integer>600</integer>
   <key>StandardOutPath</key>
-  <string>HOME_PLACEHOLDER/Library/Logs/verdant/snapshot_daemon.stdout.log</string>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/sync_staging.stdout.log</string>
   <key>StandardErrorPath</key>
-  <string>HOME_PLACEHOLDER/Library/Logs/verdant/snapshot_daemon.stderr.log</string>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/sync_staging.stderr.log</string>
   <key>WorkingDirectory</key>
   <string>REPO_ROOT_PLACEHOLDER</string>
 </dict>

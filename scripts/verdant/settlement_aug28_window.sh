@@ -4,7 +4,15 @@
 #   SETTLEMENT_FIT_ENABLE=1 ./scripts/verdant/settlement_aug28_window.sh
 set -euo pipefail
 source "$(dirname "$0")/env.sh"
+# shellcheck source=verdant_staging.sh
+source "$(dirname "$0")/verdant_staging.sh"
 cd "$REPO_ROOT"
+
+if ! verdant_remote_mounted; then
+  echo "ERROR: Verdant not mounted at $BTC_KALSHI_REMOTE_ROOT" >&2
+  exit 1
+fi
+export BTC_KALSHI_ROOT="$BTC_KALSHI_REMOTE_ROOT"
 
 SETTLEMENT_FIT_ENABLE="${SETTLEMENT_FIT_ENABLE:-0}"
 SETTLEMENT_SINCE="${SETTLEMENT_SINCE:-2026-08-28}"

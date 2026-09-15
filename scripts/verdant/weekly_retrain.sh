@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/env.sh"
+# shellcheck source=verdant_staging.sh
+source "$(dirname "$0")/verdant_staging.sh"
 cd "$REPO_ROOT"
+
+if ! verdant_remote_mounted; then
+  echo "SKIP: weekly retrain requires Verdant at $BTC_KALSHI_REMOTE_ROOT"
+  exit 0
+fi
+export BTC_KALSHI_ROOT="$BTC_KALSHI_REMOTE_ROOT"
 
 # Settlement fit is opt-in until the post-guard Aug 28+ calibration gate passes.
 # Eval always runs in its own process; fit (if enabled) runs in a second process.
@@ -53,5 +61,8 @@ else
   echo "=== Settlement FIT skipped (SETTLEMENT_FIT_ENABLE=${SETTLEMENT_FIT_ENABLE}) ==="
   echo "    Eval report: $REPORT_OUT"
 fi
+
+# Refresh local model cache for offline laptop scans after successful retrain.
+verdant_pull_cache || true
 
 echo "=== Weekly retrain complete ==="

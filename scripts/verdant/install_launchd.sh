@@ -27,14 +27,33 @@ for plist in "$LAUNCHD_SRC"/*.plist; do
   sed -e "s|REPO_ROOT_PLACEHOLDER|$REPO_ROOT|g" \
       -e "s|HOME_PLACEHOLDER|$HOME|g" \
       "$plist" > "$dest"
-  echo "Installed $dest"
+  /usr/bin/python3 - <<PY
+import plistlib
+from pathlib import Path
+path = Path(r"""$dest""")
+plist = plistlib.loads(path.read_bytes())
+script = plist["ProgramArguments"][0]
+plist["ProgramArguments"] = ["/bin/bash", script]
+plist["WorkingDirectory"] = str(Path.home())
+path.write_bytes(plistlib.dumps(plist))
+PY
+  echo "Installed $dest (bash + HOME working directory)"
 done
 
+echo ""
+echo "Reload all jobs:"
+echo "  $REPO_ROOT/scripts/verdant/ensure_verdant_jobs.sh"
 echo ""
 echo "Load jobs with:"
 echo "  launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.snapshot-daemon.plist"
 echo "  launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.weekly-retrain.plist"
 echo "  launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.hourly-scan.plist"
+echo ""
+echo "Keep all jobs on schedule (reinstall + reload + health check):"
+echo "  $REPO_ROOT/scripts/verdant/ensure_verdant_jobs.sh"
+echo ""
+echo "Offline staging sync (pull models / push pending scans):"
+echo "  $REPO_ROOT/scripts/verdant/sync_verdant_staging.sh"
 echo ""
 echo "Unload with launchctl unload <path>"
 echo "Hourly scan logs: $LOCAL_LOG_DIR/hourly_scan.*.log"
