@@ -1,0 +1,71 @@
+---
+name: candidate-promotion
+description: Advances TI candidates through SANDBOX_TESTED and drafts Captain-approved Skill sidecar PRs
+---
+
+# Candidate Promotion
+
+## Use this Skill when
+
+A Technology Intelligence candidate should advance along:
+
+`DISCOVERED → ANALYZED → SECURITY_REVIEWED → SANDBOX_TESTED`
+
+or the Captain wants a **draft Skill sidecar** prepared for an approved PR into
+`.cursor/skills/<slug>/`.
+
+**Ceiling for this Skill:** `SANDBOX_TESTED`. For `APPROVED` → `AVAILABLE_SKILL` →
+`PROVEN_SKILL` (Captain-gated, Experience-backed), use Skill `skill-lifecycle`.
+
+## Inputs
+
+- Candidate JSON path (fixture or staging)
+- Target stage (`ANALYZED` default; `SECURITY_REVIEWED` / `SANDBOX_TESTED` need evidence)
+- Optional target Skill slug for draft sidecar
+
+## Procedure
+
+1. Validate candidate (`approved_for_execution` must be false).
+2. Advance lifecycle (examples):
+
+   ```bash
+   $CONTROL/scripts/promote-candidate.sh --candidate <path.json>
+   $CONTROL/scripts/promote-candidate.sh --candidate <path.json> \
+     --stage SECURITY_REVIEWED \
+     --evidence .agent/evidence/security-review.md
+   $CONTROL/scripts/promote-candidate.sh --candidate <path.json> \
+     --stage SANDBOX_TESTED \
+     --evidence .agent/evidence/sandbox-test.md
+   ```
+
+3. Optionally draft a Skill sidecar proposal (still **not** live). **M23:** the
+   candidate must already carry `security-review` + `dependency-supply-chain`
+   evidence paths (from the TI scorecard) or the draft fails closed:
+
+   ```bash
+   $CONTROL/scripts/promote-candidate.sh --candidate <path.json> --draft-skill <slug>
+   ```
+
+4. For post-sandbox stages, load Skill `skill-lifecycle` (requires
+   `--captain-approved`).
+5. Open a Captain-reviewed PR to copy draft files into `.cursor/skills/<slug>/`
+   only after explicit approval. Never auto-merge.
+6. Re-run `$CONTROL/scripts/compile-capability-registry.sh` and tests after merge.
+7. For **live** starred-repo discovery (Captain local only), use Skill
+   `technology-intelligence-live` with `COMPASS_TI_PROVIDER=github-stars`.
+   External repos must be starred; non-starred feeds are rejected.
+
+## Output
+
+- Staging candidate under `.agent/capabilities/candidates/staging/`
+- Optional draft under `.agent/capabilities/candidates/skill-drafts/<slug>/`
+
+## Prohibited actions
+
+- Advancing candidates past `SANDBOX_TESTED` via this Skill without following
+  `skill-lifecycle` Captain gates
+- Auto-installing candidates into the Skill registry
+- Drafting Skills without security-review + dependency-supply-chain evidence
+- Setting `approved_for_execution: true`
+- Executing or cloning external repositories as part of promotion
+- Ingesting non-starred external repos into TI
