@@ -10,3 +10,13 @@ hourly_outputs/
 live_outputs/kalshi_scans/
 live_outputs/snapshots/
 models/
+
+# Captain's Compass
+.agent/evidence/private/
+.agent/budgets/private/
+.agent/sessions/private/
+.agent/runs/
+.agent/compass-skip.env
+.env
+.env.*
+!.env.example
