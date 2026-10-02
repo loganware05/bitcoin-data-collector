@@ -29,11 +29,12 @@ See `replay-cloud-attempt.txt`.
 ./scripts/verdant/sync_verdant_staging.sh --pull   # also refreshes offline snapshot cache
 ./scripts/verdant/settlement_sep13_oct2_replay.sh
 # Report → $BTC_KALSHI_ROOT/logs/settlement_sep13_oct2_replay_*.json
+# Isolated cache → $BTC_KALSHI_ROOT/settlement_cache_sep13_oct2/  (does NOT clobber shared settlement_cache)
 # Copy → .agent/evidence/postfix-buy-no-calibration/
 ```
 
-Fit remains **disabled** (`SETTLEMENT_FIT_ENABLE=0`).
+Replay is **actionable-only** (BUY YES/NO; never NO TRADE) and **eval-only** (`SETTLEMENT_FIT_ENABLE` ignored/off).
 
 ## Unit evidence (Cloud)
 
-`pytest.txt` — **66 passed** including BUY NO OTM floor 0.5% and scan `until` filter.
+`pytest.txt` — **67 passed** including BUY NO OTM floor 0.5%, ITM warning, scan `until` filter, and fail-closed empty-window eval.

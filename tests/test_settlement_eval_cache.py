@@ -52,15 +52,47 @@ def test_filter_scan_paths_since(tmp_path: Path) -> None:
 
 def test_filter_scan_paths_until_inclusive(tmp_path: Path) -> None:
     mid = tmp_path / "scan_20260920T120000Z.json"
+    eod = tmp_path / "scan_20261002T235959Z.json"
     after = tmp_path / "scan_20261003T010000Z.json"
-    mid.write_text("{}", encoding="utf-8")
-    after.write_text("{}", encoding="utf-8")
+    for p in (mid, eod, after):
+        p.write_text("{}", encoding="utf-8")
     kept = filter_scan_paths(
-        [mid, after],
+        [mid, eod, after],
         since=datetime(2026, 9, 13, tzinfo=UTC),
         until=datetime(2026, 10, 2, 23, 59, 59, tzinfo=UTC),
     )
-    assert kept == [mid]
+    assert kept == [mid, eod]
+
+
+def test_eval_window_fails_closed_when_empty(tmp_path: Path) -> None:
+    from kalshi_settlement_eval import evaluate_scan_settlements
+
+    scan_dir = tmp_path / "scans"
+    scan_dir.mkdir()
+    (scan_dir / "scan_20260801T010000Z.json").write_text("{}", encoding="utf-8")
+    cache_dir = tmp_path / "cache"
+    # Seed stale labeled rows that must NOT be reported for a later empty window.
+    save_labeled_rows(
+        pd.DataFrame(
+            {
+                "ticker": ["OLD"],
+                "model_yes_probability": [0.9],
+                "y_true": [1],
+                "recommendation": ["BUY YES"],
+            }
+        ),
+        cache_dir,
+    )
+    out = evaluate_scan_settlements(
+        sorted(scan_dir.glob("scan_*.json")),
+        cache_dir=cache_dir,
+        since=datetime(2026, 9, 13, tzinfo=UTC),
+        until=datetime(2026, 10, 2, 23, 59, 59, tzinfo=UTC),
+    )
+    assert out.get("success") is False
+    assert out.get("n_scans") == 0
+    assert out.get("n", 0) == 0
+    assert any("stale" in w.lower() or "refusing" in w.lower() for w in out.get("warnings", []))
 
 
 def test_unique_ticker_outcome_resolution(tmp_path: Path) -> None:

@@ -323,6 +323,24 @@ def evaluate_scan_settlements(
     cfg = cfg or SettlementEvalConfig()
     paths = filter_scan_paths(scan_paths, since=since, until=until)
     if cache_dir is not None:
+        if not paths:
+            result = {
+                "success": False,
+                "n": 0,
+                "n_scans": 0,
+                "warnings": [
+                    "no scan files in requested window; refusing to evaluate stale settlement cache"
+                ],
+                "since": since.isoformat() if since else None,
+                "until": until.isoformat() if until else None,
+                "cache_dir": str(cache_dir),
+            }
+            if report_out is not None:
+                report_out = Path(report_out)
+                report_out.parent.mkdir(parents=True, exist_ok=True)
+                report_out.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+                result["report_path"] = str(report_out)
+            return result
         refresh = refresh_settlement_cache(
             paths,
             cache_dir=cache_dir,
@@ -331,6 +349,23 @@ def evaluate_scan_settlements(
             until=None,
             batch_size=batch_size,
         )
+        if not refresh.get("success"):
+            result = {
+                "success": False,
+                "n": 0,
+                "n_scans": len(paths),
+                "warnings": list(refresh.get("warnings") or ["settlement cache refresh failed"]),
+                "cache_refresh": refresh,
+                "since": since.isoformat() if since else None,
+                "until": until.isoformat() if until else None,
+                "cache_dir": str(cache_dir),
+            }
+            if report_out is not None:
+                report_out = Path(report_out)
+                report_out.parent.mkdir(parents=True, exist_ok=True)
+                report_out.write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
+                result["report_path"] = str(report_out)
+            return result
         result = evaluate_from_cache(
             cache_dir,
             cfg=cfg,
@@ -345,11 +380,19 @@ def evaluate_scan_settlements(
 
     df = load_scan_rows(paths, batch_size=batch_size)
     if df.empty:
-        return {"n": 0, "warnings": ["no scan rows found"]}
+        return {
+            "success": False,
+            "n": 0,
+            "n_scans": len(paths),
+            "warnings": ["no scan rows found"],
+            "since": since.isoformat() if since else None,
+            "until": until.isoformat() if until else None,
+        }
     labeled = attach_settlement_outcomes(df, client=client)
     result = _metrics_from_labeled(labeled, cfg=cfg, models_base_dir=models_base_dir)
     result["n_scans"] = len(paths)
     result["since"] = since.isoformat() if since else None
+    result["until"] = until.isoformat() if until else None
     if report_out is not None:
         report_out = Path(report_out)
         report_out.parent.mkdir(parents=True, exist_ok=True)

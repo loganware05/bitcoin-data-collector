@@ -177,7 +177,11 @@ def evaluate_contract(
                 f"strike OTM distance {dist_yes * 100:.2f}% exceeds BUY YES max "
                 f"{cfg.max_buy_yes_strike_distance_pct * 100:.2f}%"
             )
-        if dist_yes is not None and 0.0 <= dist_yes < cfg.min_buy_no_otm_pct:
+        if dist_yes is not None and dist_yes < 0.0:
+            warnings.append(
+                f"strike OTM distance {dist_yes * 100:.2f}% is ITM — BUY NO blocked"
+            )
+        elif dist_yes is not None and dist_yes < cfg.min_buy_no_otm_pct:
             warnings.append(
                 f"strike OTM distance {dist_yes * 100:.2f}% below BUY NO floor "
                 f"{cfg.min_buy_no_otm_pct * 100:.2f}%"

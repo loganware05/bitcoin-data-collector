@@ -263,6 +263,7 @@ def test_buy_no_blocked_when_yes_is_itm():
         cfg=FairValueConfig(min_edge=0.05, min_confidence=0.48),
     )
     assert ev["recommendation"] == "NO TRADE"
+    assert any("ITM" in w for w in ev["warnings"])
 
 
 def test_buy_yes_allowed_near_money_under_tuned_guards():

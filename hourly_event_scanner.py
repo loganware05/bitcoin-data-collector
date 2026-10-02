@@ -260,6 +260,7 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
                 "max_buy_yes_model_probability": fv_cfg.max_buy_yes_model_probability,
                 "max_buy_yes_strike_distance_pct": fv_cfg.max_buy_yes_strike_distance_pct,
                 "max_buy_no_strike_distance_pct": fv_cfg.max_buy_no_strike_distance_pct,
+                "min_buy_no_otm_pct": fv_cfg.min_buy_no_otm_pct,
             },
             "pipeline_warnings": warnings,
             "kalshi_api_available": fetch.api_available,
