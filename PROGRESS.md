@@ -1,31 +1,38 @@
 # Progress
 
-## Current status (2026-09-15)
+## Current status (2026-10-02)
 
-- Branch: `feature/buy-yes-strike-guards` (onto `Kalshi-BTC-Hourly-Event-Scan` after **PR #5 merged**)
-- PR #5 (settlement OOM / Phase 1–2 cache): **MERGED**
-- This branch adds: asymmetric BUY YES/NO guards (incl. BUY NO ITM fix), offline laptop staging (ADR-003), actionable gate helper
-- Aug 28+ gate: **FAIL** raw gap 0.813 (pre–ITM-fix BUY NO mix); `SETTLEMENT_FIT_ENABLE` stays 0
+- Branch: `cursor/postfix-buy-no-otm-cache-436f` (issue #9)
+- Plan: `postfix-buy-no-calibration` **APPROVED** — implementing / validating
+- Base: NorthStar tip + merged `feature/buy-yes-strike-guards` product baseline
+- Captain decisions: OTM floor **0.5%**, offline snapshot cache **yes**, replay **Sep 13–Oct 2**
+- Cloud Sep13–Oct2 replay: **BLOCKED** (Verdant not mounted) — runbook in `.agent/evidence/postfix-buy-no-calibration/REPLAY.md`
+- `SETTLEMENT_FIT_ENABLE` stays **0**
 
 ## Completed
 
 - [x] PR #5 merge into `Kalshi-BTC-Hourly-Event-Scan`
 - [x] BUY NO model-probability cap removal + ITM strike-guard fix (ADR-002)
 - [x] Offline staging sync LaunchAgent (ADR-003)
-- [x] `settlement_aug28_actionable.sh` lean gate eval
-- [x] Sep 13 multi-horizon retrain artifacts on Verdant
+- [x] Merge strike-guards into NorthStar tip for postfix work
+- [x] BUY NO min OTM floor 0.5% (ADR-005)
+- [x] Offline snapshot cache pull/push + offline snapshot daemon path
+- [x] `--until` scan filter + `settlement_sep13_oct2_replay.sh`
+- [x] Unit tests 66 passed (Cloud)
 
 ## Next
 
-- [ ] Open / merge PR from this branch
-- [ ] Accumulate post–ITM-fix scans → re-run `./scripts/verdant/settlement_aug28_actionable.sh`
-- [ ] Fit calibrator only if `gate_pass`
+- [ ] Captain: mount Verdant → `./scripts/verdant/settlement_sep13_oct2_replay.sh` and attach report
+- [ ] Open / merge PR #9 branch
+- [ ] Fit calibrator only if gate_pass after post-floor window
 - [ ] Phase 3 `min_confidence` defaults deferred until gate passes 2+ weeks
 
 ## Commands
 
 ```bash
+./scripts/verdant/settlement_sep13_oct2_replay.sh
 ./scripts/verdant/settlement_aug28_actionable.sh
-./scripts/verdant/ensure_verdant_jobs.sh
+./scripts/verdant/sync_verdant_staging.sh --pull
 ./scripts/verdant/sync_verdant_staging.sh --check
+./scripts/verdant/ensure_verdant_jobs.sh
 ```

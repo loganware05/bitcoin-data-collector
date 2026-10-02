@@ -50,6 +50,19 @@ def test_filter_scan_paths_since(tmp_path: Path) -> None:
     assert kept == [late]
 
 
+def test_filter_scan_paths_until_inclusive(tmp_path: Path) -> None:
+    mid = tmp_path / "scan_20260920T120000Z.json"
+    after = tmp_path / "scan_20261003T010000Z.json"
+    mid.write_text("{}", encoding="utf-8")
+    after.write_text("{}", encoding="utf-8")
+    kept = filter_scan_paths(
+        [mid, after],
+        since=datetime(2026, 9, 13, tzinfo=UTC),
+        until=datetime(2026, 10, 2, 23, 59, 59, tzinfo=UTC),
+    )
+    assert kept == [mid]
+
+
 def test_unique_ticker_outcome_resolution(tmp_path: Path) -> None:
     calls: list[str] = []
 

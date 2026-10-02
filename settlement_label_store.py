@@ -50,16 +50,32 @@ def filter_scan_paths(
     scan_paths: Iterable[Path],
     *,
     since: datetime | None = None,
+    until: datetime | None = None,
 ) -> list[Path]:
+    """Keep scans with stamp in [since, until] (inclusive until end-of-day if date-only).
+
+    Paths with unparseable stamps are kept when no since/until filter applies to them
+    only if both bounds are None; otherwise they are dropped when any bound is set.
+    """
     paths = sorted(Path(p) for p in scan_paths)
-    if since is None:
+    if since is None and until is None:
         return paths
-    since_utc = since if since.tzinfo else since.replace(tzinfo=UTC)
+    since_utc = None
+    until_utc = None
+    if since is not None:
+        since_utc = since if since.tzinfo else since.replace(tzinfo=UTC)
+    if until is not None:
+        until_utc = until if until.tzinfo else until.replace(tzinfo=UTC)
     kept: list[Path] = []
     for path in paths:
         stamp = parse_scan_stamp(path)
-        if stamp is None or stamp >= since_utc:
-            kept.append(path)
+        if stamp is None:
+            continue
+        if since_utc is not None and stamp < since_utc:
+            continue
+        if until_utc is not None and stamp > until_utc:
+            continue
+        kept.append(path)
     return kept
 
 
@@ -232,12 +248,13 @@ def build_or_update_labeled_table(
     cache_dir: Path,
     fetch_outcome: OutcomeFetcher,
     since: datetime | None = None,
+    until: datetime | None = None,
     batch_size: int = 25,
 ) -> dict[str, Any]:
     """Batch-load scans, resolve unique tickers, persist labeled rows + ticker map."""
     cache_dir = Path(cache_dir)
     cache_dir.mkdir(parents=True, exist_ok=True)
-    paths = filter_scan_paths(scan_paths, since=since)
+    paths = filter_scan_paths(scan_paths, since=since, until=until)
     df = load_scan_rows_batched(paths, batch_size=batch_size)
     if df.empty:
         return {
@@ -268,6 +285,7 @@ def build_or_update_labeled_table(
         "ticker_outcomes_path": str(ticker_outcomes_path(cache_dir)),
         "cache_dir": str(cache_dir),
         "since": since.isoformat() if since else None,
+        "until": until.isoformat() if until else None,
         "batch_size": batch_size,
     }
 

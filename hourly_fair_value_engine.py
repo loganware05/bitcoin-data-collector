@@ -23,6 +23,8 @@ class FairValueConfig:
     max_buy_yes_model_probability: float = 0.85
     max_buy_yes_strike_distance_pct: float = 0.02
     max_buy_no_strike_distance_pct: float = 0.02
+    # Postfix (Captain 2026-10-02): YES must be at least 0.5% OTM for BUY NO (never ATM/near-ATM).
+    min_buy_no_otm_pct: float = 0.005
 
 
 def _clamp(x: float, lo: float = 0.0, hi: float = 1.0) -> float:
@@ -67,7 +69,7 @@ def _buy_no_strike_guard_ok(
     spot_price: float,
     cfg: FairValueConfig,
 ) -> bool:
-    # BUY NO only when YES is OTM/ATM within max distance — never when YES is ITM.
+    # BUY NO only when YES is OTM within [min floor, max] — never ITM or sub-floor ATM.
     # (Earlier flip-direction logic allowed near-ITM YES, which settled YES ~82%.)
     dist = _otm_strike_distance_pct(
         direction=parsed.direction,
@@ -76,7 +78,7 @@ def _buy_no_strike_guard_ok(
     )
     if dist is None:
         return True
-    return 0.0 <= dist <= cfg.max_buy_no_strike_distance_pct
+    return cfg.min_buy_no_otm_pct <= dist <= cfg.max_buy_no_strike_distance_pct
 
 
 def evaluate_contract(
@@ -174,6 +176,16 @@ def evaluate_contract(
             warnings.append(
                 f"strike OTM distance {dist_yes * 100:.2f}% exceeds BUY YES max "
                 f"{cfg.max_buy_yes_strike_distance_pct * 100:.2f}%"
+            )
+        if dist_yes is not None and 0.0 <= dist_yes < cfg.min_buy_no_otm_pct:
+            warnings.append(
+                f"strike OTM distance {dist_yes * 100:.2f}% below BUY NO floor "
+                f"{cfg.min_buy_no_otm_pct * 100:.2f}%"
+            )
+        elif dist_yes is not None and dist_yes > cfg.max_buy_no_strike_distance_pct:
+            warnings.append(
+                f"strike OTM distance {dist_yes * 100:.2f}% exceeds BUY NO max "
+                f"{cfg.max_buy_no_strike_distance_pct * 100:.2f}%"
             )
         if rec == "NO TRADE" and not any("below threshold" in w for w in warnings):
             if yes_edge is not None and yes_edge <= cfg.min_edge and no_edge is not None and no_edge <= cfg.min_edge:

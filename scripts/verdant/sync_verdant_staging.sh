@@ -47,17 +47,30 @@ if [[ "$MODE" == "check" ]]; then
     local_scans="$(find "$BTC_KALSHI_LOCAL_ROOT/hourly_outputs" -maxdepth 1 -name 'scan_*.json' 2>/dev/null | wc -l | tr -d ' ')"
   fi
   echo "Local pending scans: $local_scans"
+  local_snaps=0
+  if [[ -d "$BTC_KALSHI_LOCAL_ROOT/snapshots" ]]; then
+    local_snaps="$(find "$BTC_KALSHI_LOCAL_ROOT/snapshots" -maxdepth 1 -name 'btc_market_intel_*.json' 2>/dev/null | wc -l | tr -d ' ')"
+  fi
+  echo "Local snapshot cache files: $local_snaps"
   if verdant_local_has_scan_cache; then
     echo "Local model cache: OK"
   else
     echo "Local model cache: missing (run --pull when drive connected)"
+  fi
+  if verdant_local_has_snapshot_cache; then
+    echo "Local snapshot cache: OK"
+  else
+    echo "Local snapshot cache: empty (run --pull when drive connected)"
   fi
   exit 0
 fi
 
 case "$MODE" in
   pull) verdant_pull_cache ;;
-  push) verdant_push_pending_scans ;;
+  push)
+    verdant_push_pending_scans
+    verdant_push_pending_snapshots
+    ;;
   sync) verdant_sync_all ;;
 esac
 

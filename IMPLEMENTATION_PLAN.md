@@ -4,7 +4,7 @@
 
 | Field | Value |
 |---|---|
-| Status | APPROVED |
+| Status | IN PROGRESS |
 | Plan ID | postfix-buy-no-calibration |
 | Issue | #9 |
 | Branch | cursor/postfix-buy-no-otm-cache-436f |

@@ -115,6 +115,7 @@ def refresh_settlement_cache(
     cache_dir: Path,
     client: KalshiClient | None = None,
     since: datetime | None = None,
+    until: datetime | None = None,
     batch_size: int = 25,
 ) -> dict[str, Any]:
     return build_or_update_labeled_table(
@@ -122,6 +123,7 @@ def refresh_settlement_cache(
         cache_dir=cache_dir,
         fetch_outcome=_outcome_fetcher(client),
         since=since,
+        until=until,
         batch_size=batch_size,
     )
 
@@ -256,6 +258,7 @@ def fit_settlement_calibrator(
     client: KalshiClient | None = None,
     cache_dir: Path | None = None,
     since: datetime | None = None,
+    until: datetime | None = None,
     batch_size: int = 25,
 ) -> dict[str, Any]:
     """Fit calibrator; prefers cache_dir path (refresh then fit)."""
@@ -290,6 +293,7 @@ def fit_settlement_calibrator(
         cache_dir=cache_dir,
         client=client,
         since=since,
+        until=until,
         batch_size=batch_size,
     )
     if not refresh.get("success"):
@@ -307,6 +311,7 @@ def evaluate_scan_settlements(
     models_base_dir: Path | None = None,
     cache_dir: Path | None = None,
     since: datetime | None = None,
+    until: datetime | None = None,
     batch_size: int = 25,
     report_out: Path | None = None,
 ) -> dict[str, Any]:
@@ -316,13 +321,14 @@ def evaluate_scan_settlements(
     When cache_dir is set, refreshes the labeled store then evaluates from cache.
     """
     cfg = cfg or SettlementEvalConfig()
-    paths = filter_scan_paths(scan_paths, since=since)
+    paths = filter_scan_paths(scan_paths, since=since, until=until)
     if cache_dir is not None:
         refresh = refresh_settlement_cache(
             paths,
             cache_dir=cache_dir,
             client=client,
             since=None,  # already filtered
+            until=None,
             batch_size=batch_size,
         )
         result = evaluate_from_cache(
@@ -334,6 +340,7 @@ def evaluate_scan_settlements(
         result["cache_refresh"] = refresh
         result["n_scans"] = len(paths)
         result["since"] = since.isoformat() if since else None
+        result["until"] = until.isoformat() if until else None
         return result
 
     df = load_scan_rows(paths, batch_size=batch_size)
@@ -361,7 +368,21 @@ def _parse_since(raw: str | None) -> datetime | None:
             return dt.replace(tzinfo=UTC)
         except ValueError:
             continue
-    raise ValueError(f"Unrecognized --since value: {raw}")
+    raise ValueError(f"Unrecognized --since/--until value: {raw}")
+
+
+def _parse_until(raw: str | None) -> datetime | None:
+    """Parse until; date-only values include the full UTC day (23:59:59)."""
+    if not raw:
+        return None
+    text = raw.strip()
+    if len(text) == 10 and text[4] == "-" and text[7] == "-":
+        dt = datetime.strptime(text, "%Y-%m-%d").replace(tzinfo=UTC)
+        return dt.replace(hour=23, minute=59, second=59)
+    if len(text) == 8 and text.isdigit():
+        dt = datetime.strptime(text, "%Y%m%d").replace(tzinfo=UTC)
+        return dt.replace(hour=23, minute=59, second=59)
+    return _parse_since(raw)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -392,6 +413,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--min-samples", type=int, default=10)
     parser.add_argument("--batch-size", type=int, default=25)
     parser.add_argument("--since", type=str, default=None, help="Only include scans on/after this UTC date")
+    parser.add_argument(
+        "--until",
+        type=str,
+        default=None,
+        help="Only include scans on/before this UTC date (date-only = end of day inclusive)",
+    )
     parser.add_argument("--report-out", type=Path, default=None, help="Write eval JSON report to this path")
     parser.add_argument(
         "--fit-calibration",
@@ -411,6 +438,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         since = _parse_since(args.since)
+        until = _parse_until(args.until)
     except ValueError as exc:
         parser.error(str(exc))
         return 2
@@ -439,6 +467,7 @@ def main(argv: list[str] | None = None) -> int:
             scan_paths,
             cache_dir=cache_dir,
             since=since,
+            until=until,
             batch_size=args.batch_size,
         )
         print(json.dumps(out, indent=2, default=str))
@@ -453,6 +482,7 @@ def main(argv: list[str] | None = None) -> int:
                 scan_paths,
                 cache_dir=cache_dir,
                 since=since,
+                until=until,
                 batch_size=args.batch_size,
             )
             if not refresh.get("success"):
@@ -473,6 +503,7 @@ def main(argv: list[str] | None = None) -> int:
             models_base_dir=args.models_base_dir,
             cache_dir=cache_dir,
             since=since,
+            until=until,
             batch_size=args.batch_size,
             report_out=args.report_out,
         )

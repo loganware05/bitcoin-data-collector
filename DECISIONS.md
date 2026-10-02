@@ -12,6 +12,17 @@ Record architectural and process decisions here (ADR style).
 - **Decision:**
 - **Consequences:**
 
+### ADR-005: BUY NO minimum OTM floor + offline snapshot cache (no-calibration postfix)
+
+- **Status:** Accepted
+- **Date:** 2026-10-02
+- **Context:** After ADR-002 ITM BUY NO fix, near-ATM BUY NO (`0 ≤ dist < 0.5%`) still concentrates risk. Captain approved postfix plan without waiting for calibrator fit. Offline staging lacked snapshot continuity when Verdant was unplugged.
+- **Decision:**
+  1. `FairValueConfig.min_buy_no_otm_pct = 0.005` — BUY NO only when YES OTM ∈ [0.5%, max_buy_no_strike_distance_pct].
+  2. Extend ADR-003 local staging to pull/push **snapshots** (bounded by `BTC_KALSHI_SNAPSHOT_CACHE_DAYS`, default 21); snapshot daemon writes local when remote offline if model cache present.
+  3. Replay Sep 13–Oct 2 via `settlement_sep13_oct2_replay.sh` / `--until` **eval-only** (`SETTLEMENT_FIT_ENABLE=0`).
+- **Consequences:** Tighter BUY NO band; offline laptop can continue snapshot collection; calibrator fit still Captain-gated.
+
 ### ADR-004: Settlement eval and calibrator fit run in separate processes
 
 - **Status:** Accepted
@@ -33,8 +44,8 @@ Record architectural and process decisions here (ADR style).
   - When remote mounted: scan to Verdant; `rsync` models → local cache; push any pending local scans
   - When remote offline: scan to local staging if model cache exists; push on reconnect
   - `com.verdant.btc-kalshi.sync-staging` LaunchAgent runs every 10 min + at login
-  - Snapshot daemon skips gracefully when drive offline (snapshots stay on Verdant only)
-- **Consequences:** No lost scan intervals on laptop; models must be pulled at least once while drive connected. Weekly retrain still requires Verdant mounted.
+  - Snapshot daemon: when remote offline **and** model cache present, write snapshots to local staging and push on reconnect (ADR-005); otherwise skip carefully
+- **Consequences:** No lost scan intervals on laptop; models must be pulled at least once while drive connected. Weekly retrain still requires Verdant mounted. Snapshot continuity available offline after first pull.
 
 ### ADR-002: BUY YES strike-distance and max-model-YES guards
 
@@ -44,9 +55,9 @@ Record architectural and process decisions here (ADR style).
 - **Decision:** Keep paper `min_confidence=0.48` with asymmetric guards in `FairValueConfig`:
   - `max_buy_yes_model_probability=0.85` — blocks overconfident far-OTM BUY YES
   - `max_buy_yes_strike_distance_pct=0.02` (2% OTM)
-  - `max_buy_no_strike_distance_pct=0.02` — BUY NO only when YES is **OTM/ATM within 2%** (never when YES is ITM; fixed 2026-09-13 after Aug 28+ gate showed ITM BUY NOs settling YES ~82%)
+  - `max_buy_no_strike_distance_pct=0.02` with `min_buy_no_otm_pct=0.005` (ADR-005) — BUY NO only when YES is **OTM within 0.5%–2%** (never ITM or sub-floor ATM)
   - **No** `max_buy_no_model_probability` cap (removed 2026-08-28)
-- **Consequences:** BUY YES flood remains blocked; BUY NO no longer bets against ITM YES. Phase 3 default cuts remain deferred until actionable raw gap &lt;12%.
+- **Consequences:** BUY YES flood remains blocked; BUY NO no longer bets against ITM YES or near-ATM noise. Phase 3 default cuts remain deferred until actionable raw gap &lt;12%.
 
 ### ADR-001: Kalshi hourly confidence guards — paper trial + soft-land
 

@@ -1,0 +1,3 @@
+ERROR: Verdant not mounted and no local model cache at /home/ubuntu/.local/share/verdant-btc-kalshi
+  Connect drive and run: scripts/verdant/sync_verdant_staging.sh --pull
+ERROR: cannot resolve BTC_KALSHI_ROOT for Sep13–Oct2 replay
