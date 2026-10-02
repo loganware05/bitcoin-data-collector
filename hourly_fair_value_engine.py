@@ -17,10 +17,66 @@ class FairValueConfig:
     min_liquidity_score: float = 0.50
     min_time_to_expiry_minutes: float = 5.0
     min_mapping_confidence: float = 0.60
+    # Paper-trial guards: block miscalibrated far-OTM BUY YES despite low confidence floor.
+    # Tuned 2026-08-27: 0.80/1.5% yielded 0% actionable for 8 days; loosen to 0.85/2%.
+    # BUY NO uses strike-distance only — high model NO on far-above strikes is expected.
+    max_buy_yes_model_probability: float = 0.85
+    max_buy_yes_strike_distance_pct: float = 0.02
+    max_buy_no_strike_distance_pct: float = 0.02
 
 
 def _clamp(x: float, lo: float = 0.0, hi: float = 1.0) -> float:
     return max(lo, min(hi, float(x)))
+
+
+def _otm_strike_distance_pct(
+    *,
+    direction: str,
+    strike_price: float,
+    spot_price: float,
+) -> float | None:
+    """Positive when the YES side is out-of-the-money relative to spot."""
+    if spot_price <= 0:
+        return None
+    if direction == "above":
+        return (strike_price - spot_price) / spot_price
+    if direction == "below":
+        return (spot_price - strike_price) / spot_price
+    return None
+
+
+def _buy_yes_strike_guard_ok(
+    *,
+    parsed: ParsedHourlyTarget,
+    spot_price: float,
+    cfg: FairValueConfig,
+) -> bool:
+    dist = _otm_strike_distance_pct(
+        direction=parsed.direction,
+        strike_price=parsed.strike_price,
+        spot_price=spot_price,
+    )
+    if dist is None:
+        return True
+    return dist <= cfg.max_buy_yes_strike_distance_pct
+
+
+def _buy_no_strike_guard_ok(
+    *,
+    parsed: ParsedHourlyTarget,
+    spot_price: float,
+    cfg: FairValueConfig,
+) -> bool:
+    # BUY NO only when YES is OTM/ATM within max distance — never when YES is ITM.
+    # (Earlier flip-direction logic allowed near-ITM YES, which settled YES ~82%.)
+    dist = _otm_strike_distance_pct(
+        direction=parsed.direction,
+        strike_price=parsed.strike_price,
+        spot_price=spot_price,
+    )
+    if dist is None:
+        return True
+    return 0.0 <= dist <= cfg.max_buy_no_strike_distance_pct
 
 
 def evaluate_contract(
@@ -79,25 +135,46 @@ def evaluate_contract(
         guardrail_fail = True
 
     rec: Recommendation = "NO TRADE"
-    if (
+    buy_yes_ok = (
         not guardrail_fail
         and yes_edge is not None
         and yes_edge > cfg.min_edge
         and confidence >= cfg.min_confidence
         and ob.bid_ask_spread <= cfg.max_spread
         and ob.liquidity_score >= cfg.min_liquidity_score
-    ):
-        rec = "BUY YES"
-    elif (
+        and model_yes <= cfg.max_buy_yes_model_probability
+        and _buy_yes_strike_guard_ok(parsed=parsed, spot_price=current_btc_price, cfg=cfg)
+    )
+    buy_no_ok = (
         not guardrail_fail
         and no_edge is not None
         and no_edge > cfg.min_edge
         and confidence >= cfg.min_confidence
         and ob.bid_ask_spread <= cfg.max_spread
         and ob.liquidity_score >= cfg.min_liquidity_score
-    ):
+        and _buy_no_strike_guard_ok(parsed=parsed, spot_price=current_btc_price, cfg=cfg)
+    )
+
+    if buy_yes_ok:
+        rec = "BUY YES"
+    elif buy_no_ok:
         rec = "BUY NO"
     else:
+        if model_yes > cfg.max_buy_yes_model_probability:
+            warnings.append(
+                f"model YES {model_yes:.2f} above max for BUY YES "
+                f"{cfg.max_buy_yes_model_probability:.2f}"
+            )
+        dist_yes = _otm_strike_distance_pct(
+            direction=parsed.direction,
+            strike_price=parsed.strike_price,
+            spot_price=current_btc_price,
+        )
+        if dist_yes is not None and dist_yes > cfg.max_buy_yes_strike_distance_pct:
+            warnings.append(
+                f"strike OTM distance {dist_yes * 100:.2f}% exceeds BUY YES max "
+                f"{cfg.max_buy_yes_strike_distance_pct * 100:.2f}%"
+            )
         if rec == "NO TRADE" and not any("below threshold" in w for w in warnings):
             if yes_edge is not None and yes_edge <= cfg.min_edge and no_edge is not None and no_edge <= cfg.min_edge:
                 warnings.append("edge below minimum threshold; defaulting to NO TRADE")

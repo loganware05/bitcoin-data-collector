@@ -90,6 +90,10 @@ def rank_opportunities(
 
     spot = float((snapshot.get("price_data") or {}).get("spot_price_usd") or 0.0)
     rule_probs_full = dict(rule_out.get("probabilities") or {}) if isinstance(rule_out, dict) else {}
+    rule_composite = 0.0
+    if isinstance(rule_out, dict) and rule_out.get("signal_score") is not None:
+        rule_composite = (float(rule_out["signal_score"]) - 50.0) / 50.0
+        rule_composite = max(-1.0, min(1.0, rule_composite))
 
     if parsed_contracts is None:
         parsed_contracts = []
@@ -120,6 +124,8 @@ def rank_opportunities(
             p_ml=p_ml,
             fused=fused,
             spot_price_usd=spot,
+            snapshot=snapshot,
+            rule_composite=rule_composite,
             w_rule=fusion_cfg.w_rule,
             w_ml=fusion_cfg.w_ml,
         )

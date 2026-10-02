@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-05-30T17:45:32.692164+00:00",
+  "btc_price": 73827.38,
+  "scan_meta": {
+    "markets_fetched": 636,
+    "hourly_markets_matched": 0,
+    "contracts_evaluated": 0,
+    "parse_skipped": 0,
+    "event_filter": "BTC price today",
+    "conservative": true,
+    "fair_value_config": {
+      "min_edge": 0.1,
+      "min_confidence": 0.65,
+      "max_spread": 0.08,
+      "min_liquidity_score": 0.5
+    },
+    "pipeline_warnings": [
+      "no saved ML model; using rule engine only",
+      "Kalshi API credentials not set; using public market data only."
+    ],
+    "kalshi_api_available": true
+  },
+  "ranked": {
+    "buy_yes": [],
+    "buy_no": [],
+    "no_trade": [],
+    "all_contracts": [],
+    "counts": {
+      "buy_yes": 0,
+      "buy_no": 0,
+      "no_trade": 0,
+      "total": 0
+    }
+  },
+  "model_summary": {
+    "rule_confidence": 0.595,
+    "combined_confidence": 0.595,
+    "ml_available": false
+  }
+}

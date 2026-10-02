@@ -1,0 +1,70 @@
+/Users/loganware/Documents/Buisness/GitHub/bitcoin-data-collector/kalshi_settlement_eval.py:178: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  labeled["y_true"] = labeled["y_true"].astype(int)
+{
+  "n": 34787,
+  "brier_score": 0.2254,
+  "accuracy_at_50pct": 0.5333,
+  "max_calibration_gap": null,
+  "max_calibration_gap_raw_all": 0.7270884769539078,
+  "calibration_slices": {
+    "n_total": 34787,
+    "all_settled": {
+      "n": 34787,
+      "brier_score": 0.2254,
+      "max_calibration_gap_raw": 0.7270884769539078,
+      "max_calibration_gap_calibrated": 0.8324576271186441,
+      "brier_score_calibrated": 0.464
+    },
+    "actionable": {
+      "n": 6939,
+      "brier_score": 0.467,
+      "max_calibration_gap_raw": 0.8061016949152542,
+      "max_calibration_gap_calibrated": 0.8978433906207302,
+      "brier_score_calibrated": 0.8915
+    },
+    "no_trade_excluded": {
+      "n": 6939,
+      "brier_score": 0.467,
+      "max_calibration_gap_raw": 0.8061016949152542,
+      "max_calibration_gap_calibrated": 0.8978433906207302,
+      "brier_score_calibrated": 0.8915
+    },
+    "no_trade_only": {
+      "n": 27848,
+      "brier_score": 0.1652,
+      "max_calibration_gap_raw": 0.7223078398195151,
+      "max_calibration_gap_calibrated": 0.8324576271186441,
+      "brier_score_calibrated": 0.3575
+    },
+    "max_calibration_gap": 0.8978433906207302,
+    "brier_score": 0.8915
+  },
+  "exclude_no_trade_for_eval": true,
+  "by_recommendation": {
+    "count": {
+      "BUY NO": 413,
+      "BUY YES": 6526,
+      "NO TRADE": 27848
+    },
+    "mean": {
+      "BUY NO": 0.9878934624697336,
+      "BUY YES": 0.039687404229236896,
+      "NO TRADE": 0.6179977018098247
+    }
+  },
+  "calibrator_loaded": true,
+  "calibrator_meta": {
+    "fitted_at_utc": "20260807T104858Z",
+    "n_fit": 413,
+    "n_total_settled": 2468,
+    "fit_source": "actionable_only",
+    "raw_max_calibration_gap": 0.8061016949152542,
+    "calibrated_max_calibration_gap": 0.0,
+    "exclude_no_trade_for_fit": true,
+    "exclude_no_trade_for_eval": true
+  }
+}

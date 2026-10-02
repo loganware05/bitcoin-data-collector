@@ -7,3 +7,4 @@ joblib
 httpx
 python-dotenv
 pytest
+pyarrow>=14

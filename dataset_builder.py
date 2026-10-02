@@ -105,9 +105,16 @@ def load_market_probs_sidecar(path: str | Path) -> pd.DataFrame:
     if not p.exists():
         raise FileNotFoundError(f"Market probs sidecar not found: {p}")
     df = pd.read_csv(p)
-    if "timestamp" not in df.columns or "market_implied_prob" not in df.columns:
-        raise ValueError("Sidecar CSV must include columns: timestamp, market_implied_prob")
     df = df.copy()
+    if "market_implied_prob" not in df.columns and "market_yes_probability" in df.columns:
+        df["market_implied_prob"] = df["market_yes_probability"]
+    if "timestamp" not in df.columns and "snapshot_timestamp" in df.columns:
+        df["timestamp"] = df["snapshot_timestamp"]
+    if "timestamp" not in df.columns or "market_implied_prob" not in df.columns:
+        raise ValueError(
+            "Sidecar CSV must include timestamp (or snapshot_timestamp) and "
+            "market_implied_prob (or market_yes_probability)"
+        )
     df["timestamp"] = pd.to_datetime(df["timestamp"], utc=True, errors="coerce")
     df["market_implied_prob"] = pd.to_numeric(df["market_implied_prob"], errors="coerce")
     df = df.dropna(subset=["timestamp", "market_implied_prob"])

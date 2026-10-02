@@ -120,3 +120,145 @@ def test_no_trade_low_confidence():
     )
     assert ev["recommendation"] == "NO TRADE"
     assert any("confidence" in w.lower() for w in ev["warnings"])
+
+
+def test_no_trade_buy_yes_when_model_yes_too_high():
+    """Far-OTM paper guard: block BUY YES when model YES exceeds cap."""
+    parsed = ParsedHourlyTarget(
+        event_ticker="KXBTCD-26AUG1920",
+        contract_ticker="KXBTCD-26AUG1920-T70099.99",
+        event_title="BTC price today",
+        contract_title="Bitcoin above $70,099",
+        target_time_edt=_parsed().target_time_edt,
+        settlement_time_utc=_parsed().settlement_time_utc,
+        strike_price=70099.99,
+        direction="above",
+        time_to_expiry_minutes=30.0,
+        mapping_confidence=0.75,
+    )
+    ev = evaluate_contract(
+        parsed=parsed,
+        ob=_ob(yes_mid=0.01, spread=0.01, liquidity=0.95),
+        model_yes=0.97,
+        model_no=0.03,
+        confidence=0.66,
+        selected_horizon="30m",
+        current_btc_price=69383.0,
+        cfg=FairValueConfig(min_edge=0.10, min_confidence=0.48, max_buy_yes_model_probability=0.85),
+    )
+    assert ev["recommendation"] == "NO TRADE"
+    assert any("model YES" in w for w in ev["warnings"])
+
+
+def test_no_trade_buy_yes_when_strike_too_far_otm():
+    parsed = ParsedHourlyTarget(
+        event_ticker="KXBTCD-26AUG1920",
+        contract_ticker="KXBTCD-26AUG1920-T72000.99",
+        event_title="BTC price today",
+        contract_title="Bitcoin above $72,000",
+        target_time_edt=_parsed().target_time_edt,
+        settlement_time_utc=_parsed().settlement_time_utc,
+        strike_price=72000.0,
+        direction="above",
+        time_to_expiry_minutes=30.0,
+        mapping_confidence=0.75,
+    )
+    ev = evaluate_contract(
+        parsed=parsed,
+        ob=_ob(yes_mid=0.05, spread=0.02, liquidity=0.90),
+        model_yes=0.80,
+        model_no=0.20,
+        confidence=0.66,
+        selected_horizon="30m",
+        current_btc_price=69383.0,
+        cfg=FairValueConfig(
+            min_edge=0.10,
+            min_confidence=0.48,
+            max_buy_yes_strike_distance_pct=0.02,
+        ),
+    )
+    assert ev["recommendation"] == "NO TRADE"
+    assert any("OTM distance" in w for w in ev["warnings"])
+
+
+def test_buy_no_allowed_when_yes_near_otm():
+    """BUY NO ok when YES is slightly OTM (strike above spot) within 2%."""
+    parsed = ParsedHourlyTarget(
+        event_ticker="KXBTCD-26AUG1920",
+        contract_ticker="KXBTCD-26AUG1920-T81500.99",
+        event_title="BTC price today",
+        contract_title="Bitcoin above $81,500",
+        target_time_edt=_parsed().target_time_edt,
+        settlement_time_utc=_parsed().settlement_time_utc,
+        strike_price=81500.0,
+        direction="above",
+        time_to_expiry_minutes=45.0,
+        mapping_confidence=0.75,
+    )
+    # ~1.5% OTM vs spot 80300; high model NO is fine (no model-NO cap)
+    ev = evaluate_contract(
+        parsed=parsed,
+        ob=_ob(yes_mid=0.20, spread=0.01, liquidity=0.95),
+        model_yes=0.05,
+        model_no=0.95,
+        confidence=0.66,
+        selected_horizon="30m",
+        current_btc_price=80300.0,
+        cfg=FairValueConfig(min_edge=0.05, min_confidence=0.48),
+    )
+    assert ev["recommendation"] == "BUY NO"
+
+
+def test_buy_no_blocked_when_yes_is_itm():
+    """Do not BUY NO when spot already through the above-strike (YES ITM)."""
+    parsed = ParsedHourlyTarget(
+        event_ticker="KXBTCD-26AUG1920",
+        contract_ticker="KXBTCD-26AUG1920-T79000.99",
+        event_title="BTC price today",
+        contract_title="Bitcoin above $79,000",
+        target_time_edt=_parsed().target_time_edt,
+        settlement_time_utc=_parsed().settlement_time_utc,
+        strike_price=79000.0,
+        direction="above",
+        time_to_expiry_minutes=45.0,
+        mapping_confidence=0.75,
+    )
+    ev = evaluate_contract(
+        parsed=parsed,
+        ob=_ob(yes_mid=0.85, spread=0.01, liquidity=0.95),
+        model_yes=0.01,
+        model_no=0.99,
+        confidence=0.66,
+        selected_horizon="30m",
+        current_btc_price=80300.0,
+        cfg=FairValueConfig(min_edge=0.05, min_confidence=0.48),
+    )
+    assert ev["recommendation"] == "NO TRADE"
+
+
+def test_buy_yes_allowed_near_money_under_tuned_guards():
+    """Near-spot strike with model YES under 0.85 can still BUY YES at paper conf."""
+    parsed = ParsedHourlyTarget(
+        event_ticker="KXBTCD-26AUG1920",
+        contract_ticker="KXBTCD-26AUG1920-T70000.99",
+        event_title="BTC price today",
+        contract_title="Bitcoin above $70,000",
+        target_time_edt=_parsed().target_time_edt,
+        settlement_time_utc=_parsed().settlement_time_utc,
+        strike_price=70000.0,
+        direction="above",
+        time_to_expiry_minutes=45.0,
+        mapping_confidence=0.75,
+    )
+    # ~1.0% OTM vs spot 69300; model YES 0.72 under 0.85 cap
+    ev = evaluate_contract(
+        parsed=parsed,
+        ob=_ob(yes_mid=0.40, spread=0.02, liquidity=0.90),
+        model_yes=0.72,
+        model_no=0.28,
+        confidence=0.66,
+        selected_horizon="30m",
+        current_btc_price=69300.0,
+        cfg=FairValueConfig(min_edge=0.10, min_confidence=0.48),
+    )
+    assert ev["recommendation"] == "BUY YES"
