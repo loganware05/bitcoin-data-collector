@@ -1,0 +1,69 @@
+{
+  "success": true,
+  "window": {
+    "since": "2026-09-13T00:00:00+00:00",
+    "until": "2026-10-02T23:59:59+00:00"
+  },
+  "mode": "actionable_only_deduped",
+  "plan_id": "postfix-buy-no-calibration",
+  "n_scan_files": 246,
+  "n_actionable_unique": 207,
+  "n_settled_actionable": 207,
+  "raw_max_calibration_gap": 0.3229333333333333,
+  "gate_max_calibration_gap": 0.12,
+  "gate_pass": false,
+  "by_recommendation": {
+    "count": {
+      "BUY NO": 207
+    },
+    "mean": {
+      "BUY NO": 0.3333333333333333
+    }
+  },
+  "calibration_slices": {
+    "n_total": 207,
+    "all_settled": {
+      "n": 207,
+      "brier_score": 0.3265,
+      "max_calibration_gap_raw": 0.3229333333333333,
+      "max_calibration_gap_calibrated": 0.32295091422968214,
+      "brier_score_calibrated": 0.3265
+    },
+    "actionable": {
+      "n": 207,
+      "brier_score": 0.3265,
+      "max_calibration_gap_raw": 0.3229333333333333,
+      "max_calibration_gap_calibrated": 0.32295091422968214,
+      "brier_score_calibrated": 0.3265
+    },
+    "no_trade_excluded": {
+      "n": 207,
+      "brier_score": 0.3265,
+      "max_calibration_gap_raw": 0.3229333333333333,
+      "max_calibration_gap_calibrated": 0.32295091422968214,
+      "brier_score_calibrated": 0.3265
+    },
+    "no_trade_only": {
+      "n": 0,
+      "warnings": [
+        "empty slice"
+      ]
+    },
+    "max_calibration_gap": 0.32295091422968214,
+    "brier_score": 0.3265
+  },
+  "calibrator_meta": {
+    "fitted_at_utc": "20260828T003036Z",
+    "n_fit": 6939,
+    "n_total_settled": 54547,
+    "fit_source": "actionable_only",
+    "raw_max_calibration_gap": 0.8061016949152542,
+    "calibrated_max_calibration_gap": 5.551115123125783e-17,
+    "exclude_no_trade_for_fit": true,
+    "exclude_no_trade_for_eval": true
+  },
+  "ticker_outcomes_path": "/Volumes/Verdant_AI/btc_kalshi/settlement_cache_sep13_oct2/ticker_outcomes.json",
+  "cache_dir": "/Volumes/Verdant_AI/btc_kalshi/settlement_cache_sep13_oct2",
+  "report_path": "/Volumes/Verdant_AI/btc_kalshi/logs/settlement_sep13_oct2_replay_20261003T054308Z.json",
+  "fit_enabled": false
+}

@@ -4,12 +4,12 @@
 
 | Field | Value |
 |---|---|
-| Status | IN PROGRESS |
+| Status | VALIDATING |
 | Plan ID | postfix-buy-no-calibration |
 | Issue | #9 |
 | Branch | cursor/postfix-buy-no-otm-cache-436f |
 | Created | 2026-10-02 |
-| Last updated | 2026-10-02 |
+| Last updated | 2026-10-03 |
 | Approved by | Captain (Logan Ware) |
 | Approval date | 2026-10-02 |
 | Approved revision | Captain decisions: OTM floor 0.5%, offline snapshot cache yes, replay Sep13–Oct2 |
