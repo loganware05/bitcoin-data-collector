@@ -178,6 +178,74 @@ def _parse_direction(text: str) -> Direction | None:
     return None
 
 
+EVENT_FILTER_TODAY_ALIASES = frozenset(
+    {"btc price today", "bitcoin price today", "price today"}
+)
+
+
+def market_search_text(market: NormalizedMarket) -> str:
+    """Combined searchable text for market/event filters (API titles + subtitles)."""
+    raw = market.raw or {}
+    parts = [
+        market.title,
+        market.event_ticker,
+        market.ticker,
+        str(raw.get("subtitle", "")),
+        str(raw.get("yes_sub_title", "")),
+        str(raw.get("no_sub_title", "")),
+        str(raw.get("rules_primary", ""))[:240],
+    ]
+    return " ".join(p for p in parts if p).strip()
+
+
+def _ticker_contains_et_date(ticker: str, day: datetime) -> bool:
+    """True when ticker embeds KXBTCD-style date e.g. 26MAY30 in KXBTCD-26MAY3018-..."""
+    mon = day.strftime("%b").upper()
+    dd = f"{day.day:02d}"
+    yy = day.strftime("%y")
+    return f"{yy}{mon}{dd}" in ticker.upper()
+
+
+def is_today_btc_price_event(market: NormalizedMarket, *, now: datetime | None = None) -> bool:
+    """Match Kalshi 'Bitcoin price on <today>' hourly events (documented CLI filter)."""
+    ref = (now or datetime.now(ET)).astimezone(ET)
+    hay = market_search_text(market).lower()
+    if TODAY_RE.search(hay) or "price today" in hay:
+        return True
+    long_md = f"{ref.strftime('%B')} {ref.day}, {ref.year}".lower()
+    short_md = f"{ref.strftime('%b')} {ref.day}, {ref.year}".lower()
+    if long_md in hay or short_md in hay:
+        return True
+    md_no_year = f"{ref.strftime('%B')} {ref.day}".lower()
+    md_no_year_short = f"{ref.strftime('%b')} {ref.day}".lower()
+    if md_no_year in hay or md_no_year_short in hay:
+        return True
+    if _ticker_contains_et_date(market.ticker or "", ref):
+        return True
+    close = _parse_dt(market.close_time)
+    if close is not None and close.astimezone(ET).date() == ref.date():
+        return True
+    return False
+
+
+def matches_event_filter(
+    market: NormalizedMarket,
+    event_filter: str | None,
+    *,
+    now: datetime | None = None,
+) -> bool:
+    """Substring filter with aliases for documented values like 'BTC price today'."""
+    if not event_filter:
+        return True
+    fl = event_filter.strip().lower()
+    hay = market_search_text(market).lower()
+    if fl in hay:
+        return True
+    if fl in EVENT_FILTER_TODAY_ALIASES:
+        return is_today_btc_price_event(market, now=now)
+    return False
+
+
 def is_hourly_btc_event(
     title: str | None,
     event_title: str | None,
@@ -317,4 +385,7 @@ __all__ = [
     "parse_hourly_target",
     "is_hourly_btc_event",
     "format_target_time_edt",
+    "market_search_text",
+    "matches_event_filter",
+    "is_today_btc_price_event",
 ]

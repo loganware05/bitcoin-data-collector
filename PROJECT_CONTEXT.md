@@ -1,43 +1,34 @@
 # Project Context
 
-## Product Summary
+## Product
 
-<!-- Describe the product in 2–4 sentences. -->
+Bitcoin / Kalshi data collector and hourly event scanner: maps BTC price markets, scores fair value, and emits BUY YES / BUY NO / NO TRADE recommendations.
 
-## Intended Users
+## Primary data root
 
-## Primary User Problems
+`/Volumes/Verdant_AI/btc_kalshi/` (snapshots, models, hourly_outputs, datasets, logs).
 
-## Success Metrics
+**Laptop offline staging:** `~/.local/share/verdant-btc-kalshi/` — hourly scans **and snapshots** write here when the drive is unplugged (if model cache was previously pulled); `sync_verdant_staging.sh` pushes to Verdant on reconnect (ADR-003/005).
 
-## Current Technology Stack
+## Key hourly path
 
-## Repository Map
+- `hourly_event_scanner.py` → `hourly_probability_model.py` → `hourly_fair_value_engine.py`
+- Fair-value defaults: `min_edge=0.10`, `min_confidence=0.65`, `max_spread=0.08`, `min_liquidity_score=0.50`
+- Paper trial (Phase 1, reversible): `hourly_scan.sh` uses `--min-confidence 0.48` via `PAPER_MIN_CONFIDENCE`
+- Confidence formula soft-lands mapping: `0.85 + 0.15 * mapping_confidence` (ADR-001)
+- BUY YES guards (ADR-002): max model YES 0.85; max OTM strike distance 2%
+- BUY NO guards (ADR-002/005): YES OTM ∈ [0.5%, 2%]; never ITM; no model-NO cap
+- Settlement eval/fit split + cache (ADR-004); postfix replay Sep13–Oct2 eval-only (ADR-005)
 
-## Major Components
+## Workflow
 
-## External Services
+NorthStar (Captain's Compass) installed. Human user is Captain; coordinating agent is First Mate. Product behavior changes require APPROVED `IMPLEMENTATION_PLAN.md`.
 
-## Data Sources
+## Active workstream
 
-## Environments
+`cursor/postfix-buy-no-otm-cache-436f` / issue #9 — postfix-buy-no-calibration.
+Cloud replay blocked without Verdant; Captain Mac runbook in `.agent/evidence/postfix-buy-no-calibration/REPLAY.md`.
 
-## Deployment Targets
+## Branch note
 
-## Security Boundaries
-
-## Accessibility Expectations
-
-## Performance Expectations
-
-## Known Constraints
-
-## Known Technical Debt
-
-## Terminology
-
-## Important Commands
-
-## Local Development Setup
-
-## Current Priorities
+Default GitHub branch `cursor/kalshi-live-decision-system` now carries NorthStar harness; this feature branch merges strike-guards product modules onto that tip.

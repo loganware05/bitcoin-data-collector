@@ -12,15 +12,22 @@ from pathlib import Path
 from typing import Any
 
 from decision_utils import combined_model_confidence
-from event_target_parser import is_hourly_btc_event, parse_hourly_target
+from event_target_parser import (
+    is_hourly_btc_event,
+    matches_event_filter,
+    parse_hourly_target,
+)
 from feature_engineering import FeatureConfig, build_features
 from hourly_fair_value_engine import FairValueConfig, evaluate_contract, rank_evaluations
-from hourly_probability_model import FusionWeights, build_hourly_model_probs
+from hourly_probability_model import FusionWeights, build_hourly_model_probs, select_best_horizon
 from kalshi_client import KalshiClient, NormalizedMarket
 from kalshi_orderbook_features import extract_orderbook_features
 from live_runner import load_snapshot_json
-from ml_model import load_artifact
+from ml_model import TrainedArtifact
+from multi_horizon_model_router import load_model_for_horizon
+from probability_calibration import load_settlement_calibrator
 from signal_engine import SignalEngineConfig, generate_signal
+from verdant_paths import resolve_layout
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +45,9 @@ class HourlyScanConfig:
     snapshot_path: Path | None = None
     no_collect: bool = False
     collect_output_dir: Path = Path("live_outputs/snapshots")
-    models_dir: Path = Path("models")
+    models_base_dir: Path = Path("models")
     fetch_orderbook: bool = True
+    apply_settlement_calibration: bool = True
     fusion_weights: FusionWeights | None = None
     repo_root: Path | None = None
 
@@ -68,13 +76,34 @@ def collect_snapshot(output_dir: Path, repo_root: Path) -> dict[str, Any]:
     return load_snapshot_json(candidates[-1])
 
 
-def load_latest_model(models_dir: Path) -> object | None:
-    if not models_dir.exists():
-        return None
-    candidates = sorted(models_dir.glob("model_*.joblib"))
-    if not candidates:
-        return None
-    return load_artifact(candidates[-1])
+def _predict_ml_for_horizon(
+    *,
+    horizon_key: str,
+    model_cache: dict[str, TrainedArtifact | None],
+    models_base_dir: Path,
+    snapshot: dict[str, Any],
+    feature_row: object | None,
+    warnings: list[str],
+) -> tuple[dict[str, float] | None, bool, object | None]:
+    """Load horizon model (cached), run inference, return (p_ml, matched, feature_row)."""
+    if horizon_key not in model_cache:
+        model_cache[horizon_key] = load_model_for_horizon(horizon_key, models_base_dir)
+    model = model_cache[horizon_key]
+
+    if model is None:
+        return None, False, feature_row
+
+    row = feature_row
+    if row is None:
+        row, meta = build_features(snapshot, cfg=FeatureConfig())
+        warnings.extend(list(meta.get("warnings", [])))
+
+    try:
+        p_ml = model.predict_proba(row)  # type: ignore[arg-type]
+        return p_ml, True, row
+    except Exception as exc:  # noqa: BLE001
+        warnings.append(f"ml_inference_failed:{horizon_key}:{exc}")
+        return None, False, row
 
 
 def _fair_value_cfg(scan_cfg: HourlyScanConfig) -> FairValueConfig:
@@ -109,10 +138,7 @@ def filter_hourly_markets(
             close_time=m.close_time,
         ):
             continue
-        haystack = " ".join(
-            t for t in (m.title, m.event_ticker, m.ticker) if t
-        ).lower()
-        if event_filter and event_filter.lower() not in haystack:
+        if not matches_event_filter(m, event_filter):
             continue
         out.append(m)
     return out
@@ -133,19 +159,8 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
     rule_out = generate_signal(snapshot, SignalEngineConfig())
     rule_conf = float(rule_out.get("confidence", 0.0))
 
-    p_ml = None
-    model = load_latest_model(cfg.models_dir if cfg.models_dir.is_absolute() else repo_root / cfg.models_dir)
-    if model is None:
-        warnings.append("no saved ML model; using rule engine only")
-    else:
-        try:
-            x_row, meta = build_features(snapshot, cfg=FeatureConfig())
-            warnings.extend(list(meta.get("warnings", [])))
-            p_ml = model.predict_proba(x_row)
-        except Exception as exc:  # noqa: BLE001
-            warnings.append(f"ml_inference_failed: {exc}")
-
-    combined_conf = combined_model_confidence(rule_conf, ml_available=p_ml is not None)
+    model_cache: dict[str, TrainedArtifact | None] = {}
+    feature_row: object | None = None
     spot = float((snapshot.get("price_data") or {}).get("spot_price_usd") or 0.0)
 
     client = KalshiClient()
@@ -162,6 +177,10 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
     evaluations: list[dict[str, Any]] = []
     parse_skipped = 0
 
+    settlement_calibrator = None
+    if cfg.apply_settlement_calibration:
+        settlement_calibrator = load_settlement_calibrator(cfg.models_base_dir)
+
     for market in hourly_markets:
         parsed = parse_hourly_target(market, event_title=market.event_ticker)
         if parsed is None:
@@ -173,6 +192,19 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
             orderbook_raw = client.fetch_market_orderbook(market.ticker)
 
         ob = extract_orderbook_features(market, parsed, orderbook_raw)
+
+        selected_horizon = select_best_horizon(parsed.time_to_expiry_minutes)
+        p_ml, ml_matched, feature_row = _predict_ml_for_horizon(
+            horizon_key=selected_horizon,
+            model_cache=model_cache,
+            models_base_dir=cfg.models_base_dir,
+            snapshot=snapshot,
+            feature_row=feature_row,
+            warnings=warnings,
+        )
+        if model_cache.get(selected_horizon) is None:
+            warnings.append(f"no_ml_model_for_horizon:{selected_horizon}:{market.ticker}")
+
         model_probs = build_hourly_model_probs(
             snapshot=snapshot,
             parsed=parsed,
@@ -180,13 +212,23 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
             p_ml=p_ml,
             ob_features=ob,
             weights=cfg.fusion_weights,
+            ml_horizon_matched=ml_matched,
         )
+
+        model_yes = float(model_probs["model_yes_probability"])
+        model_no = float(model_probs["model_no_probability"])
+        if settlement_calibrator is not None and settlement_calibrator.fitted:
+            raw_yes, raw_no = model_yes, model_no
+            model_yes, model_no = settlement_calibrator.calibrate_yes_no(model_yes)
+            model_probs["model_yes_probability_raw"] = raw_yes
+            model_probs["model_no_probability_raw"] = raw_no
+            model_probs["settlement_calibrated"] = True
 
         ev = evaluate_contract(
             parsed=parsed,
             ob=ob,
-            model_yes=model_probs["model_yes_probability"],
-            model_no=model_probs["model_no_probability"],
+            model_yes=model_yes,
+            model_no=model_no,
             confidence=model_probs["confidence"],
             selected_horizon=model_probs["selected_horizon"],
             current_btc_price=spot,
@@ -197,6 +239,8 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
         evaluations.append(ev)
 
     ranked = rank_evaluations(evaluations)
+    ml_any_available = any(m is not None for m in model_cache.values())
+    combined_conf = combined_model_confidence(rule_conf, ml_available=ml_any_available)
 
     result: dict[str, Any] = {
         "timestamp": _now_iso(),
@@ -213,15 +257,24 @@ def run_hourly_scan(cfg: HourlyScanConfig) -> dict[str, Any]:
                 "min_confidence": fv_cfg.min_confidence,
                 "max_spread": fv_cfg.max_spread,
                 "min_liquidity_score": fv_cfg.min_liquidity_score,
+                "max_buy_yes_model_probability": fv_cfg.max_buy_yes_model_probability,
+                "max_buy_yes_strike_distance_pct": fv_cfg.max_buy_yes_strike_distance_pct,
+                "max_buy_no_strike_distance_pct": fv_cfg.max_buy_no_strike_distance_pct,
+                "min_buy_no_otm_pct": fv_cfg.min_buy_no_otm_pct,
             },
             "pipeline_warnings": warnings,
             "kalshi_api_available": fetch.api_available,
+            "settlement_calibrator_applied": bool(
+                settlement_calibrator is not None and settlement_calibrator.fitted
+            ),
         },
         "ranked": ranked,
         "model_summary": {
+            "models_base_dir": str(cfg.models_base_dir),
+            "horizons_available": sorted(h for h, m in model_cache.items() if m is not None),
+            "ml_any_available": ml_any_available,
             "rule_confidence": rule_conf,
             "combined_confidence": combined_conf,
-            "ml_available": p_ml is not None,
         },
     }
     return result
@@ -314,12 +367,41 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--min-confidence", type=float, default=0.65)
     parser.add_argument("--max-spread", type=float, default=0.08)
     parser.add_argument("--min-liquidity-score", type=float, default=0.50)
-    parser.add_argument("--output-dir", type=Path, default=Path("hourly_outputs"))
+    parser.add_argument("--output-dir", type=Path, default=None)
+    parser.add_argument(
+        "--data-root",
+        type=Path,
+        default=None,
+        help="Verdant data root; sets snapshots, models, hourly_outputs unless overridden",
+    )
+    parser.add_argument(
+        "--collect-output-dir",
+        type=Path,
+        default=None,
+        help="Directory for collector subprocess (default: {data_root}/snapshots)",
+    )
+    parser.add_argument(
+        "--snapshots-dir",
+        type=Path,
+        default=None,
+        help="Alias for --collect-output-dir",
+    )
     parser.add_argument("--snapshot", type=Path, default=None)
     parser.add_argument("--no-collect", action="store_true")
     parser.add_argument("--once", action="store_true", help="Run one scan and exit (default behavior)")
     parser.add_argument("--no-orderbook", action="store_true", help="Skip orderbook API fetch")
-    parser.add_argument("--models-dir", type=Path, default=Path("models"))
+    parser.add_argument(
+        "--models-base-dir",
+        type=Path,
+        default=None,
+        help="Base directory for per-horizon models (e.g. /Volumes/Verdant_AI/btc_kalshi/models)",
+    )
+    parser.add_argument(
+        "--models-dir",
+        type=Path,
+        default=None,
+        help="Deprecated alias for --models-base-dir",
+    )
     parser.add_argument("--top", type=int, default=10, help="Rows to print per recommendation bucket")
     return parser
 
@@ -329,6 +411,31 @@ def main(argv: list[str] | None = None) -> int:
     args = build_arg_parser().parse_args(argv)
     repo_root = Path(__file__).resolve().parent
 
+    layout = resolve_layout(args.data_root)
+    collect_dir = args.collect_output_dir or args.snapshots_dir or layout.snapshots_dir
+    if not collect_dir.is_absolute():
+        collect_dir = repo_root / collect_dir
+
+    models_base_dir = args.models_base_dir or args.models_dir
+    if models_base_dir is None:
+        models_base_dir = layout.models_dir
+    elif not models_base_dir.is_absolute():
+        models_base_dir = repo_root / models_base_dir
+
+    if args.models_dir is not None and args.models_base_dir is None:
+        logger.warning("--models-dir is deprecated; use --models-base-dir instead")
+
+    output_dir = args.output_dir or layout.hourly_outputs_dir
+    if not output_dir.is_absolute():
+        output_dir = repo_root / output_dir
+
+    if not models_base_dir.exists() or not any(models_base_dir.glob("*/model_*.joblib")):
+        logger.warning(
+            "No trained models found under %s — scanner will use rule-only fusion for missing horizons. "
+            "Pass --models-base-dir explicitly if models live elsewhere.",
+            models_base_dir,
+        )
+
     scan_cfg = HourlyScanConfig(
         event_filter=args.event_filter,
         conservative=args.conservative,
@@ -336,10 +443,11 @@ def main(argv: list[str] | None = None) -> int:
         min_confidence=args.min_confidence,
         max_spread=args.max_spread,
         min_liquidity_score=args.min_liquidity_score,
-        output_dir=args.output_dir if args.output_dir.is_absolute() else repo_root / args.output_dir,
+        output_dir=output_dir,
         snapshot_path=args.snapshot,
         no_collect=args.no_collect,
-        models_dir=args.models_dir if args.models_dir.is_absolute() else repo_root / args.models_dir,
+        collect_output_dir=collect_dir,
+        models_base_dir=models_base_dir,
         fetch_orderbook=not args.no_orderbook,
         repo_root=repo_root,
     )
@@ -353,6 +461,20 @@ def main(argv: list[str] | None = None) -> int:
     json_path, csv_path = write_scan_outputs(result, scan_cfg.output_dir)
     print(f"Saved JSON: {json_path}")
     print(f"Saved CSV:  {csv_path}")
+
+    from market_probs_logger import append_market_probs, rows_from_hourly_scan
+
+    data_root = layout.data_root
+    snap_ts = str(result.get("timestamp") or "")
+    if snap_ts:
+        mp_path = append_market_probs(
+            data_root=data_root,
+            snapshot_timestamp=snap_ts,
+            rows=rows_from_hourly_scan(result),
+            scan_type="hourly",
+        )
+        print(f"Market probs log: {mp_path}")
+
     print_summary_table(result, top=args.top)
 
     if not args.once:

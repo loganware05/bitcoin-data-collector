@@ -6,6 +6,8 @@ from event_target_parser import (
     ParsedHourlyTarget,
     format_target_time_edt,
     is_hourly_btc_event,
+    is_today_btc_price_event,
+    matches_event_filter,
     parse_hourly_target,
 )
 from kalshi_client import NormalizedMarket
@@ -84,6 +86,31 @@ def test_format_target_time_edt():
     s = format_target_time_edt(dt)
     assert "2026" in s
     assert "PM" in s or "pm" in s.lower()
+
+
+def test_matches_event_filter_btc_price_today_alias():
+    from zoneinfo import ZoneInfo
+
+    ref = datetime(2026, 5, 30, 12, 0, tzinfo=ZoneInfo("America/New_York"))
+    m = _market(
+        ticker="KXBTCD-26MAY3018-T73599.99",
+        title="Bitcoin price on May 30, 2026?",
+    )
+    assert matches_event_filter(m, "BTC price today", now=ref)
+    assert is_today_btc_price_event(m, now=ref)
+
+
+def test_matches_event_filter_rejects_other_day():
+    from zoneinfo import ZoneInfo
+
+    ref = datetime(2026, 5, 30, 12, 0, tzinfo=ZoneInfo("America/New_York"))
+    m = _market(
+        ticker="KXBTCD-26MAY3117-T73599.99",
+        title="Bitcoin price on May 31, 2026?",
+        close_time=datetime(2026, 5, 31, 21, 0, tzinfo=UTC).isoformat(),
+    )
+    m.event_ticker = "KXBTCD-26MAY3117"
+    assert not matches_event_filter(m, "BTC price today", now=ref)
 
 
 def test_low_confidence_without_strike():

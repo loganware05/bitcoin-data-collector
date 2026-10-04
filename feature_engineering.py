@@ -172,6 +172,40 @@ def build_features(
     else:
         features["log_pressure_ratio"] = float("nan")
 
+    # Derivatives regime (funding, OI, liquidations)
+    funding = _safe_num(_get(snapshot, "derivatives_data", "funding_rate"))
+    oi_usd = _safe_num(_get(snapshot, "derivatives_data", "open_interest_usd"))
+    liq_usd = _safe_num(_get(snapshot, "derivatives_data", "recent_liquidations_usd"))
+    features.update(
+        {
+            "funding_rate": funding,
+            "open_interest_usd_log": float(np.log1p(oi_usd)) if np.isfinite(oi_usd) and oi_usd >= 0 else float("nan"),
+            "recent_liquidations_usd_log": float(np.log1p(liq_usd))
+            if np.isfinite(liq_usd) and liq_usd >= 0
+            else float("nan"),
+        }
+    )
+    if np.isfinite(funding):
+        features["extreme_funding_flag"] = 1.0 if abs(funding) >= 0.0005 else 0.0
+        features["funding_positive_flag"] = 1.0 if funding > 0 else 0.0
+    else:
+        features["extreme_funding_flag"] = float("nan")
+        features["funding_positive_flag"] = float("nan")
+
+    # On-chain activity
+    tx_count = _safe_num(_get(snapshot, "on_chain_data", "transaction_count"))
+    active_addr = _safe_num(_get(snapshot, "on_chain_data", "active_addresses"))
+    hash_rate = _safe_num(_get(snapshot, "on_chain_data", "hash_rate"))
+    features.update(
+        {
+            "transaction_count_log": float(np.log1p(tx_count)) if np.isfinite(tx_count) and tx_count >= 0 else float("nan"),
+            "active_addresses_log": float(np.log1p(active_addr))
+            if np.isfinite(active_addr) and active_addr >= 0
+            else float("nan"),
+            "hash_rate_log": float(np.log1p(hash_rate)) if np.isfinite(hash_rate) and hash_rate >= 0 else float("nan"),
+        }
+    )
+
     # Sentiment encoding
     fng = _safe_num(_get(snapshot, "sentiment_data", "fear_greed_value"))
     features["fear_greed_value"] = fng
