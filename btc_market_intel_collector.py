@@ -24,6 +24,8 @@ import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
 
+from exchange_flow_provider import apply_exchange_flow_to_onchain, fetch_exchange_flow
+
 
 class SourceHealth(TypedDict, total=False):
     status: str
@@ -127,6 +129,12 @@ def init_category_schema() -> dict[str, Any]:
             "circulating_supply_btc": None,
             "exchange_inflow_btc": None,
             "exchange_outflow_btc": None,
+            "exchange_netflow_btc": None,
+            "exchange_flow_provider": None,
+            "exchange_flow_freshness_seconds": None,
+            "exchange_flow_coverage": None,
+            "exchange_flow_as_of": None,
+            "exchange_flow_source": None,
             "dormant_supply_ratio": None,
             "whale_movement_note": None,
             "source": None,
@@ -1062,10 +1070,10 @@ def normalize_and_compute(
     result["on_chain_data"]["active_addresses"] = None
     result["on_chain_data"]["exchange_inflow_btc"] = None
     result["on_chain_data"]["exchange_outflow_btc"] = None
+    result["on_chain_data"]["exchange_netflow_btc"] = None
     result["on_chain_data"]["dormant_supply_ratio"] = None
-    result["on_chain_data"]["whale_movement_note"] = (
-        "TODO: integrate Glassnode/CryptoQuant/Santiment for exchange flows, dormant supply, whale movements."
-    )
+    # AHF-P03: optional exchange-flow provider (file fixture or Glassnode).
+    apply_exchange_flow_to_onchain(result["on_chain_data"], fetch_exchange_flow())
 
     fng = sentiment.get("fear_greed")
     if isinstance(fng, dict):

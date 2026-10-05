@@ -12,6 +12,22 @@ Record architectural and process decisions here (ADR style).
 - **Decision:**
 - **Consequences:**
 
+### ADR-006: BTC exchange-netflow provider (AHF-P03)
+
+- **Status:** Accepted
+- **Date:** 2026-10-05
+- **Context:** NorthStar On-Chain / AI Hedge Fund track (OVA-64). Snapshot schema
+  already stubbed `exchange_inflow_btc` / `exchange_outflow_btc` but never filled.
+- **Decision:**
+  1. Add `exchange_flow_provider.py` with `file` fixture and optional
+     `glassnode` live path (`GLASSNODE_API_KEY` Captain-local).
+  2. Env `COMPASS_EXCHANGE_FLOW_PROVIDER` (`file`|`glassnode`|`off`); default
+     `off` unless Glassnode key present.
+  3. Persist provenance fields on `on_chain_data`; enhance
+     `compute_onchain_signal` and feature `exchange_netflow_btc`.
+- **Consequences:** Hermetic tests use fixtures; production stays None without
+  key/fixture. Recommendations-only product unchanged.
+
 ### ADR-005: BUY NO minimum OTM floor + offline snapshot cache (no-calibration postfix)
 
 - **Status:** Accepted
