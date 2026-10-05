@@ -196,6 +196,12 @@ def build_features(
     tx_count = _safe_num(_get(snapshot, "on_chain_data", "transaction_count"))
     active_addr = _safe_num(_get(snapshot, "on_chain_data", "active_addresses"))
     hash_rate = _safe_num(_get(snapshot, "on_chain_data", "hash_rate"))
+    exchange_netflow = _safe_num(_get(snapshot, "on_chain_data", "exchange_netflow_btc"))
+    if exchange_netflow is None:
+        inflow = _safe_num(_get(snapshot, "on_chain_data", "exchange_inflow_btc"))
+        outflow = _safe_num(_get(snapshot, "on_chain_data", "exchange_outflow_btc"))
+        if inflow is not None and outflow is not None:
+            exchange_netflow = inflow - outflow
     features.update(
         {
             "transaction_count_log": float(np.log1p(tx_count)) if np.isfinite(tx_count) and tx_count >= 0 else float("nan"),
@@ -203,6 +209,9 @@ def build_features(
             if np.isfinite(active_addr) and active_addr >= 0
             else float("nan"),
             "hash_rate_log": float(np.log1p(hash_rate)) if np.isfinite(hash_rate) and hash_rate >= 0 else float("nan"),
+            "exchange_netflow_btc": float(exchange_netflow)
+            if exchange_netflow is not None and np.isfinite(exchange_netflow)
+            else float("nan"),
         }
     )
 

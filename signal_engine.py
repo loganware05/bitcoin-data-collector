@@ -375,6 +375,12 @@ def compute_sentiment_signal(snapshot: Mapping[str, Any], cfg: SignalEngineConfi
 def compute_onchain_signal(snapshot: Mapping[str, Any], cfg: SignalEngineConfig) -> CategorySignal:
     tx = safe_float(get_path(snapshot, ("on_chain_data", "transaction_count")))
     hr = safe_float(get_path(snapshot, ("on_chain_data", "hash_rate")))
+    netflow = safe_float(get_path(snapshot, ("on_chain_data", "exchange_netflow_btc")))
+    if netflow is None:
+        inflow = safe_float(get_path(snapshot, ("on_chain_data", "exchange_inflow_btc")))
+        outflow = safe_float(get_path(snapshot, ("on_chain_data", "exchange_outflow_btc")))
+        if inflow is not None and outflow is not None:
+            netflow = inflow - outflow
     drivers: list[str] = []
     warnings: list[str] = []
 
@@ -390,12 +396,38 @@ def compute_onchain_signal(snapshot: Mapping[str, Any], cfg: SignalEngineConfig)
     else:
         warnings.append("Hash rate missing.")
 
+    flow_value = 0.0
+    if netflow is not None:
+        present += 1
+        # Net outflow (negative netflow = more leaving exchanges) is mildly bullish.
+        # Scale softly; clamp later.
+        if netflow < 0:
+            flow_value = 0.15
+            drivers.append(
+                f"Exchange netflow {_fmt_num(netflow, 1)} BTC (net outflow → mild bullish)."
+            )
+        elif netflow > 0:
+            flow_value = -0.15
+            drivers.append(
+                f"Exchange netflow {_fmt_num(netflow, 1)} BTC (net inflow → mild bearish)."
+            )
+        else:
+            drivers.append("Exchange netflow ~0 (neutral).")
+    else:
+        warnings.append("Exchange netflow missing.")
+
     if present == 0:
         return CategorySignal("onchain", 0.0, 0.0, drivers, warnings)
 
-    # With no trend info in a single snapshot, keep as mild supportive bias only.
-    value = 0.10 if present == 2 else 0.05
-    return CategorySignal("onchain", value, present / 2.0, drivers, warnings)
+    # Base supportive bias from tx/hash when present, plus flow contribution.
+    base = 0.10 if (tx is not None and hr is not None) else (0.05 if present else 0.0)
+    if netflow is None:
+        value = base
+        quality = present / 2.0
+    else:
+        value = base + flow_value
+        quality = present / 3.0
+    return CategorySignal("onchain", clamp(value, -1.0, 1.0), clamp(quality, 0.0, 1.0), drivers, warnings)
 
 
 def compute_macro_signal(snapshot: Mapping[str, Any], cfg: SignalEngineConfig) -> CategorySignal:

@@ -26,8 +26,8 @@ NorthStar (Captain's Compass) installed. Human user is Captain; coordinating age
 
 ## Active workstream
 
-`cursor/postfix-buy-no-otm-cache-436f` / issue #9 — postfix-buy-no-calibration.
-Cloud replay blocked without Verdant; Captain Mac runbook in `.agent/evidence/postfix-buy-no-calibration/REPLAY.md`.
+`cursor/ahf-p03-btc-exchange-netflow-8613` / Linear OVA-64 — AHF-P03 BTC
+exchange-netflow provider (file fixture + optional Glassnode).
 
 ## Branch note
 

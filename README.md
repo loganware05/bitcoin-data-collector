@@ -43,6 +43,11 @@ pip install -r requirements.txt
 
 Optional: set `COINGECKO_API_KEY` in a `.env` file for higher CoinGecko rate limits.
 
+Optional (AHF-P03 exchange netflow): set `COMPASS_EXCHANGE_FLOW_PROVIDER=file` to
+load `fixtures/exchange_flow_btc.json`, or set `GLASSNODE_API_KEY` (and optionally
+`COMPASS_EXCHANGE_FLOW_PROVIDER=glassnode`) for live Glassnode exchange
+inflow/outflow. Default is off (fields remain `null`). Never commit API keys.
+
 ## Quick start
 
 ### 1. Collect a snapshot
