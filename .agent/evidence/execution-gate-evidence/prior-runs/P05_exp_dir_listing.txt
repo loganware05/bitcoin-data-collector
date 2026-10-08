@@ -1,0 +1,5 @@
+total 12
+drwxr-xr-x 2 ubuntu ubuntu 4096 Oct  8 18:31 .
+drwxr-xr-x 5 ubuntu ubuntu 4096 Oct  8 18:31 ..
+-rw-r--r-- 1 ubuntu ubuntu  371 Oct  8 18:31 CAPTAIN_LOCAL.md
+MISSING: experiment.json

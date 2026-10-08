@@ -1,0 +1,213 @@
+{
+  "schema": "bdc.execution_gate.phase_a.v1",
+  "created_at": "2026-10-08T18:35:16+00:00",
+  "approved_for_execution": false,
+  "recommend_approved_for_execution": false,
+  "data_class": "settlement_replay",
+  "source": "synthetic:demo_returns(seed=42)",
+  "n_obs": 120,
+  "bars": {
+    "max_is_oos_sharpe_gap": 1.5,
+    "max_is_oos_sharpe_ratio": 3.0,
+    "dsr_pass_threshold": 0.95
+  },
+  "config": {
+    "n_groups": 6,
+    "n_test_groups": 2,
+    "purge": 1,
+    "embargo": 1,
+    "n_trials": 25
+  },
+  "full_sample_sharpe": -0.464373164602327,
+  "skew": -0.43469582920391986,
+  "kurtosis": 2.9810338117448043,
+  "cpcv": {
+    "n_splits": 15,
+    "reject_rate": 0.6,
+    "median_oos_sharpe": -0.14703492389215117,
+    "pass": false,
+    "splits": [
+      {
+        "train_sharpe": -1.9016604177913277,
+        "test_sharpe": 2.2076022555090713,
+        "gap": 4.109262673300399,
+        "ratio": 0.8614144205758688,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 78,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": -1.4242730890215947,
+        "test_sharpe": 2.3468102993518083,
+        "gap": 3.7710833883734027,
+        "ratio": 0.6068974085442613,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 74,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": -0.4336690240995785,
+        "test_sharpe": -0.14703492389215117,
+        "gap": 0.28663410020742736,
+        "ratio": 2.9494286977539494,
+        "rejected": false,
+        "reject_reasons": [],
+        "n_train": 74,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": 0.2748611220586934,
+        "test_sharpe": -1.299050748842571,
+        "gap": 1.5739118709012645,
+        "ratio": 0.21158613110657093,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 74,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": -0.2725983821170981,
+        "test_sharpe": -0.2137432842000659,
+        "gap": 0.058855097917032195,
+        "ratio": 1.2753541386682503,
+        "rejected": false,
+        "reject_reasons": [],
+        "n_train": 76,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": -1.871145674028455,
+        "test_sharpe": 3.086703852713373,
+        "gap": 4.957849526741828,
+        "ratio": 0.6061953991419101,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 76,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": -1.1307416203846852,
+        "test_sharpe": 0.29773626519520985,
+        "gap": 1.428477885579895,
+        "ratio": 3.797796078496914,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_ratio>3.0"
+        ],
+        "n_train": 72,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": -0.43676218356043073,
+        "test_sharpe": -0.8748997507334776,
+        "gap": 0.43813756717304686,
+        "ratio": 0.4992139764518946,
+        "rejected": false,
+        "reject_reasons": [],
+        "n_train": 72,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": -0.9903734275393387,
+        "test_sharpe": 0.19615100436152902,
+        "gap": 1.1865244319008676,
+        "ratio": 5.049035720020917,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_ratio>3.0"
+        ],
+        "n_train": 74,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": -0.7541173886651047,
+        "test_sharpe": 0.3379468685742083,
+        "gap": 1.092064257239313,
+        "ratio": 2.2314673068187085,
+        "rejected": false,
+        "reject_reasons": [],
+        "n_train": 76,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": 0.23159101597253057,
+        "test_sharpe": -0.8660997383582757,
+        "gap": 1.0976907543308063,
+        "ratio": 0.2673953191713462,
+        "rejected": false,
+        "reject_reasons": [],
+        "n_train": 72,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": -0.3351118014542019,
+        "test_sharpe": 0.23001797369473323,
+        "gap": 0.5651297751489351,
+        "ratio": 1.4568939812457578,
+        "rejected": false,
+        "reject_reasons": [],
+        "n_train": 74,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": 1.375999062373527,
+        "test_sharpe": -2.6267997329787045,
+        "gap": 4.0027987953522315,
+        "ratio": 0.5238309739026771,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 76,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": 0.8188670549616561,
+        "test_sharpe": -1.4908436116527581,
+        "gap": 2.3097106666144143,
+        "ratio": 0.5492642209828134,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 74,
+        "n_test": 40
+      },
+      {
+        "train_sharpe": 1.6611053900693715,
+        "test_sharpe": -2.5392893333946365,
+        "gap": 4.200394723464008,
+        "ratio": 0.6541615278825792,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 78,
+        "n_test": 40
+      }
+    ]
+  },
+  "dsr": {
+    "dsr": 1.2188480900963748e-13,
+    "sr_benchmark": 0.1741592360296593,
+    "z_score": -7.322292754254274,
+    "pass": false
+  },
+  "phase_a_pass": false,
+  "notes": [
+    "Replay / settlement aggregate metrics are plumbing only \u2014 not edge proof.",
+    "Simulated trade counts as evidence only after CPCV+DSR pass on non-fixture data.",
+    "approved_for_execution remains false regardless of phase_a_pass."
+  ],
+  "blocker_if_any": "data_class='settlement_replay' cannot satisfy non_fixture_backtests gate; mount Verdant staging or supply --returns from live market series."
+}

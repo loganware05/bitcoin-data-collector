@@ -1,0 +1,70 @@
+{
+  "schema": "bdc.execution_gate.phase_b_paper.v1",
+  "approved_for_execution": false,
+  "mode": "simulated_fills_only",
+  "feed": "real_time_market_data_in",
+  "fills": "conservative_simulated_out",
+  "day_clock": {
+    "consecutive_days": 0,
+    "started_on": null,
+    "last_active_day": null,
+    "reset_count": 0,
+    "last_reset_reason": null
+  },
+  "fill_model": {
+    "fee_bps": 7.0,
+    "slippage_bps": 5.0,
+    "partial_fill_prob": 0.25,
+    "no_fill_prob": 0.1,
+    "partial_fill_frac": 0.5
+  },
+  "metrics": {
+    "closed_trades": 0,
+    "total_return_pct": 0.0,
+    "max_drawdown_pct": 0.0,
+    "paper_sharpe_per_trade": 0.0,
+    "profit_factor": 0.0,
+    "calendar_days": 0,
+    "regimes_spanned": []
+  },
+  "oos_floor": {
+    "target_days_30": false,
+    "oos_floor_checks": {
+      "days_ge_14": false,
+      "trades_ge_50": false,
+      "total_return_gt_0": false,
+      "max_dd_lt_15": true,
+      "paper_sharpe_ge_1": false,
+      "profit_factor_ge_1_2": false
+    },
+    "oos_floor_pass": false,
+    "live_floor_profit_factor_later": 1.5
+  },
+  "rules": [
+    "Continuous live paper (not settlement replay) is the edge path.",
+    "Any manual override resets day clock to 0.",
+    "30 calendar days required before paper track_record gate can pass.",
+    "Disposable/reduced starter bankroll; span multiple regimes.",
+    "Do not claim 30d complete until day_clock.consecutive_days >= 30."
+  ],
+  "dry_run": {
+    "day_clock": {
+      "consecutive_days": 1,
+      "started_on": "2026-10-08",
+      "last_active_day": "2026-10-08",
+      "reset_count": 0,
+      "last_reset_reason": null
+    },
+    "sample_fill": {
+      "mode": "partial",
+      "filled_qty": 5.0,
+      "fill_price": 0.48,
+      "mid": 0.44999999999999996,
+      "spread": 0.06,
+      "fees": 0.0016799999999999999,
+      "slippage": 0.0012,
+      "pnl_mark": -0.15288000000000013,
+      "note": "paper PnL is optimistic ceiling after fees+slip; still not live edge"
+    }
+  }
+}
