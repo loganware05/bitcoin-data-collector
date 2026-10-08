@@ -1,0 +1,5 @@
+BDC=e4be26ca2ecc0ef755c879e401d116d766a2c21b branch=cursor/execution-gate-evidence-1043
+COMPASS=dad671fb4dc9297da3e39292ed4f25e1277f89ae branch=main
+SANDBOX=4cf3ca10fbaba4db0e6b051c8f512d6eaf7f35b0 branch=main
+Verdant_mounted=no
+Local_staging=no

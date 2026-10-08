@@ -26,9 +26,12 @@ NorthStar (Captain's Compass) installed. Human user is Captain; coordinating age
 
 ## Active workstream
 
-`cursor/ahf-p03-btc-exchange-netflow-8613` / Linear OVA-64 — AHF-P03 BTC
-exchange-netflow provider (file fixture + optional Glassnode).
+`cursor/execution-gate-evidence-1043` / plan `execution-gate-evidence` —
+AHF-P06 follow-on: flesh execution-readiness gates with evidence (no live
+execution). Evidence root: `.agent/evidence/execution-gate-evidence/`.
 
 ## Branch note
 
-Default GitHub branch `cursor/kalshi-live-decision-system` now carries NorthStar harness; this feature branch merges strike-guards product modules onto that tip.
+Default GitHub branch `cursor/kalshi-live-decision-system` carries NorthStar
+harness + Kalshi hourly scanner. Live execution authority remains DENIED until
+Captain written approval after readiness gates pass.

@@ -1,26 +1,48 @@
 # Progress
 
-## Current status (2026-10-05)
+## Current status (2026-10-08)
 
-- Active plan: **AHF-P03** `ahf-p03-btc-exchange-netflow` — **APPROVED** / implementing
-- Branch: `cursor/ahf-p03-btc-exchange-netflow-8613`
-- Linear: [OVA-64](https://linear.app/ovaltechnologysolutions/issue/OVA-64/ahf-p03-btc-exchange-netflow-on-chain-metric-bitcoin-data-collector)
-  · Project [NorthStar On-Chain / AI Hedge Fund](https://linear.app/ovaltechnologysolutions/project/northstar-on-chain-ai-hedge-fund-67b1475ea115)
-- Rollback: `rollback/pre-ahf-p03-exchange-netflow` @ `d3ce411`
+- Active plan: **`execution-gate-evidence`** — evidence session authorized; production
+  breaker merge / live execution **AWAITING APPROVAL**
+- Coordination branch: `cursor/execution-gate-evidence-1043`
+  (from `cursor/kalshi-live-decision-system` @ `e4be26c`)
+- Upstream Compass: PR #192 merged (AHF-P06 v1.54.0) — readiness still DENIED
+- Evidence root: `.agent/evidence/execution-gate-evidence/`
 
-## AHF-P03 scope
+## Execution Gate Evidence (cloud tandem) — completed this session
 
-- Exchange netflow provider (`file` fixture / optional Glassnode)
-- Fill `exchange_inflow_btc` / `exchange_outflow_btc` / `exchange_netflow_btc`
-- Signal + feature wiring with provenance
+- Inventoried three repos (BDC workspace + Compass/sandbox clones under
+  `/home/ubuntu/repos/`)
+- Located P06 `EXECUTION_READINESS.md` + readiness-sample; P05 live
+  `experiment.json` still **missing**
+- Re-ran `scripts/ahf-behavioral-coupling.sh` (fixture) → still
+  `recommend_approved_for_execution: false`
+- Built evidence tree, Captain evaluation packet (authority false)
+- Phase A CPCV/DSR harness + plumbing_demo run (Verdant blocker recorded)
+- Phase B paper loop design + schema dry-run (30d **not** claimed)
+- Phase C breaker stub drills (`drill_pass: true`, not production-wired)
+- Phase D security checklist drafted
 
-## Prior (postfix BUY NO)
+## Prior (AHF-P03)
 
-- Plan `postfix-buy-no-calibration` completed on prior branch; Sep13–Oct2 replay evidence retained
+- Plan `ahf-p03-btc-exchange-netflow` implemented on prior branch; merged via #11
+  into baseline tip
 
-## Next after P03
+## Handoff — local First Mate
 
-- Captain review / merge AHF-P03 PR
-- Optional: enable `COMPASS_EXCHANGE_FLOW_PROVIDER=file` for demos or
-  `GLASSNODE_API_KEY` for live
-- AHF-P04+ (on-chain analyst) remains deferred in control-repo track
+1. Ask Captain for `exp-20261007T211148Z-23fa367a/experiment.json` and re-run
+   Compass coupling against it.
+2. Mount Verdant / staging; produce trade-return series; re-run Phase A with
+   `--data-class verdant_staging`.
+3. Start continuous live-forward paper on sandbox host (day clock = 0).
+4. Keep `approved_for_execution: false` until all gates pass **and** Captain
+   writes approval.
+5. Do not merge Phase C stubs into live paths without new plan approval.
+
+## Next
+
+- Non-fixture Phase A evidence
+- 30d paper track record
+- Repeated live-Jev runs
+- Security review of any proposed live surface
+- Captain written approval decision

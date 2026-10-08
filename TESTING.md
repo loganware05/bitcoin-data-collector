@@ -42,4 +42,17 @@ bash -n scripts/verdant/verdant_staging.sh
 
 ## Evidence location
 
-`.agent/evidence/postfix-buy-no-calibration/`, `.agent/evidence/settlement-retrain-oom/`, `.agent/evidence/kalshi-predictive-roadmap/`
+`.agent/evidence/postfix-buy-no-calibration/`, `.agent/evidence/settlement-retrain-oom/`, `.agent/evidence/kalshi-predictive-roadmap/`, `.agent/evidence/execution-gate-evidence/`
+
+## Execution-gate harnesses (non-execution)
+
+```bash
+./.venv/bin/python scripts/execution-gate/phase_a_cpcv_dsr.py \
+  --out .agent/evidence/execution-gate-evidence/analysis/phase_a_report.json
+./.venv/bin/python scripts/execution-gate/phase_b_paper_loop.py --dry-run-tick \
+  --out .agent/evidence/execution-gate-evidence/paper/phase_b_schema.json
+./.venv/bin/python scripts/execution-gate/phase_c_breaker_stubs.py --drill \
+  --out .agent/evidence/execution-gate-evidence/risk-drills/phase_c_drill.json
+```
+
+These scripts must never enable live orders or set `approved_for_execution: true`.
