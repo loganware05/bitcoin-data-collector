@@ -26,7 +26,7 @@ NorthStar (Captain's Compass) installed. Human user is Captain; coordinating age
 
 ## Active workstream
 
-`cursor/execution-gate-evidence-1043` / plan `execution-gate-evidence` —
+`docs/execution-gate-evidence-1043` / plan `execution-gate-evidence` —
 AHF-P06 follow-on: flesh execution-readiness gates with evidence (no live
 execution). Evidence root: `.agent/evidence/execution-gate-evidence/`.
 

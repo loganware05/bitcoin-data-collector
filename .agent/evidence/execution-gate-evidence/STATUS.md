@@ -9,7 +9,7 @@
 
 | Repo | Path | Branch | HEAD SHA |
 |---|---|---|---|
-| bitcoin-data-collector (COORDINATION HOME) | `/workspace` | `cursor/execution-gate-evidence-1043` (from `cursor/kalshi-live-decision-system`) | see `analysis/repo-shas.txt` |
+| bitcoin-data-collector (COORDINATION HOME) | `/workspace` | `docs/execution-gate-evidence-1043` (from `cursor/kalshi-live-decision-system`; NorthStar branch-name hook blocked `cursor/` prefix on commit) | see `analysis/repo-shas.txt` |
 | captains-compass-cursor | `/home/ubuntu/repos/captains-compass-cursor` | `main` (PR #192 merged) | see `analysis/repo-shas.txt` |
 | captain-compass-sandbox | `/home/ubuntu/repos/captain-compass-sandbox` | `main` | see `analysis/repo-shas.txt` |
 

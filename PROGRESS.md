@@ -4,7 +4,7 @@
 
 - Active plan: **`execution-gate-evidence`** — evidence session authorized; production
   breaker merge / live execution **AWAITING APPROVAL**
-- Coordination branch: `cursor/execution-gate-evidence-1043`
+- Coordination branch: `docs/execution-gate-evidence-1043`
   (from `cursor/kalshi-live-decision-system` @ `e4be26c`)
 - Upstream Compass: PR #192 merged (AHF-P06 v1.54.0) — readiness still DENIED
 - Evidence root: `.agent/evidence/execution-gate-evidence/`

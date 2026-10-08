@@ -8,7 +8,7 @@
 | Plan ID | `execution-gate-evidence` |
 | Product | `bitcoin-data-collector` (coordination) + Compass assessor + sandbox paper path |
 | Baseline | `cursor/kalshi-live-decision-system` @ `e4be26c` |
-| Branch | `cursor/execution-gate-evidence-1043` |
+| Branch | `docs/execution-gate-evidence-1043` |
 | Upstream | Compass PR #192 / AHF-P06 v1.54.0 |
 | Issue | placeholder — cloud tandem “Execution Gate Evidence” (create GitHub/Linear issue on Captain request) |
 
