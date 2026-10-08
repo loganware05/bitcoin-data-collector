@@ -2,47 +2,59 @@
 
 ## Current status (2026-10-08)
 
-- Active plan: **`execution-gate-evidence`** — evidence session authorized; production
-  breaker merge / live execution **AWAITING APPROVAL**
-- Coordination branch: `docs/execution-gate-evidence-1043`
-  (from `cursor/kalshi-live-decision-system` @ `e4be26c`)
-- Upstream Compass: PR #192 merged (AHF-P06 v1.54.0) — readiness still DENIED
-- Evidence root: `.agent/evidence/execution-gate-evidence/`
+- Plan **`execution-gate-evidence`**: **APPROVED** (Captain) for evidence/paper/risk-on-paper
+- Branch: `feature/local-execution-gate-evidence` (from cloud `docs/execution-gate-evidence-1043`)
+- Live execution: **DENIED** (`approved_for_execution: false`)
+- Evidence: `.agent/evidence/execution-gate-evidence/`
+- Draft PR: https://github.com/loganware05/bitcoin-data-collector/pull/12
+- Issue: `local/execution-gate-evidence` (`gh` auth broken on this host)
 
-## Execution Gate Evidence (cloud tandem) — completed this session
+## Phase scoreboard
 
-- Inventoried three repos (BDC workspace + Compass/sandbox clones under
-  `/home/ubuntu/repos/`)
-- Located P06 `EXECUTION_READINESS.md` + readiness-sample; P05 live
-  `experiment.json` still **missing**
-- Re-ran `scripts/ahf-behavioral-coupling.sh` (fixture) → still
-  `recommend_approved_for_execution: false`
-- Built evidence tree, Captain evaluation packet (authority false)
-- Phase A CPCV/DSR harness + plumbing_demo run (Verdant blocker recorded)
-- Phase B paper loop design + schema dry-run (30d **not** claimed)
-- Phase C breaker stub drills (`drill_pass: true`, not production-wired)
-- Phase D security checklist drafted
+| Phase | Status |
+|---|---|
+| A CPCV/DSR Verdant | **FAIL** — 207 trades, Sharpe ≈ -1.05; research bar rejects |
+| B Live paper | **Day 1/30** — `phase_b_live_scan_tick.py` against Verdant hourly scans |
+| C Risk drills | Drill pass; gates consulted on paper ticks (not live-wired) |
+| D Security/packet | Packet updated; execution denied recommendation |
 
-## Prior (AHF-P03)
+## Completed
 
-- Plan `ahf-p03-btc-exchange-netflow` implemented on prior branch; merged via #11
-  into baseline tip
+- [x] Cloud tandem harnesses + packet scaffold ([Execution Gate Evidence](bc-dcd1e50c-1985-422f-a94a-266e51971043))
+- [x] Captain plan approval recorded
+- [x] Verdant actionable returns export + Phase A non-fixture run
+- [x] Paper day clock started (simulated fills only)
+- [x] Phase C drill re-run post-approval
 
-## Handoff — local First Mate
+## Blockers
 
-1. Ask Captain for `exp-20261007T211148Z-23fa367a/experiment.json` and re-run
-   Compass coupling against it.
-2. Mount Verdant / staging; produce trade-return series; re-run Phase A with
-   `--data-class verdant_staging`.
-3. Start continuous live-forward paper on sandbox host (day clock = 0).
-4. Keep `approved_for_execution: false` until all gates pass **and** Captain
-   writes approval.
-5. Do not merge Phase C stubs into live paths without new plan approval.
+- Missing Compass live Jev `experiment.json`
+- Phase A fail blocks counting paper trades as edge evidence until strategy revision
+- `gh` token invalid — cannot open/update GitHub issue/PR from this host
 
 ## Next
 
-- Non-fixture Phase A evidence
-- 30d paper track record
-- Repeated live-Jev runs
-- Security review of any proposed live surface
-- Captain written approval decision
+- [ ] Captain: strategy revision vs CONTINUE_PAPER_ONLY plumbing
+- [ ] Supply experiment.json → Compass coupling re-run
+- [ ] Continue daily paper ticks (or LaunchAgent) without claiming edge until Phase A passes
+- [ ] Refresh `gh auth` → sync PR #12 / create issue
+- [ ] Keep live money denied
+
+## Commands
+
+```bash
+python3 scripts/execution-gate/export_verdant_actionable_returns.py \
+  --out-csv .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns.csv \
+  --out-meta .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns_meta.json
+
+python3 scripts/execution-gate/phase_a_cpcv_dsr.py \
+  --returns .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns.csv \
+  --data-class verdant_staging \
+  --out .agent/evidence/execution-gate-evidence/analysis/phase_a_verdant.json
+
+python3 scripts/execution-gate/phase_b_live_scan_tick.py \
+  --state-dir .agent/evidence/execution-gate-evidence/paper
+
+python3 scripts/execution-gate/phase_c_breaker_stubs.py --drill \
+  --out .agent/evidence/execution-gate-evidence/risk-drills/phase_c_drill_post_approval.json
+```

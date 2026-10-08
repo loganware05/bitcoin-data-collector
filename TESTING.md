@@ -47,12 +47,28 @@ bash -n scripts/verdant/verdant_staging.sh
 ## Execution-gate harnesses (non-execution)
 
 ```bash
-./.venv/bin/python scripts/execution-gate/phase_a_cpcv_dsr.py \
+# Plumbing demo (not edge evidence)
+python3 scripts/execution-gate/phase_a_cpcv_dsr.py \
   --out .agent/evidence/execution-gate-evidence/analysis/phase_a_report.json
-./.venv/bin/python scripts/execution-gate/phase_b_paper_loop.py --dry-run-tick \
-  --out .agent/evidence/execution-gate-evidence/paper/phase_b_schema.json
-./.venv/bin/python scripts/execution-gate/phase_c_breaker_stubs.py --drill \
-  --out .agent/evidence/execution-gate-evidence/risk-drills/phase_c_drill.json
+
+# Verdant non-fixture research bar (requires Verdant mount)
+python3 scripts/execution-gate/export_verdant_actionable_returns.py \
+  --out-csv .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns.csv \
+  --out-meta .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns_meta.json
+python3 scripts/execution-gate/phase_a_cpcv_dsr.py \
+  --returns .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns.csv \
+  --data-class verdant_staging \
+  --out .agent/evidence/execution-gate-evidence/analysis/phase_a_verdant.json
+
+# Live-forward paper tick (simulated fills only; advances day clock)
+python3 scripts/execution-gate/phase_b_live_scan_tick.py \
+  --state-dir .agent/evidence/execution-gate-evidence/paper
+
+python3 scripts/execution-gate/phase_c_breaker_stubs.py --drill \
+  --out .agent/evidence/execution-gate-evidence/risk-drills/phase_c_drill_post_approval.json
+
+python3 -m pytest tests/test_execution_gate_phase_a.py -q
 ```
 
 These scripts must never enable live orders or set `approved_for_execution: true`.
+Phase A must pass on non-fixture data before paper trades count as edge evidence.

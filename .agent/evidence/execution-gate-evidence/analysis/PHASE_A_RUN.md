@@ -1,57 +1,43 @@
 # Phase A run — CPCV + DSR + IS/OOS
 
-**When:** 2026-10-08 (cloud)  
-**Script:** `scripts/execution-gate/phase_a_cpcv_dsr.py`  
-**Live execution:** not involved
+## Cloud session (plumbing_demo)
 
-## Commands
+- `phase_a_report.json` — synthetic demo; `phase_a_pass: false` (expected)
 
-```bash
-cd /workspace
-./.venv/bin/python scripts/execution-gate/phase_a_cpcv_dsr.py \
-  --out .agent/evidence/execution-gate-evidence/analysis/phase_a_report.json
+## Local Captain host (2026-10-08) — Verdant non-fixture
 
-./.venv/bin/python scripts/execution-gate/phase_a_cpcv_dsr.py \
-  --data-class settlement_replay \
-  --out .agent/evidence/execution-gate-evidence/analysis/phase_a_settlement_replay_class.json
-```
+**Verdant mounted** at `/Volumes/Verdant_AI/btc_kalshi`.
 
-## Environment data availability
-
-| Source | Available? |
-|---|---|
-| `/Volumes/Verdant_AI/btc_kalshi` | **NO** (not mounted) |
-| `~/.local/share/verdant-btc-kalshi` | **NO** |
-| Per-trade return series for CPCV | **NO** in cloud |
-| Settlement aggregate JSONs in `.agent/evidence/` | YES (plumbing summaries only — not a return series) |
-
-## Results (plumbing_demo)
-
-See `phase_a_report.json`:
-
-| Check | Result |
-|---|---|
-| `phase_a_pass` | **false** |
-| `cpcv_pass` | false (reject_rate 0.6 on synthetic regime-break series) |
-| `dsr_pass` | false (DSR ≈ 0) |
-| `data_class` | `plumbing_demo` |
-| Blocker | Cannot satisfy `non_fixture_backtests` without Verdant/live returns |
-
-## Interpretation
-
-Harness is operable. This run is a **plumbing smoke test**, not edge evidence.
-IS/OOS reject bars (`gap > 1.5` or `ratio > 3.0`) are enforced inside CPCV splits.
-Settlement replay class is explicitly blocked from Phase A pass.
-
-## Unblock path
-
-1. Mount Verdant or sync laptop staging with scan/settlement trade-level PnL series.
-2. Export CSV/JSON with a `return` column (per closed paper/backtest trade, time-ordered).
-3. Re-run:
+### Commands
 
 ```bash
-./.venv/bin/python scripts/execution-gate/phase_a_cpcv_dsr.py \
-  --returns /path/to/returns.csv \
+python3 scripts/execution-gate/export_verdant_actionable_returns.py \
+  --out-csv .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns.csv \
+  --out-meta .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns_meta.json
+
+python3 scripts/execution-gate/phase_a_cpcv_dsr.py \
+  --returns .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns.csv \
   --data-class verdant_staging \
   --out .agent/evidence/execution-gate-evidence/analysis/phase_a_verdant.json
 ```
+
+### Results (`phase_a_verdant.json`)
+
+| Check | Result |
+|---|---|
+| `n_obs` | 207 settled actionable (Sep13–Oct2 outcomes cache) |
+| `full_sample_sharpe` | **≈ -1.05** |
+| `cpcv_pass` | **false** (reject_rate 0.6; median OOS Sharpe ≈ -0.57) |
+| `dsr_pass` | **false** (DSR ≈ 0) |
+| `phase_a_pass` | **false** |
+| `data_class` | `verdant_staging` (non-fixture; research bar applicable) |
+
+Reject reasons observed: `is_oos_gap>1.5` (7 splits), `is_oos_ratio>3.0` (2 splits).
+
+### Interpretation
+
+1. Harness is operable on real Verdant joins.
+2. Current actionable strategy **fails** the Captain research bar (CPCV + DSR) under conservative fills.
+3. Therefore **no simulated trade may count toward paper edge evidence** until a revised strategy passes Phase A.
+4. This series is **not** live-forward edge proof; live paper (Phase B) remains a separate clock.
+5. `approved_for_execution` remains **false**.
