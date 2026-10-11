@@ -42,6 +42,42 @@ def latest_scan(hourly_dir: Path) -> Path:
     return files[-1]
 
 
+def row_otm(row: dict[str, Any]) -> float:
+    strike = float(row.get("strike_price") or 0.0)
+    spot = float(row.get("current_btc_price") or 0.0)
+    if spot <= 0:
+        return 0.0
+    return abs(strike - spot) / spot
+
+
+def passes_strategy(row: dict[str, Any], filters: dict[str, Any]) -> bool:
+    side = str(row.get("recommendation") or "").upper().strip()
+    sides = {str(s).upper() for s in (filters.get("sides") or [])}
+    if sides and side not in sides:
+        return False
+    conf = float(row.get("confidence") or 0.0)
+    edge_key = "yes_edge" if side == "BUY YES" else "no_edge"
+    edge = float(row.get(edge_key) or 0.0)
+    spread = float(row.get("bid_ask_spread") or 0.0)
+    liq = float(row.get("liquidity_score") or 0.0)
+    tte = float(row.get("time_to_expiry_minutes") or 0.0)
+    otm = row_otm(row)
+    yes = float(row.get("market_yes_probability") or 0.5)
+    # Conservative fill px proxy (cross half-spread)
+    px = min(0.99, max(0.01, (1.0 - yes if side == "BUY NO" else yes) + spread / 2.0))
+    return (
+        conf >= float(filters.get("min_confidence") or 0.0)
+        and edge >= float(filters.get("min_edge") or 0.0)
+        and spread <= float(filters.get("max_spread") or 1.0)
+        and liq >= float(filters.get("min_liquidity_score") or 0.0)
+        and float(filters.get("min_otm") or 0.0) <= otm <= float(filters.get("max_otm") or 1.0)
+        and px <= float(filters.get("max_fill_price") or 1.0)
+        and float(filters.get("min_tte_minutes") or 0.0)
+        <= tte
+        <= float(filters.get("max_tte_minutes") or 1e9)
+    )
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
@@ -54,6 +90,18 @@ def main() -> int:
         type=Path,
         default=Path(".agent/evidence/execution-gate-evidence/paper"),
     )
+    ap.add_argument(
+        "--strategy",
+        type=Path,
+        default=_HERE / "paper_strategy_v1.json",
+        help="Paper strategy filter profile (required for edge-counting ticks)",
+    )
+    ap.add_argument(
+        "--reset-clock",
+        action="store_true",
+        help="Manual override: reset day clock to 0 before this tick (Captain bar)",
+    )
+    ap.add_argument("--reset-reason", default="manual_override")
     ap.add_argument("--starter-bankroll-usd", type=float, default=250.0)
     ap.add_argument("--qty", type=float, default=5.0)
     ap.add_argument("--seed", type=int, default=None)
@@ -65,6 +113,8 @@ def main() -> int:
     ledger_path = state_dir / "paper_ledger.jsonl"
     metrics_path = state_dir / "metrics_snapshot.json"
     tick_path = state_dir / f"tick_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.json"
+    strategy = load_json(args.strategy, {})
+    filters = strategy.get("filters") or {}
 
     clock_raw = load_json(clock_path, {})
     clock = DayClock(
@@ -74,12 +124,21 @@ def main() -> int:
         reset_count=int(clock_raw.get("reset_count") or 0),
         last_reset_reason=clock_raw.get("last_reset_reason"),
     )
+    # Strategy adoption or explicit flag resets the 30d clock
+    active_strategy = str(clock_raw.get("strategy_id") or "")
+    new_strategy = str(strategy.get("strategy_id") or "")
+    if args.reset_clock or (new_strategy and active_strategy and active_strategy != new_strategy):
+        reason = args.reset_reason if args.reset_clock else f"strategy_change:{active_strategy}->{new_strategy}"
+        clock.note_manual_override(reason)
+    elif new_strategy and not active_strategy:
+        clock.note_manual_override(f"strategy_adopt:{new_strategy}")
     clock.tick_calendar_day()
 
     scan_path = latest_scan(args.hourly_outputs)
     scan = json.loads(scan_path.read_text())
     ranked = scan.get("ranked") or {}
-    candidates = list(ranked.get("buy_yes") or []) + list(ranked.get("buy_no") or [])
+    raw_candidates = list(ranked.get("buy_yes") or []) + list(ranked.get("buy_no") or [])
+    candidates = [r for r in raw_candidates if passes_strategy(r, filters)] if filters else raw_candidates
 
     limits = RiskLimits()
     # Load crude portfolio from last metrics if present
@@ -129,8 +188,10 @@ def main() -> int:
                     {
                         "ts": utc_now(),
                         "scan": scan_path.name,
+                        "strategy_id": new_strategy or None,
                         "fill": fill,
                         "approved_for_execution": False,
+                        "counts_as_edge_evidence": bool(strategy.get("edge_counting_enabled")),
                     }
                 )
                 + "\n"
@@ -141,12 +202,16 @@ def main() -> int:
         "created_at": utc_now(),
         "approved_for_execution": False,
         "mode": "simulated_fills_only",
+        "strategy_id": new_strategy or None,
+        "edge_counting_enabled": bool(strategy.get("edge_counting_enabled")),
         "starter_bankroll_usd": args.starter_bankroll_usd,
         "scan": scan_path.name,
         "scan_timestamp": scan.get("timestamp"),
         "btc_price": scan.get("btc_price"),
+        "n_raw_candidates": len(raw_candidates),
         "n_candidates": len(candidates),
         "n_fills_attempted": len(fills),
+        "filters": filters,
         "day_clock": asdict(clock),
         "position_contracts": portfolio.position_contracts,
         "gross_exposure_usd": portfolio.gross_exposure_usd,
@@ -159,17 +224,21 @@ def main() -> int:
             closed_trades=0,
         ).oos_floor_status(),
         "30d_complete": clock.consecutive_days >= 30,
-        "note": "Live-forward paper tick; PnL marks are optimistic ceiling; not settlement replay edge proof.",
+        "note": "Live-forward paper tick under paper_buy_no_v1; PnL optimistic ceiling; live execution denied.",
     }
     metrics_path.write_text(json.dumps(metrics, indent=2) + "\n")
-    clock_path.write_text(json.dumps(asdict(clock), indent=2) + "\n")
+    clock_payload = {**asdict(clock), "strategy_id": new_strategy or None}
+    clock_path.write_text(json.dumps(clock_payload, indent=2) + "\n")
     tick_path.write_text(json.dumps({**metrics, "fills": fills}, indent=2) + "\n")
     print(
         json.dumps(
             {
                 "tick": str(tick_path),
+                "strategy_id": new_strategy or None,
                 "day": clock.consecutive_days,
                 "gates_ok": gates_ok,
+                "n_raw": len(raw_candidates),
+                "n_filtered": len(candidates),
                 "n_fills": len(fills),
                 "approved_for_execution": False,
             },

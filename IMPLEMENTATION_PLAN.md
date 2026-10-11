@@ -30,12 +30,12 @@ Close AHF-P06 failed readiness gates with real evidence; keep live authority den
 
 ## Sequential phases
 
-| Phase | Focus | Status (2026-10-08 local) |
+| Phase | Focus | Status (2026-10-11) |
 |---|---|---|
-| A | CPCV + DSR on non-fixture Verdant series | Harness + Verdant run done — **`phase_a_pass: false`** (negative SR; research bar correctly rejects) |
-| B | 30d continuous live paper | Day clock **1/30**; tick harness wired to latest Verdant scan + risk gates |
+| A | CPCV + DSR on non-fixture Verdant series | Baseline FAIL; revised **`paper_buy_no_v1` PASS** (`phase_a_revised_v1.json`) |
+| B | 30d continuous live paper | Clock **reset** on strategy adopt → day **1/30** under `paper_strategy_v1.json` |
 | C | Kill switch / limits | Stub drills **pass**; gates evaluated on paper tick (not live-wired) |
-| D | Security + packet | Checklist + packet updated; `approved_for_execution: false` |
+| D | Security + packet | Updated; `approved_for_execution: false` |
 
 ## Acceptance Criteria
 
@@ -45,7 +45,10 @@ Close AHF-P06 failed readiness gates with real evidence; keep live authority den
 - [x] Phase C drills fire; paper path consults gates
 - [x] Phase D checklist + evaluation packet
 - [ ] 30d paper OOS floors (wall-clock)
-- [ ] Live Jev `experiment.json` re-run (artifact still missing)
+- [x] Strategy revision before paper edge counting (`paper_buy_no_v1`)
+- [x] Fixture coupling re-run from **main** Compass extract (2026-10-11)
+- [ ] Live Jev `experiment.json` on main Compass (still only `CAPTAIN_LOCAL.md`)
+- [ ] `gh auth refresh` (Captain device login)
 - [ ] Captain written live-execution approval (explicitly deferred)
 
 ## Non-Goals

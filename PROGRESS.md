@@ -1,60 +1,53 @@
 # Progress
 
-## Current status (2026-10-08)
+## Current status (2026-10-11)
 
-- Plan **`execution-gate-evidence`**: **APPROVED** (Captain) for evidence/paper/risk-on-paper
-- Branch: `feature/local-execution-gate-evidence` (from cloud `docs/execution-gate-evidence-1043`)
-- Live execution: **DENIED** (`approved_for_execution: false`)
-- Evidence: `.agent/evidence/execution-gate-evidence/`
-- Draft PR: https://github.com/loganware05/bitcoin-data-collector/pull/12
-- Issue: `local/execution-gate-evidence` (`gh` auth broken on this host)
+- Plan **`execution-gate-evidence`**: APPROVED; PR #12 **merged** into `cursor/kalshi-live-decision-system`
+- Branch: `feature/local-execution-gate-evidence` (post-merge follow-on)
+- Live execution: **DENIED**
+- Main Compass: https://github.com/loganware05/captains-compass-cursor.git (not Vorssaint fork)
+- Paper strategy: **`paper_buy_no_v1`** adopted after Phase A pass; day clock reset to **1/30**
 
 ## Phase scoreboard
 
 | Phase | Status |
 |---|---|
-| A CPCV/DSR Verdant | **FAIL** — 207 trades, Sharpe ≈ -1.05; research bar rejects |
-| B Live paper | **Day 1/30** — `phase_b_live_scan_tick.py` against Verdant hourly scans |
-| C Risk drills | Drill pass; gates consulted on paper ticks (not live-wired) |
-| D Security/packet | Packet updated; execution denied recommendation |
+| A CPCV/DSR | **PASS** on revised strategy (`phase_a_revised_v1.json`, n=51, DSR n_trials=324) |
+| A baseline (unfiltered) | FAIL (historical) — do not count |
+| B Live paper | Day **1/30** under `paper_buy_no_v1` filters |
+| C Risk drills | Drill pass; gates on paper ticks |
+| D Security/packet | Updated; live still denied |
+| Jev coupling | Fixture re-run OK from main Compass zip extract; **live `experiment.json` still absent on main** (only `CAPTAIN_LOCAL.md`) |
 
-## Completed
+## Captain decisions (2026-10-11)
 
-- [x] Cloud tandem harnesses + packet scaffold ([Execution Gate Evidence](bc-dcd1e50c-1985-422f-a94a-266e51971043))
-- [x] Captain plan approval recorded
-- [x] Verdant actionable returns export + Phase A non-fixture run
-- [x] Paper day clock started (simulated fills only)
-- [x] Phase C drill re-run post-approval
-
-## Blockers
-
-- Missing Compass live Jev `experiment.json`
-- Phase A fail blocks counting paper trades as edge evidence until strategy revision
-- `gh` token invalid — cannot open/update GitHub issue/PR from this host
+1. Revise strategy before counting paper edge — **done** (`paper_buy_no_v1`)
+2. Use main `captains-compass-cursor` — **done** (zip extract under `.repos/`; gitignored)
+3. Retry `gh auth refresh` — **blocked** on device login (invalid keyring token); Captain must complete browser device flow
 
 ## Next
 
-- [ ] Captain: strategy revision vs CONTINUE_PAPER_ONLY plumbing
-- [ ] Supply experiment.json → Compass coupling re-run
-- [ ] Continue daily paper ticks (or LaunchAgent) without claiming edge until Phase A passes
-- [ ] Refresh `gh auth` → sync PR #12 / create issue
-- [ ] Keep live money denied
+- [ ] Captain: complete `gh auth refresh` device login (see chat for one-time code)
+- [ ] Captain: place live `experiment.json` into main Compass evidence path (file not on GitHub main)
+- [ ] Continue daily paper ticks under `paper_buy_no_v1`
+- [ ] Keep live money denied until remaining gates + written approval
 
 ## Commands
 
 ```bash
-python3 scripts/execution-gate/export_verdant_actionable_returns.py \
-  --out-csv .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns.csv \
-  --out-meta .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns_meta.json
-
+# Phase A revised
 python3 scripts/execution-gate/phase_a_cpcv_dsr.py \
-  --returns .agent/evidence/execution-gate-evidence/analysis/verdant_actionable_returns.csv \
-  --data-class verdant_staging \
-  --out .agent/evidence/execution-gate-evidence/analysis/phase_a_verdant.json
+  --returns .agent/evidence/execution-gate-evidence/analysis/verdant_returns_revised_v1.csv \
+  --data-class verdant_staging --n-trials 324 \
+  --out .agent/evidence/execution-gate-evidence/analysis/phase_a_revised_v1.json
 
+# Paper tick (edge-counting under revised strategy)
 python3 scripts/execution-gate/phase_b_live_scan_tick.py \
+  --strategy scripts/execution-gate/paper_strategy_v1.json \
   --state-dir .agent/evidence/execution-gate-evidence/paper
 
-python3 scripts/execution-gate/phase_c_breaker_stubs.py --drill \
-  --out .agent/evidence/execution-gate-evidence/risk-drills/phase_c_drill_post_approval.json
+# Compass coupling (from local main extract)
+cd .repos/compass-run/captains-compass-cursor-main
+PYTHONPATH=. COMPASS_AHF_BEHAVIOR_COUPLING_ENABLED=1 ./scripts/ahf-behavioral-coupling.sh \
+  orchestrator/integrations/ai_hedge_fund/fixtures/experiment_outcome_sample.json
 ```

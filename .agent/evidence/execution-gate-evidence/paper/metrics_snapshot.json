@@ -1,20 +1,37 @@
 {
   "schema": "bdc.execution_gate.phase_b_tick.v1",
-  "created_at": "2026-10-08T18:44:34+00:00",
+  "created_at": "2026-10-11T22:35:02+00:00",
   "approved_for_execution": false,
   "mode": "simulated_fills_only",
+  "strategy_id": "paper_buy_no_v1",
+  "edge_counting_enabled": true,
   "starter_bankroll_usd": 250.0,
-  "scan": "scan_20261008T180113Z.json",
-  "scan_timestamp": "2026-10-08T18:01:13.519179+00:00",
-  "btc_price": 80587.73,
-  "n_candidates": 5,
-  "n_fills_attempted": 3,
+  "scan": "scan_20261011T220107Z.json",
+  "scan_timestamp": "2026-10-11T22:01:07.339884+00:00",
+  "btc_price": 83378.09,
+  "n_raw_candidates": 0,
+  "n_candidates": 0,
+  "n_fills_attempted": 0,
+  "filters": {
+    "sides": [
+      "BUY NO"
+    ],
+    "min_confidence": 0.65,
+    "min_edge": 0.2,
+    "max_spread": 0.03,
+    "min_liquidity_score": 0.7,
+    "min_otm": 0.0,
+    "max_otm": 0.02,
+    "max_fill_price": 0.99,
+    "min_tte_minutes": 15,
+    "max_tte_minutes": 180
+  },
   "day_clock": {
     "consecutive_days": 1,
-    "started_on": "2026-10-08",
-    "last_active_day": "2026-10-08",
-    "reset_count": 0,
-    "last_reset_reason": null
+    "started_on": "2026-10-11",
+    "last_active_day": "2026-10-11",
+    "reset_count": 1,
+    "last_reset_reason": "strategy_adopt:paper_buy_no_v1"
   },
   "position_contracts": 9,
   "gross_exposure_usd": 2.15,
@@ -23,7 +40,7 @@
   "kill_switch_engaged": false,
   "gates": {
     "schema": "bdc.execution_gate.phase_c_breakers.v1",
-    "created_at": "2026-10-08T18:44:34+00:00",
+    "created_at": "2026-10-11T22:35:02+00:00",
     "approved_for_execution": false,
     "production_wired": false,
     "limits": {
@@ -83,5 +100,5 @@
     "live_floor_profit_factor_later": 1.5
   },
   "30d_complete": false,
-  "note": "Live-forward paper tick; PnL marks are optimistic ceiling; not settlement replay edge proof."
+  "note": "Live-forward paper tick under paper_buy_no_v1; PnL optimistic ceiling; live execution denied."
 }
