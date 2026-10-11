@@ -1,10 +1,12 @@
 # Implementation Plan — Execution Gate Evidence (AHF-P06 follow-on)
 
+- Status: APPROVED
+
 ## Metadata
 
 | Field | Value |
 |---|---|
-| Status | **APPROVED** |
+| Status | APPROVED |
 | Plan ID | `execution-gate-evidence` |
 | Product | `bitcoin-data-collector` (coordination) + Compass assessor + sandbox/paper path |
 | Baseline | `cursor/kalshi-live-decision-system` @ `e4be26c` |
