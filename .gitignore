@@ -11,6 +11,9 @@ live_outputs/kalshi_scans/
 live_outputs/snapshots/
 models/
 
+# Local clones of companion repos (not product source)
+.repos/
+
 # Captain's Compass
 .agent/evidence/private/
 .agent/budgets/private/

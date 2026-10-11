@@ -1,0 +1,1233 @@
+{
+  "n_trades": 207,
+  "n_passing": 324,
+  "top_passing": [
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2913194708641682,
+      "med_oos": 1.1938460649406981,
+      "dsr": 0.999995702076265,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.25,
+        "max_spread": 0.03,
+        "min_liq": 0.4,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 0,
+        "max_tte": 9999,
+        "n": 53
+      }
+    },
+    {
+      "full_sr": 1.2913194708641682,
+      "med_oos": 1.1938460649406981,
+      "dsr": 0.999995702076265,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.25,
+        "max_spread": 0.03,
+        "min_liq": 0.4,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 0,
+        "max_tte": 9999,
+        "n": 53
+      }
+    }
+  ],
+  "top_near": [
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.2,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.2,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.2,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.2,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.2,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.2,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.2,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.2,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.2,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.2,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.2,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 1.6601013388759593,
+      "med_oos": 1.439997124316919,
+      "dsr": 0.9999999741404195,
+      "cpcv": false,
+      "dsr_pass": true,
+      "phase_a": false,
+      "reject_rate": 0.5333333333333333,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.2,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 66
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 2.1224753355156394,
+      "med_oos": 1.3374376013594134,
+      "dsr": 0.9999992499805758,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.2,
+      "cfg": {
+        "min_conf": 0.65,
+        "min_edge": 0.2,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 51
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.48,
+        "min_edge": 0.12,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.03,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.05,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    },
+    {
+      "full_sr": 1.2021184998058712,
+      "med_oos": 1.282759313856341,
+      "dsr": 0.9999997296849271,
+      "cpcv": true,
+      "dsr_pass": true,
+      "phase_a": true,
+      "reject_rate": 0.4666666666666667,
+      "cfg": {
+        "min_conf": 0.55,
+        "min_edge": 0.12,
+        "max_spread": 0.08,
+        "min_liq": 0.7,
+        "sides": [
+          "BUY YES",
+          "BUY NO"
+        ],
+        "min_otm": 0.0,
+        "max_otm": 0.02,
+        "max_px": 0.99,
+        "min_tte": 15,
+        "max_tte": 180,
+        "n": 90
+      }
+    }
+  ]
+}

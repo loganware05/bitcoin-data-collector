@@ -1,0 +1,28 @@
+{
+  "strategy_id": "paper_buy_no_v1",
+  "approved_for_execution": false,
+  "edge_counting_enabled": true,
+  "phase_a_artifact": ".agent/evidence/execution-gate-evidence/analysis/phase_a_revised_v1.json",
+  "filters": {
+    "sides": ["BUY NO"],
+    "min_confidence": 0.65,
+    "min_edge": 0.20,
+    "max_spread": 0.03,
+    "min_liquidity_score": 0.70,
+    "min_otm": 0.0,
+    "max_otm": 0.02,
+    "max_fill_price": 0.99,
+    "min_tte_minutes": 15,
+    "max_tte_minutes": 180
+  },
+  "fill_model": {
+    "fee_bps": 7.0,
+    "slippage_bps": 5.0,
+    "mode": "cross_spread_partial_nofill"
+  },
+  "notes": [
+    "Phase A passed on Verdant settled joins with DSR n_trials=324.",
+    "Adopting this strategy resets the paper day clock to day 0/1.",
+    "Live Kalshi execution remains denied."
+  ]
+}

@@ -1,48 +1,53 @@
 # Progress
 
-## Current status (2026-10-08)
+## Current status (2026-10-11)
 
-- Active plan: **`execution-gate-evidence`** — evidence session authorized; production
-  breaker merge / live execution **AWAITING APPROVAL**
-- Coordination branch: `docs/execution-gate-evidence-1043`
-  (from `cursor/kalshi-live-decision-system` @ `e4be26c`)
-- Upstream Compass: PR #192 merged (AHF-P06 v1.54.0) — readiness still DENIED
-- Evidence root: `.agent/evidence/execution-gate-evidence/`
+- Plan **`execution-gate-evidence`**: APPROVED; PR #12 **merged** into `cursor/kalshi-live-decision-system`
+- Branch: `feature/local-execution-gate-evidence` (post-merge follow-on)
+- Live execution: **DENIED**
+- Main Compass: https://github.com/loganware05/captains-compass-cursor.git (not Vorssaint fork)
+- Paper strategy: **`paper_buy_no_v1`** adopted after Phase A pass; day clock reset to **1/30**
 
-## Execution Gate Evidence (cloud tandem) — completed this session
+## Phase scoreboard
 
-- Inventoried three repos (BDC workspace + Compass/sandbox clones under
-  `/home/ubuntu/repos/`)
-- Located P06 `EXECUTION_READINESS.md` + readiness-sample; P05 live
-  `experiment.json` still **missing**
-- Re-ran `scripts/ahf-behavioral-coupling.sh` (fixture) → still
-  `recommend_approved_for_execution: false`
-- Built evidence tree, Captain evaluation packet (authority false)
-- Phase A CPCV/DSR harness + plumbing_demo run (Verdant blocker recorded)
-- Phase B paper loop design + schema dry-run (30d **not** claimed)
-- Phase C breaker stub drills (`drill_pass: true`, not production-wired)
-- Phase D security checklist drafted
+| Phase | Status |
+|---|---|
+| A CPCV/DSR | **PASS** on revised strategy (`phase_a_revised_v1.json`, n=51, DSR n_trials=324) |
+| A baseline (unfiltered) | FAIL (historical) — do not count |
+| B Live paper | Day **1/30** under `paper_buy_no_v1` filters |
+| C Risk drills | Drill pass; gates on paper ticks |
+| D Security/packet | Updated; live still denied |
+| Jev coupling | Fixture re-run OK from main Compass zip extract; **live `experiment.json` still absent on main** (only `CAPTAIN_LOCAL.md`) |
 
-## Prior (AHF-P03)
+## Captain decisions (2026-10-11)
 
-- Plan `ahf-p03-btc-exchange-netflow` implemented on prior branch; merged via #11
-  into baseline tip
-
-## Handoff — local First Mate
-
-1. Ask Captain for `exp-20261007T211148Z-23fa367a/experiment.json` and re-run
-   Compass coupling against it.
-2. Mount Verdant / staging; produce trade-return series; re-run Phase A with
-   `--data-class verdant_staging`.
-3. Start continuous live-forward paper on sandbox host (day clock = 0).
-4. Keep `approved_for_execution: false` until all gates pass **and** Captain
-   writes approval.
-5. Do not merge Phase C stubs into live paths without new plan approval.
+1. Revise strategy before counting paper edge — **done** (`paper_buy_no_v1`)
+2. Use main `captains-compass-cursor` — **done** (zip extract under `.repos/`; gitignored)
+3. Retry `gh auth refresh` — **blocked** on device login (invalid keyring token); Captain must complete browser device flow
 
 ## Next
 
-- Non-fixture Phase A evidence
-- 30d paper track record
-- Repeated live-Jev runs
-- Security review of any proposed live surface
-- Captain written approval decision
+- [ ] Captain: complete `gh auth refresh` device login (see chat for one-time code)
+- [ ] Captain: place live `experiment.json` into main Compass evidence path (file not on GitHub main)
+- [ ] Continue daily paper ticks under `paper_buy_no_v1`
+- [ ] Keep live money denied until remaining gates + written approval
+
+## Commands
+
+```bash
+# Phase A revised
+python3 scripts/execution-gate/phase_a_cpcv_dsr.py \
+  --returns .agent/evidence/execution-gate-evidence/analysis/verdant_returns_revised_v1.csv \
+  --data-class verdant_staging --n-trials 324 \
+  --out .agent/evidence/execution-gate-evidence/analysis/phase_a_revised_v1.json
+
+# Paper tick (edge-counting under revised strategy)
+python3 scripts/execution-gate/phase_b_live_scan_tick.py \
+  --strategy scripts/execution-gate/paper_strategy_v1.json \
+  --state-dir .agent/evidence/execution-gate-evidence/paper
+
+# Compass coupling (from local main extract)
+cd .repos/compass-run/captains-compass-cursor-main
+PYTHONPATH=. COMPASS_AHF_BEHAVIOR_COUPLING_ENABLED=1 ./scripts/ahf-behavioral-coupling.sh \
+  orchestrator/integrations/ai_hedge_fund/fixtures/experiment_outcome_sample.json
+```
