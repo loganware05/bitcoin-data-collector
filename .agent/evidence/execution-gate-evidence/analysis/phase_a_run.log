@@ -1,0 +1,20 @@
+{
+  "phase_a_pass": false,
+  "data_class": "plumbing_demo",
+  "blocker_if_any": "data_class='plumbing_demo' cannot satisfy non_fixture_backtests gate; mount Verdant staging or supply --returns from live market series.",
+  "cpcv_pass": false,
+  "cpcv_reject_rate": 0.6,
+  "dsr_pass": false,
+  "dsr": 1.2188480900963748e-13
+}
+wrote .agent/evidence/execution-gate-evidence/analysis/phase_a_report.json
+{
+  "phase_a_pass": false,
+  "data_class": "settlement_replay",
+  "blocker_if_any": "data_class='settlement_replay' cannot satisfy non_fixture_backtests gate; mount Verdant staging or supply --returns from live market series.",
+  "cpcv_pass": false,
+  "cpcv_reject_rate": 0.6,
+  "dsr_pass": false,
+  "dsr": 1.2188480900963748e-13
+}
+wrote .agent/evidence/execution-gate-evidence/analysis/phase_a_settlement_replay_class.json

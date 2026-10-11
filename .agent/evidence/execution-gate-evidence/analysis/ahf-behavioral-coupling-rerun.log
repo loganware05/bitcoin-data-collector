@@ -1,0 +1,8 @@
+experiment orchestrator/integrations/ai_hedge_fund/fixtures/experiment_outcome_sample.json
+recommend_approved_for_execution False
+approved_for_execution False
+confidence_band research_operable
+failed_gates ['non_fixture_backtests', 'paper_track_record', 'multiple_live_jev_runs', 'kill_switch_and_limits', 'security_review_live_path', 'captain_written_approval']
+readiness_evidence /home/ubuntu/repos/captains-compass-cursor/.agent/evidence/ahf-p06-behavioral-coupling/ahf-ready-20261008T183152Z-ec50d2be/readiness.json
+coupling_evidence /home/ubuntu/repos/captains-compass-cursor/.agent/evidence/ahf-p06-behavioral-coupling/ahf-bc-20261008T183152Z-8e542aa9/coupling.json
+rationale Research stack (P01–P05) is operable including live Jev shadow, but execution authority requires non-fixture performance evidence, sustained paper results, live risk controls, security review, and explicit Captain written approval. Current confidence is NOT strong enough to approve for execution.
