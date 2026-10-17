@@ -17,6 +17,7 @@ CHECK_ONLY=0
 
 mkdir -p "$LOCAL_LOG_DIR" "$HOME/Library/LaunchAgents"
 chmod +x "$SCRIPT_DIR/"*.sh
+chmod +x "$REPO_ROOT/scripts/execution-gate/"*.sh 2>/dev/null || true
 
 install_plist() {
   local label="$1"
@@ -51,6 +52,7 @@ labels=(
   com.verdant.btc-kalshi.weekly-retrain
   com.verdant.btc-kalshi.hourly-scan
   com.verdant.btc-kalshi.sync-staging
+  com.verdant.btc-kalshi.execution-gate-paper-tick
 )
 
 echo "=== ensure Verdant jobs: $(date -u +%Y-%m-%dT%H:%M:%SZ) ==="

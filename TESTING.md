@@ -62,7 +62,14 @@ python3 scripts/execution-gate/phase_a_cpcv_dsr.py \
 
 # Live-forward paper tick (simulated fills only; advances day clock)
 python3 scripts/execution-gate/phase_b_live_scan_tick.py \
+  --strategy scripts/execution-gate/paper_strategy_v1.json \
   --state-dir .agent/evidence/execution-gate-evidence/paper
+
+# Daily paper tick wrapper + LaunchAgent (local 23:45; prevents calendar-gap resets)
+./scripts/execution-gate/paper_tick_daily.sh
+./scripts/verdant/ensure_verdant_jobs.sh --check
+# Install/reload including paper tick:
+# ./scripts/verdant/ensure_verdant_jobs.sh
 
 python3 scripts/execution-gate/phase_c_breaker_stubs.py --drill \
   --out .agent/evidence/execution-gate-evidence/risk-drills/phase_c_drill_post_approval.json
@@ -72,3 +79,4 @@ python3 -m pytest tests/test_execution_gate_phase_a.py -q
 
 These scripts must never enable live orders or set `approved_for_execution: true`.
 Phase A must pass on non-fixture data before paper trades count as edge evidence.
+Daily LaunchAgent `com.verdant.btc-kalshi.execution-gate-paper-tick` is required for continuous 30d paper.
