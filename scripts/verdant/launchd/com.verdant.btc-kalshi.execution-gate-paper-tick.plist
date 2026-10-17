@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.verdant.btc-kalshi.execution-gate-paper-tick</string>
+  <!-- Once per local calendar day after typical scan window.
+       Keeps the 30d paper day clock continuous (gap >1d resets to day 0).
+       Simulated fills only — never live Kalshi orders. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>REPO_ROOT_PLACEHOLDER/scripts/execution-gate/paper_tick_daily.sh</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>BTC_KALSHI_REMOTE_ROOT</key>
+    <string>/Volumes/Verdant_AI/btc_kalshi</string>
+  </dict>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>23</integer>
+    <key>Minute</key>
+    <integer>45</integer>
+  </dict>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>StandardOutPath</key>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/execution_gate_paper_tick.stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/execution_gate_paper_tick.stderr.log</string>
+  <key>WorkingDirectory</key>
+  <string>REPO_ROOT_PLACEHOLDER</string>
+</dict>
+</plist>

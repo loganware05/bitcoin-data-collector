@@ -41,3 +41,11 @@
 - PR #14 merged.
 - Paper clock gap reset: `calendar_gap_days=6` → consecutive_days back to **1**.
 - Cloud agent handoff superseded; live execution still DENIED.
+
+## Update 2026-10-17 (daily paper LaunchAgent)
+
+- Added `scripts/execution-gate/paper_tick_daily.sh`
+- LaunchAgent `com.verdant.btc-kalshi.execution-gate-paper-tick` @ local 23:45 daily
+- Wired into `ensure_verdant_jobs.sh`
+- Live execution remains DENIED
+
