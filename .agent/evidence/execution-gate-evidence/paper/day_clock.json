@@ -1,8 +1,8 @@
 {
   "consecutive_days": 1,
-  "started_on": "2026-10-11",
-  "last_active_day": "2026-10-11",
-  "reset_count": 1,
-  "last_reset_reason": "strategy_adopt:paper_buy_no_v1",
+  "started_on": "2026-10-17",
+  "last_active_day": "2026-10-17",
+  "reset_count": 2,
+  "last_reset_reason": "calendar_gap_days=6",
   "strategy_id": "paper_buy_no_v1"
 }
