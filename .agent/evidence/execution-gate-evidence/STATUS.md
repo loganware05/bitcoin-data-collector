@@ -35,3 +35,9 @@
 - No live Kalshi orders
 - No `approved_for_execution: true`
 - Paper = simulated fills under revised filters only for edge counting
+
+## Update 2026-10-17
+
+- PR #14 merged.
+- Paper clock gap reset: `calendar_gap_days=6` → consecutive_days back to **1**.
+- Cloud agent handoff superseded; live execution still DENIED.

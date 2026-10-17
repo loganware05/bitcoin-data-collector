@@ -1,15 +1,15 @@
 {
   "schema": "bdc.execution_gate.phase_b_tick.v1",
-  "created_at": "2026-10-11T22:35:02+00:00",
+  "created_at": "2026-10-17T04:26:21+00:00",
   "approved_for_execution": false,
   "mode": "simulated_fills_only",
   "strategy_id": "paper_buy_no_v1",
   "edge_counting_enabled": true,
   "starter_bankroll_usd": 250.0,
-  "scan": "scan_20261011T220107Z.json",
-  "scan_timestamp": "2026-10-11T22:01:07.339884+00:00",
-  "btc_price": 83378.09,
-  "n_raw_candidates": 0,
+  "scan": "scan_20261017T040116Z.json",
+  "scan_timestamp": "2026-10-17T04:01:16.923913+00:00",
+  "btc_price": 81453.06,
+  "n_raw_candidates": 1,
   "n_candidates": 0,
   "n_fills_attempted": 0,
   "filters": {
@@ -28,10 +28,10 @@
   },
   "day_clock": {
     "consecutive_days": 1,
-    "started_on": "2026-10-11",
-    "last_active_day": "2026-10-11",
-    "reset_count": 1,
-    "last_reset_reason": "strategy_adopt:paper_buy_no_v1"
+    "started_on": "2026-10-17",
+    "last_active_day": "2026-10-17",
+    "reset_count": 2,
+    "last_reset_reason": "calendar_gap_days=6"
   },
   "position_contracts": 9,
   "gross_exposure_usd": 2.15,
@@ -40,7 +40,7 @@
   "kill_switch_engaged": false,
   "gates": {
     "schema": "bdc.execution_gate.phase_c_breakers.v1",
-    "created_at": "2026-10-11T22:35:02+00:00",
+    "created_at": "2026-10-17T04:26:21+00:00",
     "approved_for_execution": false,
     "production_wired": false,
     "limits": {
