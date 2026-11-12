@@ -4,6 +4,14 @@ A decision-grade pipeline for Bitcoin market intelligence and Kalshi-style proba
 
 **This project generates recommendations only — it does not execute trades.**
 
+### Agent skill on Agensi
+
+Use the packaged five-skill workflow in Claude, ChatGPT, Cursor, or any Agensi-compatible agent:
+
+**[BTC Kalshi Market Intel Pack](https://www.agensi.io/skills/btc-kalshi-market-intel-pack)** — security-scanned on Agensi ($15). Collect → rule signal → guarded BUY YES / BUY NO / NO TRADE. Research only; no order routing.
+
+Promotion / Sellbird copy: [`docs/promotion/`](docs/promotion/).
+
 ## What it does
 
 1. **Collect** — Pull price, liquidity, derivatives, on-chain, sentiment, and macro data from public APIs with graceful degradation.

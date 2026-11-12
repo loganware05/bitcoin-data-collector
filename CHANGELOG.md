@@ -4,6 +4,7 @@
 
 ### Added
 
+- Agensi listing CTA on README + Sellbird promotion pack under `docs/promotion/` (#19)
 - XRV Pilot B paper-continuity evidence (`.agent/evidence/xrv-pilot-b-paper-continuity/`) — live execution remains DENIED
 - Daily paper-tick LaunchAgent (`com.verdant.btc-kalshi.execution-gate-paper-tick`) via PR #16
 - `paper_tick_daily.sh` remote→local staging hourly fallback + `continuity_alert.json` soft-skip

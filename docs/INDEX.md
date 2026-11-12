@@ -31,6 +31,7 @@ $CONTROL/scripts/northstar skills learn --repo "$(pwd)" --objective "…"
 | Doc | Notes |
 |---|---|
 | [`EVIDENCE_MATRIX.md`](EVIDENCE_MATRIX.md) | Evidence expectations |
+| [`promotion/`](promotion/) | Agensi + Sellbird promotion pack (product knowledge, cold sequences, ICP) |
 | [`integrations/code-reviewer.md`](integrations/code-reviewer.md) | Code Reviewer operator guide |
 | [`integrations/multi-runtime-agents.md`](integrations/multi-runtime-agents.md) | Multi-runtime agents |
 | [`integrations/technology-intelligence.md`](integrations/technology-intelligence.md) | Technology intelligence |
