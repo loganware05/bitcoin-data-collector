@@ -26,9 +26,10 @@ NorthStar (Captain's Compass) installed. Human user is Captain; coordinating age
 
 ## Active workstream
 
-`docs/execution-gate-evidence-1043` / plan `execution-gate-evidence` —
-AHF-P06 follow-on: flesh execution-readiness gates with evidence (no live
-execution). Evidence root: `.agent/evidence/execution-gate-evidence/`.
+Plan `xrv-pilot-b-paper-continuity` (#17) — restore uninterrupted paper-validation
+continuity after PR #16 daily LaunchAgent merge (no live execution). Evidence:
+`.agent/evidence/xrv-pilot-b-paper-continuity/` and
+`.agent/evidence/execution-gate-evidence/`.
 
 ## Branch note
 

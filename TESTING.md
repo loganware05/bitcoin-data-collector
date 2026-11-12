@@ -42,7 +42,7 @@ bash -n scripts/verdant/verdant_staging.sh
 
 ## Evidence location
 
-`.agent/evidence/postfix-buy-no-calibration/`, `.agent/evidence/settlement-retrain-oom/`, `.agent/evidence/kalshi-predictive-roadmap/`, `.agent/evidence/execution-gate-evidence/`
+`.agent/evidence/postfix-buy-no-calibration/`, `.agent/evidence/settlement-retrain-oom/`, `.agent/evidence/kalshi-predictive-roadmap/`, `.agent/evidence/execution-gate-evidence/`, `.agent/evidence/xrv-pilot-b-paper-continuity/`
 
 ## Execution-gate harnesses (non-execution)
 
@@ -71,12 +71,20 @@ python3 scripts/execution-gate/phase_b_live_scan_tick.py \
 # Install/reload including paper tick:
 # ./scripts/verdant/ensure_verdant_jobs.sh
 
+# Soft-skip path (no clock advance; writes continuity_alert.json)
+PAPER_HOURLY_OUTPUTS=/nonexistent \
+  BTC_KALSHI_REMOTE_ROOT=/nonexistent \
+  BTC_KALSHI_LOCAL_ROOT=/nonexistent-local \
+  PAPER_CONTINUITY_ALERT=.agent/evidence/xrv-pilot-b-paper-continuity/soft_skip_continuity_alert.json \
+  ./scripts/execution-gate/paper_tick_daily.sh
+
 python3 scripts/execution-gate/phase_c_breaker_stubs.py --drill \
   --out .agent/evidence/execution-gate-evidence/risk-drills/phase_c_drill_post_approval.json
 
-python3 -m pytest tests/test_execution_gate_phase_a.py -q
+python3 -m pytest tests/test_execution_gate_phase_a.py tests/test_execution_gate_day_clock.py -q
 ```
 
 These scripts must never enable live orders or set `approved_for_execution: true`.
 Phase A must pass on non-fixture data before paper trades count as edge evidence.
 Daily LaunchAgent `com.verdant.btc-kalshi.execution-gate-paper-tick` is required for continuous 30d paper.
+Evidence packet: `.agent/evidence/xrv-pilot-b-paper-continuity/`.

@@ -1,0 +1,18 @@
+{
+  "EnvironmentVariables" => {
+    "BTC_KALSHI_REMOTE_ROOT" => "/Volumes/Verdant_AI/btc_kalshi"
+  }
+  "Label" => "com.verdant.btc-kalshi.execution-gate-paper-tick"
+  "ProgramArguments" => [
+    0 => "/bin/bash"
+    1 => "/Users/loganware/bitcoin-data-collector/scripts/execution-gate/paper_tick_daily.sh"
+  ]
+  "RunAtLoad" => false
+  "StandardErrorPath" => "/Users/loganware/Library/Logs/verdant/execution_gate_paper_tick.stderr.log"
+  "StandardOutPath" => "/Users/loganware/Library/Logs/verdant/execution_gate_paper_tick.stdout.log"
+  "StartCalendarInterval" => {
+    "Hour" => 23
+    "Minute" => 45
+  }
+  "WorkingDirectory" => "/Users/loganware"
+}

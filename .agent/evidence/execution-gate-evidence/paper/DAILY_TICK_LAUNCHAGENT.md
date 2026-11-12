@@ -1,6 +1,6 @@
 # Daily paper tick LaunchAgent
 
-**Date:** 2026-10-17  
+**Date:** 2026-10-17 (updated 2026-11-12)  
 **Label:** `com.verdant.btc-kalshi.execution-gate-paper-tick`  
 **Schedule:** every local day at **23:45**  
 **Script:** `scripts/execution-gate/paper_tick_daily.sh`  
@@ -10,15 +10,13 @@
 ## Why
 
 Any calendar gap >1 day resets the 30d paper clock (`calendar_gap_days=N`).  
-PR #15 recorded a 6-day reset. A daily LaunchAgent keeps continuity.
+PR #15 recorded a 6-day reset; 2026-11-12 smoke recorded `calendar_gap_days=26`.  
+A daily LaunchAgent keeps continuity.
 
-## Captain install (required on Mac host)
-
-Cursor sandbox cannot write `~/Library/LaunchAgents`. Run locally:
+## Install (Mac host)
 
 ```bash
-cd /Users/loganware/Documents/Buisness/GitHub/bitcoin-data-collector
-git checkout feature/13-execution-gate-daily-paper-tick   # or after merge: tip
+cd /Users/loganware/bitcoin-data-collector
 ./scripts/verdant/ensure_verdant_jobs.sh
 ./scripts/verdant/ensure_verdant_jobs.sh --check
 ```
@@ -27,10 +25,17 @@ Expect: `OK: com.verdant.btc-kalshi.execution-gate-paper-tick loaded`
 
 Logs: `~/Library/Logs/verdant/execution_gate_paper_tick.*.log`
 
-## Smoke (this session)
+## Feed resolution (2026-11-12)
 
-- Wrapper ran successfully: `daily_wrapper_smoke_20261017.log`
-- LaunchAgent install from agent environment: **blocked** (Operation not permitted on LaunchAgents) — Captain must load.
+1. `PAPER_HOURLY_OUTPUTS` if it contains `scan_*.json`
+2. Else remote `$BTC_KALSHI_REMOTE_ROOT/hourly_outputs`
+3. Else local staging `$BTC_KALSHI_LOCAL_ROOT/hourly_outputs` (ADR-003)
+4. Else soft-skip (exit 0), write `continuity_alert.json`, **do not** advance day clock
+
+## Smoke
+
+- 2026-10-17: `daily_wrapper_smoke_20261017.log` (PR #16)
+- 2026-11-12: `.agent/evidence/xrv-pilot-b-paper-continuity/smoke_tick.log` + soft-skip alert
 
 ## Safety
 

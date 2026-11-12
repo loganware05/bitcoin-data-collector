@@ -1,0 +1,11 @@
+{
+  "schema": "bdc.execution_gate.paper_continuity_alert.v1",
+  "created_at": "2026-11-12T00:28:34Z",
+  "event": "soft_skip_no_hourly_feed",
+  "reason": "no_scan_json_under_remote_or_local",
+  "approved_for_execution": false,
+  "day_clock_advanced": false,
+  "remote_hourly_outputs": "/nonexistent/hourly_outputs",
+  "local_hourly_outputs": "/nonexistent-local/hourly_outputs",
+  "note": "Soft-skip avoids false continuity; schedule another tick once scans exist."
+}

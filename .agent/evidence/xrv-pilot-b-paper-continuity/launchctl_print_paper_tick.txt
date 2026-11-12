@@ -1,0 +1,40 @@
+gui/501/com.verdant.btc-kalshi.execution-gate-paper-tick = {
+	active count = 0
+	path = /Users/loganware/Library/LaunchAgents/com.verdant.btc-kalshi.execution-gate-paper-tick.plist
+	type = LaunchAgent
+	state = not running
+
+	program = /bin/bash
+	arguments = {
+		/bin/bash
+		/Users/loganware/bitcoin-data-collector/scripts/execution-gate/paper_tick_daily.sh
+	}
+
+	working directory = /Users/loganware
+
+	stdout path = /Users/loganware/Library/Logs/verdant/execution_gate_paper_tick.stdout.log
+	stderr path = /Users/loganware/Library/Logs/verdant/execution_gate_paper_tick.stderr.log
+	inherited environment = {
+		SSH_AUTH_SOCK => /var/run/com.apple.launchd.a6tlfyIe7y/Listeners
+	}
+
+	default environment = {
+		PATH => /usr/bin:/bin:/usr/sbin:/sbin
+	}
+
+	environment = {
+		OSLogRateLimit => 64
+		BTC_KALSHI_REMOTE_ROOT => /Volumes/Verdant_AI/btc_kalshi
+		XPC_SERVICE_NAME => com.verdant.btc-kalshi.execution-gate-paper-tick
+	}
+
+	domain = gui/501 [151120]
+	asid = 151120
+	minimum runtime = 10
+	exit timeout = 5
+	runs = 0
+	last exit code = (never exited)
+
+	event triggers = {
+		com.verdant.btc-kalshi.execution-gate-paper-tick.268436453 => {
+			keepalive = 0

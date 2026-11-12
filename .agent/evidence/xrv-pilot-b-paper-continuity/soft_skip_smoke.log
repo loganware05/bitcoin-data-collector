@@ -1,0 +1,9 @@
+=== execution-gate paper tick 2026-11-12T00:28:34Z ===
+state=/Users/loganware/bitcoin-data-collector/.agent/evidence/execution-gate-evidence/paper
+strategy=/Users/loganware/bitcoin-data-collector/scripts/execution-gate/paper_strategy_v1.json
+approved_for_execution=false
+WARN: PAPER_HOURLY_OUTPUTS set but no scan_*.json under /nonexistent/hourly
+hourly=MISSING
+hourly_source=none
+WARN: hourly outputs missing (remote=/nonexistent/hourly_outputs local=/nonexistent-local/hourly_outputs); day clock not advanced — soft skip
+wrote continuity alert: .agent/evidence/xrv-pilot-b-paper-continuity/soft_skip_continuity_alert.json

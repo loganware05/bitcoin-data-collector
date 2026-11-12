@@ -1,0 +1,13 @@
+439059da3700  README.md
+3ce2385c46ae  day_clock_after_smoke.json
+6a08b1c973e9  ensure_verdant_jobs_check.log
+21dad1c092c2  ensure_verdant_jobs_install.log
+832d48297053  installed_plist_paths.txt
+26751e309919  launchctl_print_paper_tick.txt
+b5a6d57ac16d  local_staging_fallback_smoke.log
+2a96f8b44d30  metrics_snapshot_after_smoke.json
+b493deb59eb7  repo_head.txt
+6fe207d88b98  smoke_tick.log
+86a8aac803e1  soft_skip_continuity_alert.json
+d71b498bf98a  soft_skip_smoke.log
+d8bed6937589  tick_20261112T002834Z.json
