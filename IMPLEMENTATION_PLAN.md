@@ -36,7 +36,7 @@ Make the live Agensi skill listing discoverable from the public repo, and ship S
 | W1 | README Agensi CTA + research-only framing | DONE |
 | W2 | GitHub About: description, homepage, topics | DONE |
 | W3 | `docs/promotion/` Sellbird product knowledge + sequences | DONE |
-| W4 | PROGRESS/CHANGELOG + PR | IN PROGRESS |
+| W4 | PROGRESS/CHANGELOG + PR | DONE |
 
 ## Acceptance Criteria
 
@@ -44,7 +44,7 @@ Make the live Agensi skill listing discoverable from the public repo, and ship S
 - [x] Repo homepage/description/topics updated via GitHub API
 - [x] `docs/promotion/product_knowledge.md` and cold sequences committed
 - [x] Research-only / no-trade framing preserved
-- [ ] PR opened from `feature/19-agensi-promo-hygiene`
+- [x] PR opened from `feature/19-agensi-promo-hygiene` → [#20](https://github.com/loganware05/bitcoin-data-collector/pull/20)
 
 ## Rollback
 
