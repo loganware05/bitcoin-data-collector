@@ -1,0 +1,4 @@
+8db4fcc8be352ab244863462f649f4c08cd63da0
+branch=feature/17-xrv-pilot-b-paper-continuity
+baseline_pr16=8db4fcc8be352ab244863462f649f4c08cd63da0
+rollback=rollback/pre-xrv-pilot-b-paper-continuity

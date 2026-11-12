@@ -1,0 +1,17 @@
+=== execution-gate paper tick 2026-11-12T00:29:16Z ===
+state=/var/folders/d_/6_jq1n8s5156kldr783f89480000gn/T/tmp.QeVrxqfjjY/state
+strategy=/Users/loganware/bitcoin-data-collector/scripts/execution-gate/paper_strategy_v1.json
+approved_for_execution=false
+hourly=/var/folders/d_/6_jq1n8s5156kldr783f89480000gn/T/tmp.QeVrxqfjjY/hourly_outputs
+hourly_source=local_staging
+{
+  "tick": "/var/folders/d_/6_jq1n8s5156kldr783f89480000gn/T/tmp.QeVrxqfjjY/state/tick_20261112T002916Z.json",
+  "strategy_id": "paper_buy_no_v1",
+  "day": 1,
+  "gates_ok": true,
+  "n_raw": 2,
+  "n_filtered": 0,
+  "n_fills": 0,
+  "approved_for_execution": false
+}
+=== paper tick done 2026-11-12T00:29:16Z source=local_staging ===

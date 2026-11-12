@@ -1,0 +1,17 @@
+=== execution-gate paper tick 2026-11-12T00:28:33Z ===
+state=/Users/loganware/bitcoin-data-collector/.agent/evidence/execution-gate-evidence/paper
+strategy=/Users/loganware/bitcoin-data-collector/scripts/execution-gate/paper_strategy_v1.json
+approved_for_execution=false
+hourly=/Volumes/Verdant_AI/btc_kalshi/hourly_outputs
+hourly_source=remote
+{
+  "tick": "/Users/loganware/bitcoin-data-collector/.agent/evidence/execution-gate-evidence/paper/tick_20261112T002834Z.json",
+  "strategy_id": "paper_buy_no_v1",
+  "day": 1,
+  "gates_ok": true,
+  "n_raw": 2,
+  "n_filtered": 0,
+  "n_fills": 0,
+  "approved_for_execution": false
+}
+=== paper tick done 2026-11-12T00:28:34Z source=remote ===

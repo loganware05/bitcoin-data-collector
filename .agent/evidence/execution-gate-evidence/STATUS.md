@@ -1,6 +1,6 @@
 # STATUS — Execution Gate Evidence
 
-**Updated:** 2026-10-11  
+**Updated:** 2026-11-12  
 **Live execution authority:** **DENIED**
 
 ## Repo inventory
@@ -48,4 +48,14 @@
 - LaunchAgent `com.verdant.btc-kalshi.execution-gate-paper-tick` @ local 23:45 daily
 - Wired into `ensure_verdant_jobs.sh`
 - Live execution remains DENIED
+
+## Update 2026-11-12 (XRV Pilot B)
+
+- PR #16 **merged** @ `8db4fcc`.
+- Plan `xrv-pilot-b-paper-continuity` APPROVED (#17).
+- Host LaunchAgent **loaded** from `/Users/loganware/bitcoin-data-collector`.
+- Smoke tick reset clock: `calendar_gap_days=26` → day **1/30**.
+- Wrapper now falls back to local staging hourly outputs; soft-skip writes `continuity_alert.json`.
+- Evidence: `.agent/evidence/xrv-pilot-b-paper-continuity/`
+- Live execution remains DENIED.
 
