@@ -17,6 +17,7 @@ LOG_DIR="/Volumes/Verdant_AI/btc_kalshi/logs"
 LOCAL_LOG_DIR="$HOME/Library/Logs/verdant"
 
 chmod +x "$REPO_ROOT/scripts/verdant/"*.sh
+chmod +x "$REPO_ROOT/scripts/execution-gate/"*.sh 2>/dev/null || true
 mkdir -p "$LOCAL_LOG_DIR" "$LAUNCHD_DST"
 # Best-effort Verdant log dir (may fail if volume unmounted / ACL-restricted).
 mkdir -p "$LOG_DIR" 2>/dev/null || true
@@ -48,6 +49,7 @@ echo "Load jobs with:"
 echo "  launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.snapshot-daemon.plist"
 echo "  launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.weekly-retrain.plist"
 echo "  launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.hourly-scan.plist"
+echo "  launchctl load ~/Library/LaunchAgents/com.verdant.btc-kalshi.execution-gate-paper-tick.plist"
 echo ""
 echo "Keep all jobs on schedule (reinstall + reload + health check):"
 echo "  $REPO_ROOT/scripts/verdant/ensure_verdant_jobs.sh"

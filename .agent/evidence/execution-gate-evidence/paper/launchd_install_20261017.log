@@ -1,0 +1,9 @@
+=== ensure Verdant jobs: 2026-10-17T18:55:19Z ===
+./scripts/verdant/ensure_verdant_jobs.sh: line 26: /Users/loganware/Library/LaunchAgents/com.verdant.btc-kalshi.snapshot-daemon.plist: Operation not permitted
+=== ensure Verdant jobs: 2026-10-17T18:55:19Z ===
+OK: com.verdant.btc-kalshi.snapshot-daemon loaded (last_exit=1)
+OK: com.verdant.btc-kalshi.weekly-retrain loaded (last_exit=1)
+OK: com.verdant.btc-kalshi.hourly-scan loaded (last_exit=0)
+OK: com.verdant.btc-kalshi.sync-staging loaded (last_exit=0)
+WARN: com.verdant.btc-kalshi.execution-gate-paper-tick not loaded
+Logs: /Users/loganware/Library/Logs/verdant/
