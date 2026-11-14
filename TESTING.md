@@ -45,7 +45,7 @@ bash -n scripts/verdant/verdant_staging.sh
 ## KXBTC15M (paper-only)
 
 ```bash
-python3 -m pytest tests/test_kxbtc15m_decision_engine.py tests/test_kxbtc15m_live_readiness.py -q
+python3 -m pytest tests/test_kxbtc15m_decision_engine.py tests/test_kxbtc15m_live_readiness.py tests/test_kxbtc15m_real_market_validation.py -q
 # Fixture decision + ML calibration evidence
 python3 kxbtc15m_decision_engine.py --fixture tests/fixtures/kxbtc15m/market_pack.json \
   --out .agent/evidence/kxbtc15m-decision-engine/wave-a/decision_report.json

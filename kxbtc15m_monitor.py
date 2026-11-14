@@ -17,6 +17,11 @@ from typing import Any
 from kalshi_client import KalshiClient, NormalizedMarket
 from kxbtc15m_decision_engine import Kxbtc15mDecisionConfig, build_decision_report
 from kxbtc15m_event_parser import is_kxbtc15m_market
+from kxbtc15m_index_provider import (
+    SettlementIndexQuote,
+    counts_as_edge_evidence,
+    resolve_index_cascade,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -37,12 +42,28 @@ def resolve_settlement_index(
     *,
     explicit: float | None,
     spot_proxy: float | None,
+    explicit_source: str | None = None,
+    index_file: Path | None = None,
+    market_raw: dict[str, Any] | None = None,
+    snapshots_dir: Path | None = None,
 ) -> tuple[float | None, str]:
-    if explicit is not None:
-        return explicit, "kalshi_api"
-    if spot_proxy is not None:
-        return spot_proxy, "exchange_spot_proxy"
-    return None, "unavailable"
+    """Backward-compatible wrapper with honest provenance.
+
+    Explicit numeric values are NEVER labeled kalshi_api unless explicit_source says so.
+    """
+    if explicit is not None and explicit_source:
+        return explicit, explicit_source
+    quote = resolve_index_cascade(
+        operator_value=explicit if explicit_source in (None, "operator_supplied") else None,
+        index_file=index_file,
+        market_raw=market_raw,
+        spot_proxy=spot_proxy,
+        snapshots_dir=snapshots_dir,
+    )
+    if explicit is not None and quote.source == "unavailable":
+        # Caller passed a number without cascade hit — operator_supplied
+        return explicit, "operator_supplied"
+    return quote.value, quote.source
 
 
 def monitor_once(
@@ -50,7 +71,10 @@ def monitor_once(
     *,
     output_dir: Path,
     settlement_index: float | None = None,
+    settlement_index_source: str | None = None,
     spot_proxy: float | None = None,
+    index_file: Path | None = None,
+    snapshots_dir: Path | None = None,
     annualized_volatility: float | None = None,
     cfg: Kxbtc15mDecisionConfig | None = None,
 ) -> list[dict[str, Any]]:
@@ -58,7 +82,6 @@ def monitor_once(
     cfg = cfg or Kxbtc15mDecisionConfig()
     output_dir.mkdir(parents=True, exist_ok=True)
     result = client.fetch_kxbtc15m_markets()
-    index, source = resolve_settlement_index(explicit=settlement_index, spot_proxy=spot_proxy)
     reports: list[dict[str, Any]] = []
     ts = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
 
@@ -66,7 +89,17 @@ def monitor_once(
     if not markets and result.markets:
         markets = list(result.markets)
 
+    tick_sources: list[str] = []
     for market in markets:
+        index, source = resolve_settlement_index(
+            explicit=settlement_index,
+            explicit_source=settlement_index_source,
+            spot_proxy=spot_proxy,
+            index_file=index_file,
+            market_raw=market.raw,
+            snapshots_dir=snapshots_dir,
+        )
+        tick_sources.append(source)
         report = build_decision_report(
             market=market,
             settlement_index=index,
@@ -74,14 +107,15 @@ def monitor_once(
             annualized_volatility=annualized_volatility,
             cfg=cfg,
         )
+        report["counts_as_edge_evidence"] = counts_as_edge_evidence(source)
         if result.warnings:
             report["api_warnings"] = list(result.warnings)
         reports.append(report)
 
-    edge_ok_sources = {"kalshi_api", "cf_benchmarks", "fixture"}
-    for report in reports:
-        src = str(report.get("settlement_index_source") or "unavailable")
-        report["counts_as_edge_evidence"] = src in edge_ok_sources
+    # Aggregate source for tick envelope (first / majority)
+    source = tick_sources[0] if tick_sources else "unavailable"
+    if settlement_index is not None and settlement_index_source:
+        source = settlement_index_source
 
     out = {
         "timestamp": _now_iso(),
@@ -92,7 +126,7 @@ def monitor_once(
         "decisions": reports,
         "approved_for_execution": False,
         "settlement_index_source": source,
-        "counts_as_edge_evidence": source in edge_ok_sources,
+        "counts_as_edge_evidence": counts_as_edge_evidence(source),
         "note": "Paper monitor tick only; live money denied; does not advance paper_buy_no_v1 clock.",
     }
     path = output_dir / f"kxbtc15m_tick_{ts}.json"
@@ -107,7 +141,10 @@ def run_loop(
     poll_seconds: float = DEFAULT_POLL_SECONDS,
     max_ticks: int | None = None,
     settlement_index: float | None = None,
+    settlement_index_source: str | None = None,
     spot_proxy: float | None = None,
+    index_file: Path | None = None,
+    snapshots_dir: Path | None = None,
     annualized_volatility: float | None = None,
     client: KalshiClient | None = None,
 ) -> int:
@@ -121,7 +158,10 @@ def run_loop(
                 client,
                 output_dir=output_dir,
                 settlement_index=settlement_index,
+                settlement_index_source=settlement_index_source,
                 spot_proxy=spot_proxy,
+                index_file=index_file,
+                snapshots_dir=snapshots_dir,
                 annualized_volatility=annualized_volatility,
             )
             ticks += 1
@@ -147,26 +187,53 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max-ticks", type=int, default=None, help="Stop after N ticks (tests/smoke)")
     ap.add_argument("--once", action="store_true", help="Single tick then exit")
     ap.add_argument("--settlement-index", type=float, default=None)
+    ap.add_argument(
+        "--settlement-index-source",
+        default=None,
+        choices=[
+            "cf_benchmarks",
+            "kalshi_api",
+            "exchange_spot_proxy",
+            "operator_supplied",
+            "file_drop",
+            "fixture",
+            "unavailable",
+        ],
+        help="Honest provenance for --settlement-index (default operator_supplied)",
+    )
+    ap.add_argument("--index-file", type=Path, default=None, help="JSON file drop for index")
     ap.add_argument("--spot-proxy", type=float, default=None, help="Exchange spot used as index proxy")
+    ap.add_argument(
+        "--snapshots-dir",
+        type=Path,
+        default=None,
+        help="Optional snapshots dir for spot fallback",
+    )
     ap.add_argument("--vol", type=float, default=None)
     args = ap.parse_args(argv)
 
+    explicit_source = args.settlement_index_source
+    if args.settlement_index is not None and explicit_source is None:
+        explicit_source = "operator_supplied"
+
+    kwargs = dict(
+        output_dir=args.output_dir,
+        settlement_index=args.settlement_index,
+        settlement_index_source=explicit_source,
+        spot_proxy=args.spot_proxy,
+        index_file=args.index_file,
+        snapshots_dir=args.snapshots_dir,
+        annualized_volatility=args.vol,
+    )
+
     if args.once or args.max_ticks == 1:
-        monitor_once(
-            KalshiClient(),
-            output_dir=args.output_dir,
-            settlement_index=args.settlement_index,
-            spot_proxy=args.spot_proxy,
-            annualized_volatility=args.vol,
-        )
+        monitor_once(KalshiClient(), **kwargs)
         return 0
     return run_loop(
-        output_dir=args.output_dir,
         poll_seconds=args.poll_seconds,
         max_ticks=args.max_ticks,
-        settlement_index=args.settlement_index,
-        spot_proxy=args.spot_proxy,
-        annualized_volatility=args.vol,
+        client=KalshiClient(),
+        **kwargs,
     )
 
 

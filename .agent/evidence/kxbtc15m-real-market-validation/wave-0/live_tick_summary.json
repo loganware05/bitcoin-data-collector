@@ -1,0 +1,10 @@
+{
+  "tick_file": "kxbtc15m_tick_20261114T193620Z.json",
+  "count": 1,
+  "api_available": true,
+  "settlement_index_source": "unavailable",
+  "counts_as_edge_evidence": false,
+  "first_recommendation": "NO TRADE",
+  "first_reason": "Awaiting live contract data and validated model; settlement_index missing; forecast_confidence 0.0000 below min 0.6500",
+  "approved_for_execution": false
+}

@@ -1,6 +1,6 @@
 # STATUS — Execution Gate Evidence
 
-**Updated:** 2026-11-14  
+**Updated:** 2026-11-14 (real-market validation)  
 **Live execution authority:** **DENIED**
 
 ## Dual-track readiness (Captain board)
@@ -8,9 +8,11 @@
 | Track | Strategy | Day clock | Monitor / tick jobs | Phase A | Live GO? |
 |---|---|---|---|---|---|
 | Hourly | `paper_buy_no_v1` | Separate `paper/` | `execution-gate-paper-tick` @ 23:45 | **PASS** (prior) | **NO** |
-| KXBTC15M | `paper_kxbtc15m_v1` | Separate `paper-kxbtc15m/` | `kxbtc15m-monitor` @ 15s + paper tick @ 23:50 | Fixture harness only (not live GO) | **NO** |
+| KXBTC15M | `paper_kxbtc15m_v1` | Separate `paper-kxbtc15m/` | `kxbtc15m-monitor` @ 15s + paper tick @ 23:50 | Non-fixture dual floor not met | **NO** |
 
-**Edge evidence rule (15m):** `counts_as_edge_evidence=true` only when `settlement_index_source` ∈ `{kalshi_api, cf_benchmarks, fixture}`. Spot-proxy ticks keep continuity but do not count toward live-readiness edge.
+**Edge evidence rule (15m):** `counts_as_edge_evidence=true` only for verified live sources `{kalshi_api, cf_benchmarks}`. Fixtures require `COMPASS_KXBTC15M_ALLOW_FIXTURE_EDGE=1` (tests only). Operator/manual numeric → `operator_supplied` (never mislabeled as `kalshi_api`). Spot-proxy / file_drop keep continuity but are not readiness edge.
+
+**Non-fixture Phase A dual floor:** ≥14 edge-eligible calendar days **and** ≥50 settled labels.
 
 ### Update 2026-11-14 (live-readiness pipeline)
 

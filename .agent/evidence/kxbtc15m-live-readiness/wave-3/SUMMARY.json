@@ -3,6 +3,7 @@
   "approved_for_execution": false,
   "live_money": "DENIED",
   "artifacts": [
+    "SUMMARY.json",
     "joined_labels.json",
     "paper_returns.csv",
     "phase_a_report.json",

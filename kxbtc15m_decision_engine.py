@@ -10,6 +10,7 @@ from typing import Any, Literal
 
 from kalshi_client import NormalizedMarket, normalize_market
 from kxbtc15m_event_parser import ParsedKxbtc15mMarket, parse_kxbtc15m_market
+from kxbtc15m_index_provider import counts_as_edge_evidence
 from kxbtc15m_settlement_model import (
     SettlementIndexSource,
     SettlementModelConfig,
@@ -106,11 +107,22 @@ def build_decision_report(
     spread = _spread(market.yes_bid, market.yes_ask)
     liq = float(market.liquidity_score)
 
-    confidence = parsed.mapping_confidence
-    if model_p_up is not None:
-        # Soft confidence from mapping + quote completeness
-        quote_factor = 1.0 if (yes_ask is not None and no_ask is not None) else 0.7
-        confidence = _clamp01(0.7 * parsed.mapping_confidence + 0.3 * quote_factor)
+    quote_factor = 1.0 if (yes_ask is not None and no_ask is not None) else 0.7
+    mapping_confidence = _clamp01(0.7 * parsed.mapping_confidence + 0.3 * quote_factor)
+
+    # Forecast confidence ≠ mapping completeness. Conservative until live calibration exists.
+    if model_p_up is None:
+        forecast_confidence = 0.0
+    else:
+        base = 0.40
+        if counts_as_edge_evidence(settlement_index_source):
+            base += 0.15
+        extremity = abs(float(model_p_up) - 0.5) * 2.0  # 0..1
+        # Extreme probs without calibration → lower forecast confidence
+        forecast_confidence = _clamp01(base + 0.25 * (1.0 - extremity) + 0.10 * quote_factor)
+
+    # Gate trades on forecast_confidence (not mapping alone).
+    confidence = forecast_confidence
 
     rec: Recommendation = "NO TRADE"
     net_edge: float | None = None
@@ -135,7 +147,9 @@ def build_decision_report(
     if liq < cfg.min_liquidity_score:
         reasons.append(f"liquidity_score {liq:.4f} below min {cfg.min_liquidity_score:.4f}")
     if confidence < cfg.min_confidence:
-        reasons.append(f"confidence {confidence:.4f} below min {cfg.min_confidence:.4f}")
+        reasons.append(
+            f"forecast_confidence {confidence:.4f} below min {cfg.min_confidence:.4f}"
+        )
 
     hard_block = any(
         x in " ".join(reasons).lower()
@@ -174,8 +188,7 @@ def build_decision_report(
             "Paper recommendation only; approved_for_execution=false; live money denied"
         )
 
-    edge_ok_sources = {"kalshi_api", "cf_benchmarks", "fixture"}
-    counts_as_edge = settlement_index_source in edge_ok_sources
+    counts_as_edge = counts_as_edge_evidence(settlement_index_source)
 
     return {
         "series": parsed.series,
@@ -200,7 +213,8 @@ def build_decision_report(
         "bid_ask_spread": spread,
         "liquidity_score": liq,
         "confidence": round(confidence, 4),
-        "mapping_confidence": round(parsed.mapping_confidence, 4),
+        "mapping_confidence": round(mapping_confidence, 4),
+        "forecast_confidence": round(forecast_confidence, 4),
         "recommendation": rec,
         "reason": "; ".join(dict.fromkeys(reasons)) if reasons else "ok",
         "drivers": drivers,
@@ -239,6 +253,8 @@ def main(argv: list[str] | None = None) -> int:
             "cf_benchmarks",
             "kalshi_api",
             "exchange_spot_proxy",
+            "operator_supplied",
+            "file_drop",
             "fixture",
             "unavailable",
         ],

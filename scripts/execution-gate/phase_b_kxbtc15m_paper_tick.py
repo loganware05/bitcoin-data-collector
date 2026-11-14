@@ -124,7 +124,7 @@ def main() -> int:
         d
         for d in candidates
         if d.get("counts_as_edge_evidence", False)
-        or str(d.get("settlement_index_source") or "") in {"kalshi_api", "cf_benchmarks", "fixture"}
+        or str(d.get("settlement_index_source") or "") in {"kalshi_api", "cf_benchmarks"}
     ]
 
     prev = load_json(metrics_path, {})
@@ -157,7 +157,7 @@ def main() -> int:
             fill["counts_as_edge_evidence"] = bool(
                 row.get("counts_as_edge_evidence")
                 or str(row.get("settlement_index_source") or "")
-                in {"kalshi_api", "cf_benchmarks", "fixture"}
+                in {"kalshi_api", "cf_benchmarks"}
             )
             fills.append(fill)
             if fill["filled_qty"]:

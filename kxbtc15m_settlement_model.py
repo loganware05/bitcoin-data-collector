@@ -22,6 +22,8 @@ SettlementIndexSource = Literal[
     "cf_benchmarks",
     "kalshi_api",
     "exchange_spot_proxy",
+    "operator_supplied",
+    "file_drop",
     "fixture",
     "unavailable",
 ]

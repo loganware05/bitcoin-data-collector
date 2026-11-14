@@ -26,10 +26,10 @@ NorthStar (Captain's Compass) installed. Human user is Captain; coordinating age
 
 ## Active workstream
 
-Plan `kxbtc15m-live-readiness` (#24) — continuous paper pipeline toward live
-*eligibility* (monitor + daily 15m paper tick + Phase A harness). Live money
-DENIED. Hourly `paper_buy_no_v1` and Sellbird/Compass backlog remain standing
-next steps. Evidence: `.agent/evidence/kxbtc15m-live-readiness/`.
+Plan `kxbtc15m-real-market-validation` (#27) — honest settlement-index provenance,
+forecast confidence, live label floors. Live money DENIED. Standing next steps
+(hourly 30d, Sellbird, Compass experiment.json) preserved in PROGRESS. Evidence:
+`.agent/evidence/kxbtc15m-real-market-validation/`.
 
 ## Branch note
 

@@ -1,0 +1,14 @@
+{
+  "schema": "bdc.kxbtc15m.validation_status.v1",
+  "approved_for_execution": false,
+  "live_money": "DENIED",
+  "decision_dir": "/Volumes/Verdant_AI/btc_kalshi/live_outputs/kxbtc15m",
+  "n_decisions": 9,
+  "edge_eligible_calendar_days": 0,
+  "min_edge_days": 14,
+  "n_settled_labels": 20,
+  "min_labels": 50,
+  "phase_a_non_fixture_ready": false,
+  "note": "Dual floor for Phase A attempt only; does not authorize live trading.",
+  "as_of": "2026-11-14"
+}

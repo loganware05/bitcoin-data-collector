@@ -12,6 +12,22 @@ Record architectural and process decisions here (ADR style).
 - **Decision:**
 - **Consequences:**
 
+### ADR-009: KXBTC15M real-market validation provenance + floors
+
+- **Status:** Accepted
+- **Date:** 2026-11-14
+- **Context:** Reassessment after #22/#25/#26; monitor shell crash; mislabeled
+  `--settlement-index` as `kalshi_api`; fixtures counted as edge.
+- **Decision:**
+  1. Fix monitor wrapper for bash 3.2 `set -u` empty-array failure.
+  2. Index cascade: operator → file drop → Kalshi fields → spot/snapshot → unavailable.
+  3. Live edge evidence only for `kalshi_api` / `cf_benchmarks`; fixture gated.
+  4. Split `mapping_confidence` vs `forecast_confidence`; gate trades on forecast.
+  5. Dual floor for non-fixture Phase A attempt: ≥14 edge days and ≥50 labels.
+  6. Live money remains denied.
+- **Consequences:** Host monitor produces ticks; readiness claims require honest
+  provenance and sample floors.
+
 ### ADR-008: KXBTC15M live-readiness paper pipeline (no live money)
 
 - **Status:** Accepted
