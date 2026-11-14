@@ -12,6 +12,23 @@ Record architectural and process decisions here (ADR style).
 - **Decision:**
 - **Consequences:**
 
+### ADR-008: KXBTC15M live-readiness paper pipeline (no live money)
+
+- **Status:** Accepted
+- **Date:** 2026-11-14
+- **Context:** Captain approved `kxbtc15m-live-readiness` (#24) after the
+  live-trading checklist. Need continuous jobs without enabling live orders or
+  burying hourly/`Sellbird` backlog.
+- **Decision:**
+  1. Monitor via launchd **StartInterval 15s** + `--once` (not KeepAlive).
+  2. Daily `paper_kxbtc15m_v1` tick at **23:50** local (after hourly 23:45).
+  3. Dual-mode evidence: spot-proxy allowed for continuity; edge-counting requires
+     `kalshi_api` / `cf_benchmarks` (fixtures hermetic-only).
+  4. Wire both jobs into `ensure_verdant_jobs.sh`; hard-separate state dirs.
+  5. Live money and `approved_for_execution` remain denied.
+- **Consequences:** Operators can accumulate 15m paper evidence in parallel with
+  hourly paper. A future plan is still required for any order client.
+
 ### ADR-007: Dedicated KXBTC15M 15-minute decision engine (paper-only)
 
 - **Status:** Accepted

@@ -1,0 +1,9 @@
+=== ensure Verdant jobs: 2026-11-14T19:11:12Z ===
+OK: com.verdant.btc-kalshi.snapshot-daemon loaded (last_exit=1)
+OK: com.verdant.btc-kalshi.weekly-retrain loaded (last_exit=(never exited))
+OK: com.verdant.btc-kalshi.hourly-scan loaded (last_exit=0)
+OK: com.verdant.btc-kalshi.sync-staging loaded (last_exit=0)
+OK: com.verdant.btc-kalshi.execution-gate-paper-tick loaded (last_exit=0)
+WARN: com.verdant.btc-kalshi.kxbtc15m-monitor not loaded
+WARN: com.verdant.btc-kalshi.kxbtc15m-paper-tick not loaded
+Logs: /Users/loganware/Library/Logs/verdant/

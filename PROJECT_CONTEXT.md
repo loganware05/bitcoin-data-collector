@@ -26,9 +26,10 @@ NorthStar (Captain's Compass) installed. Human user is Captain; coordinating age
 
 ## Active workstream
 
-Plan `kxbtc15m-decision-engine` (#21) — dedicated Kalshi 15-minute decision module
-(paper-only). Hourly `paper_buy_no_v1` continuity continues separately. Evidence:
-`.agent/evidence/kxbtc15m-decision-engine/`.
+Plan `kxbtc15m-live-readiness` (#24) — continuous paper pipeline toward live
+*eligibility* (monitor + daily 15m paper tick + Phase A harness). Live money
+DENIED. Hourly `paper_buy_no_v1` and Sellbird/Compass backlog remain standing
+next steps. Evidence: `.agent/evidence/kxbtc15m-live-readiness/`.
 
 ## Branch note
 

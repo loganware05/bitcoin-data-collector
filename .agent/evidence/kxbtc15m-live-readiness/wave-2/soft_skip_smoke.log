@@ -1,0 +1,6 @@
+=== kxbtc15m paper tick 2026-11-14T19:11:24Z ===
+state=.agent/evidence/kxbtc15m-live-readiness/wave-2/paper-state
+strategy=/Users/loganware/bitcoin-data-collector-kxbtc15m/scripts/execution-gate/paper_strategy_kxbtc15m_v1.json
+approved_for_execution=false
+WARN: KXBTC15M_DECISION_DIR set but no kxbtc15m_tick_*.json under .agent/evidence/kxbtc15m-live-readiness/wave-2/empty-decisions
+wrote continuity alert: .agent/evidence/kxbtc15m-live-readiness/wave-2/paper-state/continuity_alert.json

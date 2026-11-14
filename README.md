@@ -189,7 +189,19 @@ python3 kxbtc15m_ml.py --labels tests/fixtures/kxbtc15m/settlement_labels.json
 # Separate paper strategy tick (never shares paper_buy_no_v1 day clock)
 python3 scripts/execution-gate/phase_b_kxbtc15m_paper_tick.py \
   --state-dir .agent/evidence/execution-gate-evidence/paper-kxbtc15m
+
+# Live-readiness pipeline (LaunchAgents; still no live money)
+./scripts/verdant/ensure_verdant_jobs.sh --check
+# Install/reload adds:
+#   com.verdant.btc-kalshi.kxbtc15m-monitor      (StartInterval 15s)
+#   com.verdant.btc-kalshi.kxbtc15m-paper-tick   (daily 23:50 local)
+./scripts/verdant/ensure_verdant_jobs.sh
+./scripts/execution-gate/phase_a_kxbtc15m.sh
 ```
+
+**Edge evidence:** spot-proxy ticks keep the paper clock alive but set
+`counts_as_edge_evidence=false`. Prefer Kalshi/CF index sources before treating
+fills as live-readiness edge.
 
 ### 7. Hourly BTC event scanner (recommendation only)
 

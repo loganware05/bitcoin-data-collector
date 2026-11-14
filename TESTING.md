@@ -45,12 +45,17 @@ bash -n scripts/verdant/verdant_staging.sh
 ## KXBTC15M (paper-only)
 
 ```bash
-python3 -m pytest tests/test_kxbtc15m_decision_engine.py -q
+python3 -m pytest tests/test_kxbtc15m_decision_engine.py tests/test_kxbtc15m_live_readiness.py -q
 # Fixture decision + ML calibration evidence
 python3 kxbtc15m_decision_engine.py --fixture tests/fixtures/kxbtc15m/market_pack.json \
   --out .agent/evidence/kxbtc15m-decision-engine/wave-a/decision_report.json
 python3 kxbtc15m_ml.py --labels tests/fixtures/kxbtc15m/settlement_labels.json \
   --out .agent/evidence/kxbtc15m-decision-engine/wave-d/train_eval.json
+# Live-readiness jobs (read-only / simulated fills)
+./scripts/verdant/kxbtc15m_monitor.sh
+./scripts/execution-gate/paper_tick_kxbtc15m_daily.sh
+./scripts/execution-gate/phase_a_kxbtc15m.sh
+./scripts/verdant/ensure_verdant_jobs.sh --check
 # Separate paper tick (never use execution-gate-evidence/paper/)
 python3 scripts/execution-gate/phase_b_kxbtc15m_paper_tick.py \
   --decision-dir live_outputs/kxbtc15m \
