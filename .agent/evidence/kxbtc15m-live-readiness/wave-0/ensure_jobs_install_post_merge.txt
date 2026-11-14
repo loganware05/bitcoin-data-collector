@@ -1,0 +1,34 @@
+=== ensure Verdant jobs: 2026-11-14T19:17:20Z ===
+Installed /Users/loganware/Library/LaunchAgents/com.verdant.btc-kalshi.snapshot-daemon.plist
+Reloaded com.verdant.btc-kalshi.snapshot-daemon
+OK: com.verdant.btc-kalshi.snapshot-daemon loaded (last_exit=(never exited))
+Installed /Users/loganware/Library/LaunchAgents/com.verdant.btc-kalshi.weekly-retrain.plist
+Reloaded com.verdant.btc-kalshi.weekly-retrain
+OK: com.verdant.btc-kalshi.weekly-retrain loaded (last_exit=(never exited))
+Installed /Users/loganware/Library/LaunchAgents/com.verdant.btc-kalshi.hourly-scan.plist
+Reloaded com.verdant.btc-kalshi.hourly-scan
+OK: com.verdant.btc-kalshi.hourly-scan loaded (last_exit=(never exited))
+Installed /Users/loganware/Library/LaunchAgents/com.verdant.btc-kalshi.sync-staging.plist
+Reloaded com.verdant.btc-kalshi.sync-staging
+OK: com.verdant.btc-kalshi.sync-staging loaded (last_exit=(never exited))
+Installed /Users/loganware/Library/LaunchAgents/com.verdant.btc-kalshi.execution-gate-paper-tick.plist
+Reloaded com.verdant.btc-kalshi.execution-gate-paper-tick
+OK: com.verdant.btc-kalshi.execution-gate-paper-tick loaded (last_exit=(never exited))
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/plistlib.py", line 883, in loads
+    return load(fp, fmt=fmt, dict_type=dict_type)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/plistlib.py", line 875, in load
+    return p.parse(fp)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/plistlib.py", line 177, in parse
+    self.parser.ParseFile(fileobj)
+xml.parsers.expat.ExpatError: not well-formed (invalid token): line 7, column 25
+=== ensure Verdant jobs: 2026-11-14T19:17:20Z ===
+OK: com.verdant.btc-kalshi.snapshot-daemon loaded (last_exit=(never exited))
+OK: com.verdant.btc-kalshi.weekly-retrain loaded (last_exit=(never exited))
+OK: com.verdant.btc-kalshi.hourly-scan loaded (last_exit=(never exited))
+OK: com.verdant.btc-kalshi.sync-staging loaded (last_exit=(never exited))
+OK: com.verdant.btc-kalshi.execution-gate-paper-tick loaded (last_exit=(never exited))
+WARN: com.verdant.btc-kalshi.kxbtc15m-monitor not loaded
+WARN: com.verdant.btc-kalshi.kxbtc15m-paper-tick not loaded
+Logs: /Users/loganware/Library/Logs/verdant/

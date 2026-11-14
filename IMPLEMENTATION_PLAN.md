@@ -1,12 +1,12 @@
 # Implementation Plan — KXBTC15M Live-Readiness Pipeline (Paper Only)
 
-- Status: **APPROVED**
+- Status: **COMPLETE** (merged PR #25)
 
 ## Metadata
 
 | Field | Value |
 |---|---|
-| Status | **APPROVED** |
+| Status | **COMPLETE** (merged PR #25 @ `b93740d`) |
 | Plan ID | `kxbtc15m-live-readiness` |
 | Repo | `bitcoin-data-collector` only |
 | Baseline | `cursor/kalshi-live-decision-system` @ `b4d9027` |
@@ -69,3 +69,15 @@ See `docs/plans/KXBTC15M_LIVE_READINESS.md` for full acceptance criteria. Summar
 ## Approval Boundary
 
 **Implementation may begin.** Live money remains DENIED.
+
+
+## Completion record
+
+| Field | Value |
+|---|---|
+| Merged PR | [#25](https://github.com/loganware05/bitcoin-data-collector/pull/25) |
+| Merge commit | `b93740d` |
+| Issue | [#24](https://github.com/loganware05/bitcoin-data-collector/issues/24) closed |
+| Completed | 2026-11-14 |
+| Live execution | DENIED |
+| Host follow-up | `./scripts/verdant/ensure_verdant_jobs.sh` |
