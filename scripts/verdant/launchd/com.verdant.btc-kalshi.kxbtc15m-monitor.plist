@@ -4,8 +4,8 @@
 <dict>
   <key>Label</key>
   <string>com.verdant.btc-kalshi.kxbtc15m-monitor</string>
-  <!-- StartInterval + --once (not KeepAlive): crash isolation, matches other Verdant jobs.
-       15s cadence ≈ 60 samples per 15m contract. Read-only; no live orders. -->
+  <!-- StartInterval one-shot ticks (not KeepAlive): crash isolation, matches other Verdant jobs.
+       15s cadence ~60 samples per 15m contract. Read-only; no live orders. -->
   <key>ProgramArguments</key>
   <array>
     <string>REPO_ROOT_PLACEHOLDER/scripts/verdant/kxbtc15m_monitor.sh</string>
