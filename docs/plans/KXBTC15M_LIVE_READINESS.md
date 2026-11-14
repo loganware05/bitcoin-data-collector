@@ -1,12 +1,12 @@
 # Implementation Plan — KXBTC15M Live-Readiness Pipeline (Paper Only)
 
-- Status: **APPROVED**
+- Status: **COMPLETE** (merged PR #25)
 
 ## Metadata
 
 | Field | Value |
 |---|---|
-| Status | **APPROVED** |
+| Status | **COMPLETE** (merged PR #25) |
 | Plan ID | `kxbtc15m-live-readiness` |
 | Repo | `bitcoin-data-collector` only |
 | Goal | Reach Captain live-trading **eligibility** for 15m markets — **without** enabling live money in this plan |
