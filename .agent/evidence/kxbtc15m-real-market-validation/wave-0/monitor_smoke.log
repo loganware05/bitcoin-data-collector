@@ -1,0 +1,4 @@
+=== kxbtc15m monitor 2026-11-14T19:36:17Z out=/Volumes/Verdant_AI/btc_kalshi/live_outputs/kxbtc15m ===
+2026-11-14 13:36:17,523 INFO HTTP Request: GET https://api.elections.kalshi.com/trade-api/v2/markets?limit=200&status=open&series_ticker=KXBTC15M "HTTP/1.1 200 OK"
+2026-11-14 13:36:17,599 INFO Wrote /Volumes/Verdant_AI/btc_kalshi/live_outputs/kxbtc15m/kxbtc15m_tick_20261114T193617Z.json (1 decisions)
+=== kxbtc15m monitor done 2026-11-14T19:36:17Z ===

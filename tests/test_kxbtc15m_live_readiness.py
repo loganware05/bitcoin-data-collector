@@ -19,7 +19,7 @@ from kxbtc15m_settlement_labels import join_fixture_labels  # noqa: E402
 FIX = ROOT / "tests" / "fixtures" / "kxbtc15m"
 
 
-def test_counts_as_edge_evidence_by_source():
+def test_counts_as_edge_evidence_by_source(monkeypatch):
     pack = json.loads((FIX / "market_pack.json").read_text())
     now = datetime(2026, 11, 14, 15, 20, tzinfo=UTC)
     proxy = decide_from_raw_market(
@@ -31,6 +31,7 @@ def test_counts_as_edge_evidence_by_source():
     )
     assert proxy["counts_as_edge_evidence"] is False
 
+    monkeypatch.delenv("COMPASS_KXBTC15M_ALLOW_FIXTURE_EDGE", raising=False)
     fixture = decide_from_raw_market(
         pack["markets"][0],
         settlement_index=65620.0,
@@ -38,7 +39,16 @@ def test_counts_as_edge_evidence_by_source():
         model_probability_up_override=0.7,
         now=now,
     )
-    assert fixture["counts_as_edge_evidence"] is True
+    assert fixture["counts_as_edge_evidence"] is False
+
+    live = decide_from_raw_market(
+        pack["markets"][0],
+        settlement_index=65620.0,
+        settlement_index_source="kalshi_api",
+        model_probability_up_override=0.7,
+        now=now,
+    )
+    assert live["counts_as_edge_evidence"] is True
 
 
 def test_daily_wrapper_soft_skip(tmp_path: Path):

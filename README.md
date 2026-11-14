@@ -199,9 +199,16 @@ python3 scripts/execution-gate/phase_b_kxbtc15m_paper_tick.py \
 ./scripts/execution-gate/phase_a_kxbtc15m.sh
 ```
 
-**Edge evidence:** spot-proxy ticks keep the paper clock alive but set
-`counts_as_edge_evidence=false`. Prefer Kalshi/CF index sources before treating
-fills as live-readiness edge.
+**Edge evidence:** only `kalshi_api` / `cf_benchmarks` count toward readiness.
+Operator numeric env is tagged `operator_supplied` (never mislabeled as Kalshi API).
+Spot-proxy / file-drop keep continuity but are not edge. Non-fixture Phase A dual
+floor: ≥14 edge-eligible days and ≥50 settled labels.
+
+```bash
+python3 scripts/execution-gate/kxbtc15m_validation_status.py \
+  --decision-dir /Volumes/Verdant_AI/btc_kalshi/live_outputs/kxbtc15m \
+  --out .agent/evidence/kxbtc15m-real-market-validation/validation_status.json
+```
 
 ### 7. Hourly BTC event scanner (recommendation only)
 

@@ -4,6 +4,9 @@
 
 ### Added
 
+- **KXBTC15M real-market validation** (#27 / ADR-009): monitor bash 3.2 hotfix,
+  honest index provenance cascade, forecast vs mapping confidence, dual Phase A
+  floors, validation status CLI — live money still DENIED
 - **KXBTC15M live-readiness pipeline** (paper-only) (#24 / ADR-008): 15s monitor
   LaunchAgent, daily `paper_kxbtc15m_v1` tick @ 23:50, dual-mode edge evidence,
   Phase A fixture harness, dual-track STATUS — live money still DENIED
