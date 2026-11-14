@@ -1,12 +1,12 @@
 # Implementation Plan — KXBTC15M Decision Engine
 
-- Status: **APPROVED**
+- Status: **COMPLETE** (merged PR #22)
 
 ## Metadata
 
 | Field | Value |
 |---|---|
-| Status | **APPROVED** |
+| Status | **COMPLETE** (merged PR #22 @ `f14e8cd`) |
 | Plan ID | `kxbtc15m-decision-engine` |
 | Repo | `bitcoin-data-collector` only |
 | Source brief | ChatGPT assessment *Assess Kalshi Decisions* (2026-11-14) |
@@ -71,3 +71,14 @@ Full Wave A–D acceptance criteria, architecture, and risks are in `docs/plans/
 ## Approval Boundary
 
 **Implementation may begin.** Live money remains denied. Stop at autonomy budget limits.
+
+
+## Completion record
+
+| Field | Value |
+|---|---|
+| Merged PR | [#22](https://github.com/loganware05/bitcoin-data-collector/pull/22) |
+| Merge commit | `f14e8cd` |
+| Issue | [#21](https://github.com/loganware05/bitcoin-data-collector/issues/21) closed |
+| Completed | 2026-11-14 |
+| Live execution | DENIED |
