@@ -4,8 +4,10 @@
 
 ```bash
 python3 -m pytest tests/ -q
-python3 -m pytest tests/test_settlement_eval_cache.py tests/test_fair_value_engine.py -q
+python3 -m pytest tests/test_kxbtc15m_decision_engine.py tests/test_settlement_eval_cache.py tests/test_fair_value_engine.py -q
 python3 kalshi_settlement_eval.py --help
+python3 kxbtc15m_decision_engine.py --fixture tests/fixtures/kxbtc15m/market_pack.json
+python3 kxbtc15m_ml.py --labels tests/fixtures/kxbtc15m/settlement_labels.json
 bash -n scripts/verdant/weekly_retrain.sh
 bash -n scripts/verdant/settlement_aug28_window.sh
 bash -n scripts/verdant/settlement_aug28_actionable.sh
@@ -40,9 +42,24 @@ bash -n scripts/verdant/verdant_staging.sh
 3. Offline snapshots: `BTC_KALSHI_REMOTE_ROOT=/nonexistent ./scripts/verdant/snapshot_daemon.sh` → writes under local `snapshots/` when model cache present
 4. Reconnect drive: `./scripts/verdant/sync_verdant_staging.sh` → pending scans/snapshots appear on Verdant
 
+## KXBTC15M (paper-only)
+
+```bash
+python3 -m pytest tests/test_kxbtc15m_decision_engine.py -q
+# Fixture decision + ML calibration evidence
+python3 kxbtc15m_decision_engine.py --fixture tests/fixtures/kxbtc15m/market_pack.json \
+  --out .agent/evidence/kxbtc15m-decision-engine/wave-a/decision_report.json
+python3 kxbtc15m_ml.py --labels tests/fixtures/kxbtc15m/settlement_labels.json \
+  --out .agent/evidence/kxbtc15m-decision-engine/wave-d/train_eval.json
+# Separate paper tick (never use execution-gate-evidence/paper/)
+python3 scripts/execution-gate/phase_b_kxbtc15m_paper_tick.py \
+  --decision-dir live_outputs/kxbtc15m \
+  --state-dir .agent/evidence/execution-gate-evidence/paper-kxbtc15m
+```
+
 ## Evidence location
 
-`.agent/evidence/postfix-buy-no-calibration/`, `.agent/evidence/settlement-retrain-oom/`, `.agent/evidence/kalshi-predictive-roadmap/`, `.agent/evidence/execution-gate-evidence/`, `.agent/evidence/xrv-pilot-b-paper-continuity/`
+`.agent/evidence/kxbtc15m-decision-engine/`, `.agent/evidence/postfix-buy-no-calibration/`, `.agent/evidence/settlement-retrain-oom/`, `.agent/evidence/kalshi-predictive-roadmap/`, `.agent/evidence/execution-gate-evidence/`, `.agent/evidence/xrv-pilot-b-paper-continuity/`
 
 ## Execution-gate harnesses (non-execution)
 

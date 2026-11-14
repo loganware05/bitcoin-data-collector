@@ -1,0 +1,171 @@
+{
+  "domains_detected": [
+    "react",
+    "python",
+    "test",
+    "github"
+  ],
+  "execution_order": [
+    "task-discovery",
+    "task-architecture",
+    "task-impl-frontend",
+    "task-impl-ml",
+    "task-validation",
+    "task-documentation"
+  ],
+  "objective": "Build dedicated Kalshi KXBTC15M 15-minute BTC UP/DOWN decision engine in bitcoin-data-collector: series discovery, settlement-aligned CF Benchmarks prediction, higher-frequency inference, contract-specific ML validation, paper-trading-only integration with existing execution gates; no live money",
+  "security_sensitive": false,
+  "stacks": [],
+  "tasks": [
+    {
+      "acceptance_criteria": [
+        "Repository discovery report covers stack, entry points, tests, and CI",
+        "Relevant Skills recommended for downstream tasks"
+      ],
+      "dependencies": [],
+      "expected_artifacts": [
+        "repository-discovery-report"
+      ],
+      "id": "task-discovery",
+      "objective": "Discover repository structure, tooling, risks, and conventions",
+      "parallelizable": false,
+      "required_capabilities": [
+        "repo-structure-mapping",
+        "tooling-identification",
+        "convention-discovery"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Architecture brief documents boundaries, contracts, and migration/rollback",
+        "Assumptions are explicit"
+      ],
+      "dependencies": [
+        "task-discovery"
+      ],
+      "expected_artifacts": [
+        "architecture-brief"
+      ],
+      "id": "task-architecture",
+      "objective": "Define components, contracts, data changes, and rollback strategy",
+      "parallelizable": false,
+      "required_capabilities": [
+        "component-boundary-design",
+        "api-contract-definition",
+        "migration-rollback-strategy"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "UI matches approved plan and project conventions",
+        "Client tests updated or added for changed behavior"
+      ],
+      "dependencies": [
+        {
+          "contract": "architecture-brief",
+          "link": "hard",
+          "target": "task-architecture"
+        }
+      ],
+      "expected_artifacts": [
+        "frontend-diff",
+        "component-tests"
+      ],
+      "id": "task-impl-frontend",
+      "objective": "Implement frontend/UI changes for the approved scope",
+      "parallelizable": true,
+      "required_capabilities": [
+        "react-component-development",
+        "typescript-ui",
+        "component-testing"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Training/eval steps are reproducible",
+        "Dataset and model contracts documented"
+      ],
+      "dependencies": [
+        {
+          "contract": "architecture-brief",
+          "link": "hard",
+          "target": "task-architecture"
+        }
+      ],
+      "expected_artifacts": [
+        "ml-code-diff",
+        "experiment-notes"
+      ],
+      "id": "task-impl-ml",
+      "objective": "Implement ML/data pipeline changes with reproducible experiments",
+      "parallelizable": true,
+      "required_capabilities": [
+        "python-service-development",
+        "ml-training",
+        "ml-evaluation",
+        "experiment-reproducibility"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "Applicable lint/tests/build pass without weakened assertions",
+        "Evidence stored under .agent/evidence/"
+      ],
+      "dependencies": [
+        {
+          "link": "symlink",
+          "paths": [
+            "frontend-diff",
+            "component-tests"
+          ],
+          "target": "task-impl-frontend"
+        },
+        {
+          "link": "symlink",
+          "paths": [
+            "ml-code-diff",
+            "experiment-notes"
+          ],
+          "target": "task-impl-ml"
+        }
+      ],
+      "expected_artifacts": [
+        "validation-report",
+        "evidence-paths"
+      ],
+      "id": "task-validation",
+      "objective": "Run applicable validation layers and capture evidence",
+      "parallelizable": false,
+      "required_capabilities": [
+        "unit-test-execution",
+        "integration-test-execution",
+        "definition-of-done-validation",
+        "validation-evidence-capture",
+        "playwright-execution",
+        "e2e-testing",
+        "ui-evidence-capture"
+      ]
+    },
+    {
+      "acceptance_criteria": [
+        "PROGRESS.md and relevant memory docs updated",
+        "Plan completion record prepared when appropriate"
+      ],
+      "dependencies": [
+        "task-validation"
+      ],
+      "expected_artifacts": [
+        "documentation-diff"
+      ],
+      "id": "task-documentation",
+      "objective": "Update project memory docs and completion records",
+      "parallelizable": false,
+      "required_capabilities": [
+        "project-memory-update",
+        "progress-tracking",
+        "completion-reporting"
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}

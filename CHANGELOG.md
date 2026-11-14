@@ -4,6 +4,9 @@
 
 ### Added
 
+- Dedicated **KXBTC15M** 15-minute decision engine (paper-only) (#21 / ADR-007):
+  series discovery, settlement-aligned probability, 10s monitor, contract-specific
+  ML train/eval fixtures, and separate `paper_kxbtc15m_v1` paper tick state dir
 - Agensi listing CTA on README + Sellbird promotion pack under `docs/promotion/` (#19)
 - XRV Pilot B paper-continuity evidence (`.agent/evidence/xrv-pilot-b-paper-continuity/`) — live execution remains DENIED
 - Daily paper-tick LaunchAgent (`com.verdant.btc-kalshi.execution-gate-paper-tick`) via PR #16

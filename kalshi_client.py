@@ -20,6 +20,9 @@ logger = logging.getLogger(__name__)
 DEFAULT_BASE_URL = "https://api.elections.kalshi.com/trade-api/v2"
 BTC_PATTERN = re.compile(r"\b(btc|bitcoin)\b", re.IGNORECASE)
 DEFAULT_BTC_SERIES_TICKERS = ("KXBTC", "KXBTCD")
+# 15-minute series is first-class via fetch_kxbtc15m_markets(); not merged into
+# the hourly/general DEFAULT fetch to avoid extra API load on existing jobs.
+KXBTC15M_SERIES_TICKER = "KXBTC15M"
 
 
 @dataclass(frozen=True)
@@ -333,6 +336,22 @@ class KalshiClient:
         return matched
 
 
+    def fetch_kxbtc15m_markets(self) -> FetchResult:
+        """Fetch and normalize open KXBTC15M series markets (15-minute BTC)."""
+        warnings = list(self.warnings)
+        try:
+            raw = self.fetch_markets(series_ticker=KXBTC15M_SERIES_TICKER)
+            if not raw:
+                warnings.append(f"No markets returned for series {KXBTC15M_SERIES_TICKER}.")
+            normalized = [normalize_market(m) for m in raw if m.get("ticker")]
+            return FetchResult(markets=normalized, warnings=warnings, api_available=True)
+        except Exception as exc:  # noqa: BLE001
+            msg = f"Kalshi API unavailable for {KXBTC15M_SERIES_TICKER}: {exc}"
+            logger.warning(msg)
+            warnings.append(msg)
+            return FetchResult(markets=[], warnings=warnings, api_available=False)
+
+
 __all__ = [
     "KalshiClient",
     "KalshiClientConfig",
@@ -342,4 +361,6 @@ __all__ = [
     "is_btc_related_text",
     "mid_prob",
     "liquidity_score",
+    "DEFAULT_BTC_SERIES_TICKERS",
+    "KXBTC15M_SERIES_TICKER",
 ]

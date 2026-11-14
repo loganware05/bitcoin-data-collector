@@ -2,7 +2,7 @@
 
 ## Product
 
-Bitcoin / Kalshi data collector and hourly event scanner: maps BTC price markets, scores fair value, and emits BUY YES / BUY NO / NO TRADE recommendations.
+Bitcoin / Kalshi data collector and hourly event scanner: maps BTC price markets, scores fair value, and emits BUY YES / BUY NO / NO TRADE recommendations. Also includes a dedicated **KXBTC15M** 15-minute decision engine (paper-only; live denied).
 
 ## Primary data root
 
@@ -26,10 +26,9 @@ NorthStar (Captain's Compass) installed. Human user is Captain; coordinating age
 
 ## Active workstream
 
-Plan `xrv-pilot-b-paper-continuity` (#17) — restore uninterrupted paper-validation
-continuity after PR #16 daily LaunchAgent merge (no live execution). Evidence:
-`.agent/evidence/xrv-pilot-b-paper-continuity/` and
-`.agent/evidence/execution-gate-evidence/`.
+Plan `kxbtc15m-decision-engine` (#21) — dedicated Kalshi 15-minute decision module
+(paper-only). Hourly `paper_buy_no_v1` continuity continues separately. Evidence:
+`.agent/evidence/kxbtc15m-decision-engine/`.
 
 ## Branch note
 

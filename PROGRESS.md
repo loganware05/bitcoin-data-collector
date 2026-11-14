@@ -1,38 +1,40 @@
 # Progress
 
-## Current status (2026-11-12)
+## Current status (2026-11-14)
 
-- Plan **`agensi-promo-hygiene`**: **APPROVED** (Captain: "Yes, do both"); issue [#19](https://github.com/loganware05/bitcoin-data-collector/issues/19)
-- Branch: `feature/19-agensi-promo-hygiene` — README Agensi CTA + `docs/promotion/` Sellbird assets
-- Prior plan **`xrv-pilot-b-paper-continuity`**: merged via PR [#18](https://github.com/loganware05/bitcoin-data-collector/pull/18) @ `59367ad`
+- Plan **`kxbtc15m-decision-engine`**: **APPROVED** — implementing on
+  `feature/21-kxbtc15m-decision-engine` (issue [#21](https://github.com/loganware05/bitcoin-data-collector/issues/21))
+- Rollback: `rollback/pre-kxbtc15m-decision-engine` @ `addc982`
+- Worktree: `/Users/loganware/bitcoin-data-collector-kxbtc15m`
 - Live execution: **DENIED**
-- Paper strategy: **`paper_buy_no_v1`**
-- Paper day clock: day **1/30** after `calendar_gap_days=26` restart
-- Host: `com.verdant.btc-kalshi.execution-gate-paper-tick` **loaded**
-- Evidence: `.agent/evidence/xrv-pilot-b-paper-continuity/`
+- Hourly paper strategy: **`paper_buy_no_v1`** (untouched; separate clock)
+- New paper candidate: **`paper_kxbtc15m_v1`** (separate state dir)
+- Evidence: `.agent/evidence/kxbtc15m-decision-engine/`
 
 ## Phase scoreboard
 
 | Phase | Status |
 |---|---|
-| A CPCV/DSR | **PASS** on `paper_buy_no_v1` |
-| B Live paper | Day **1/30** after documented gap restart; daily LaunchAgent installed |
-| C Risk drills | Drill pass; gates on paper ticks |
-| D Security/packet | Live still denied |
-| Jev | Fixture only; live `experiment.json` still absent on Compass main |
-| Agensi promo | Listing live; repo hygiene + Sellbird copy in flight (#19) |
+| A CPCV/DSR (`paper_buy_no_v1`) | **PASS** (prior) |
+| B Live paper hourly | Continues on host LaunchAgent — do not reset |
+| KXBTC15M Wave A–D | Implemented on feature branch; pytest green |
+| D Security/packet | Live still denied; `approved_for_execution=false` |
+| Agensi promo | Merged (#20) |
 
 ## Next
 
-- [ ] Merge Agensi promo hygiene PR (#19)
-- [ ] Run Sellbird train + first ≤50 outbound cohort from `docs/promotion/`
-- [ ] Let daily ticks accumulate toward 30d / OOS floors (no further calendar gaps)
-- [ ] Supply live Compass `experiment.json` when available
+- [ ] Open / merge PR for #21
+- [ ] Optional Captain-local live `KXBTC15M` read-only smoke
+- [ ] Let hourly `paper_buy_no_v1` ticks continue to 30d
 - [ ] Keep live money denied
 
 ## Commands
 
 ```bash
-./scripts/execution-gate/paper_tick_daily.sh
-./scripts/verdant/ensure_verdant_jobs.sh --check
+python3 -m pytest tests/ -q
+python3 kxbtc15m_decision_engine.py --fixture tests/fixtures/kxbtc15m/market_pack.json
+python3 kxbtc15m_monitor.py --once --spot-proxy 65000 --output-dir live_outputs/kxbtc15m
+python3 kxbtc15m_ml.py --labels tests/fixtures/kxbtc15m/settlement_labels.json
+python3 scripts/execution-gate/phase_b_kxbtc15m_paper_tick.py
+./scripts/execution-gate/paper_tick_daily.sh   # hourly paper_buy_no_v1 only
 ```
