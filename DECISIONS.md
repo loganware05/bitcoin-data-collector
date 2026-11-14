@@ -12,6 +12,28 @@ Record architectural and process decisions here (ADR style).
 - **Decision:**
 - **Consequences:**
 
+### ADR-007: Dedicated KXBTC15M 15-minute decision engine (paper-only)
+
+- **Status:** Accepted
+- **Date:** 2026-11-14
+- **Context:** ChatGPT assessment + Captain approval of `kxbtc15m-decision-engine`
+  (#21). Hourly `KXBTCD` stack cannot score Kalshi 15-minute target markets;
+  `paper_buy_no_v1` continuity must not be reset.
+- **Decision:**
+  1. Add first-class `KXBTC15M` series discovery (`DEFAULT_BTC_SERIES_TICKERS` +
+     `fetch_kxbtc15m_markets`).
+  2. Ship settlement-aligned probability + fee-aware edge modules
+     (`kxbtc15m_settlement_model`, `kxbtc15m_decision_engine`) with fail-closed
+     NO TRADE when index/target/quotes/time are missing.
+  3. Monitor loop defaults to 10s polls (clamped 5–15s); writes
+     `live_outputs/kxbtc15m/` only.
+  4. Separate paper strategy `paper_kxbtc15m_v1` with its own state dir
+     (`.agent/evidence/execution-gate-evidence/paper-kxbtc15m/`); refuse shared
+     `paper/` dir used by `paper_buy_no_v1`.
+  5. `approved_for_execution` remains false; no order placement paths.
+- **Consequences:** Research-stage 15m decisions are possible without disturbing
+  hourly paper continuity. Live money still DENIED pending a future Captain plan.
+
 ### ADR-006: BTC exchange-netflow provider (AHF-P03)
 
 - **Status:** Accepted

@@ -172,6 +172,25 @@ python examples/run_kalshi_scan.py --no-collect --snapshot outputs/btc_market_in
 
 Output: `live_outputs/kalshi_scans/scan_<UTC>.json` plus a summary table (ticker, edge, recommendation).
 
+### 7a. KXBTC15M 15-minute decision engine (paper only)
+
+Dedicated path for Kalshi **15-minute BTC** markets (`KXBTC15M`), e.g. target UP/DOWN contracts. Settlement-aligned probability + fee-aware edge; defaults to **NO TRADE** when index/target/quotes/time are missing. **Does not place orders.** Separate from hourly `paper_buy_no_v1`.
+
+```bash
+# Fixture decision report
+python3 kxbtc15m_decision_engine.py --fixture tests/fixtures/kxbtc15m/market_pack.json
+
+# Optional live read-only monitor tick (10s default poll when looping)
+python3 kxbtc15m_monitor.py --once --spot-proxy 65000 --output-dir live_outputs/kxbtc15m
+
+# Contract-specific time-ordered train/eval on labeled fixtures
+python3 kxbtc15m_ml.py --labels tests/fixtures/kxbtc15m/settlement_labels.json
+
+# Separate paper strategy tick (never shares paper_buy_no_v1 day clock)
+python3 scripts/execution-gate/phase_b_kxbtc15m_paper_tick.py \
+  --state-dir .agent/evidence/execution-gate-evidence/paper-kxbtc15m
+```
+
 ### 7. Hourly BTC event scanner (recommendation only)
 
 Level-3 automation for Kalshi **hourly BTC threshold** contracts such as `"BTC price today at 3 PM EDT"` or `"Bitcoin above $78,000 at 4 PM EDT"`. The scanner:
@@ -279,7 +298,7 @@ Public market data works without credentials. For future authenticated endpoints
 | `KALSHI_API_BASE` | API base URL (default: `https://api.elections.kalshi.com/trade-api/v2`) |
 | `KALSHI_API_KEY_ID` | API key ID (optional) |
 | `KALSHI_PRIVATE_KEY_PATH` | Path to RSA private key PEM (optional) |
-| `KALSHI_BTC_SERIES_TICKER` | Optional single series filter; default scans `KXBTC` and `KXBTCD` |
+| `KALSHI_BTC_SERIES_TICKER` | Optional single series filter; default scans `KXBTC` and `KXBTCD` (15m uses `fetch_kxbtc15m_markets`) |
 
 If credentials are missing, the client logs once and continues with public `GET /markets`.
 

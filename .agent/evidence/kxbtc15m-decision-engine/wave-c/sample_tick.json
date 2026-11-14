@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-11-14T15:20:00+00:00",
+  "series": "KXBTC15M",
+  "api_available": false,
+  "warnings": [
+    "fixture"
+  ],
+  "count": 1,
+  "decisions": [
+    {
+      "series": "KXBTC15M",
+      "contract_ticker": "KXBTC15M-26NOV141530-T65586.65",
+      "event_ticker": "KXBTC15M-26NOV141530",
+      "title": "BTC 15min Target 65586.65",
+      "target_price": 65586.65,
+      "time_remaining_seconds": 600.0,
+      "close_time_utc": "2026-11-14T15:30:00+00:00",
+      "open_time_utc": "2026-11-14T15:15:00+00:00",
+      "settlement_index": 65620.0,
+      "settlement_index_source": "fixture",
+      "model_probability_up": 0.583908,
+      "model_probability_down": 0.416092,
+      "yes_ask": 0.54,
+      "no_ask": 0.52,
+      "yes_bid": 0.48,
+      "no_bid": 0.46,
+      "yes_net_edge": 0.023908,
+      "no_net_edge": -0.123908,
+      "net_edge": null,
+      "bid_ask_spread": 0.06000000000000005,
+      "liquidity_score": 0.6294624755390579,
+      "confidence": 0.895,
+      "mapping_confidence": 0.85,
+      "recommendation": "NO TRADE",
+      "reason": "edge below minimum threshold; defaulting to NO TRADE",
+      "drivers": [
+        "lognormal_cdf settlement_index=65620.00 target=65586.65 tte_s=600.0 sigma_h=0.002399"
+      ],
+      "fee_per_contract": 0.02,
+      "approved_for_execution": false,
+      "timestamp": "2026-11-14T15:20:00+00:00"
+    }
+  ],
+  "approved_for_execution": false
+}

@@ -1,0 +1,1495 @@
+{
+  "capability_gaps": [],
+  "domains_detected": [
+    "react",
+    "python",
+    "test",
+    "github"
+  ],
+  "objective": "Build dedicated Kalshi KXBTC15M 15-minute BTC UP/DOWN decision engine in bitcoin-data-collector: series discovery, settlement-aligned CF Benchmarks prediction, higher-frequency inference, contract-specific ML validation, paper-trading-only integration with existing execution gates; no live money",
+  "ranked_skills": [
+    {
+      "score": 0.42,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 4/15 required",
+          "score": 0.12
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['python']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "python-ml"
+    },
+    {
+      "score": 0.42,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 4/15 required",
+          "score": 0.12
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "testing-validation"
+    },
+    {
+      "score": 0.39,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 3/15 required",
+          "score": 0.09
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['node', 'react', 'web']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "react-engineering"
+    },
+    {
+      "score": 0.36,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 2/15 required",
+          "score": 0.06
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "github-integration"
+    },
+    {
+      "score": 0.33,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 1/15 required",
+          "score": 0.03
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any', 'ios', 'react', 'web']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "accessibility-review"
+    },
+    {
+      "score": 0.33,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 1/15 required",
+          "score": 0.03
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "pull-request-preparation"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "autonomy-budget"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "capability-planning"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "code-structure-cleanup"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any', 'node', 'python', 'rust', 'swift']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "dependency-supply-chain"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any', 'node', 'python', 'web']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "docker-cloud"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "harness-gc"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "implementation-planning"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['ios', 'swift']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "ios-engineering"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "linear-integration"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['node']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "node-engineering"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "notion-integration"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['node', 'react', 'web']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "playwright-browser-validation"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['node', 'postgres']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "postgres-prisma"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "project-overseer"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "repository-discovery"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "review-fix-loop"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "security-review"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any', 'node', 'python', 'rust']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "source-code-context"
+    },
+    {
+      "score": 0.3,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "PROVEN_SKILL",
+          "score": 0.15
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "worktree-orchestration"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "agent-skills-packaging"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "bounded-autonomy"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "candidate-promotion"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "code-reviewer"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "compass-evaluator"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "context-inodes"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "embedding-providers"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "execution-telemetry"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "experience-routing"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "experience-skill-training"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "external-knowledge-ingest"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "goose-agent-orchestration"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['postgres', 'python']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "hosted-vector-db"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "knowledge-steward"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "northstar-connected-routine"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "package-registry-ti"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "persistent-role-promotion"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "procedure-playbooks"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "security-audit-procedures"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "skill-learning-loop"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "skill-lifecycle"
+    },
+    {
+      "score": 0.255,
+      "scoring_breakdown": [
+        {
+          "factor": "capability_overlap",
+          "note": "matched 0/15 required",
+          "score": 0.0
+        },
+        {
+          "factor": "stack_match",
+          "note": "stacks=[] compatible=['any']",
+          "score": 0.1
+        },
+        {
+          "factor": "lifecycle_stage",
+          "note": "AVAILABLE_SKILL",
+          "score": 0.105
+        },
+        {
+          "factor": "security_bonus",
+          "note": "security_sensitive=False",
+          "score": 0.0
+        },
+        {
+          "factor": "agent_affinity",
+          "note": "preferred_profile=none",
+          "score": 0.05
+        }
+      ],
+      "skill_id": "technology-intelligence-live"
+    }
+  ],
+  "recommended_skill_ids": [
+    "python-ml",
+    "testing-validation",
+    "react-engineering",
+    "github-integration",
+    "accessibility-review"
+  ],
+  "required_capabilities": [
+    "react-component-development",
+    "typescript-ui",
+    "component-testing",
+    "keyboard-navigation-review",
+    "python-service-development",
+    "ml-training",
+    "ml-evaluation",
+    "experiment-reproducibility",
+    "unit-test-execution",
+    "integration-test-execution",
+    "definition-of-done-validation",
+    "validation-evidence-capture",
+    "github-issue-create",
+    "github-pr-create",
+    "pr-description-assembly"
+  ],
+  "security_sensitive": false,
+  "stacks": []
+}

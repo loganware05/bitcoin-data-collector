@@ -1,0 +1,33 @@
+{
+  "series": "KXBTC15M",
+  "contract_ticker": "KXBTC15M-26NOV141545-T65000",
+  "event_ticker": "KXBTC15M-26NOV141545",
+  "title": "BTC 15min incomplete quotes",
+  "target_price": 65000.0,
+  "time_remaining_seconds": 0.0,
+  "close_time_utc": "2026-11-14T15:45:00+00:00",
+  "open_time_utc": "2026-11-14T15:30:00+00:00",
+  "settlement_index": null,
+  "settlement_index_source": "unavailable",
+  "model_probability_up": null,
+  "model_probability_down": null,
+  "yes_ask": null,
+  "no_ask": null,
+  "yes_bid": null,
+  "no_bid": null,
+  "yes_net_edge": null,
+  "no_net_edge": null,
+  "net_edge": null,
+  "bid_ask_spread": null,
+  "liquidity_score": 0.0,
+  "confidence": 0.85,
+  "mapping_confidence": 0.85,
+  "recommendation": "NO TRADE",
+  "reason": "Awaiting live contract data and validated model; settlement_index missing; time_remaining_seconds 0.0 below min 30.0; missing YES/NO ask quotes; liquidity_score 0.0000 below min 0.5000",
+  "drivers": [
+    "settlement_index unavailable"
+  ],
+  "fee_per_contract": 0.02,
+  "approved_for_execution": false,
+  "timestamp": "2026-11-14T18:44:20.265906+00:00"
+}

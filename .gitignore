@@ -23,3 +23,6 @@ models/
 .env
 .env.*
 !.env.example
+
+# KXBTC15M monitor ticks (local)
+live_outputs/kxbtc15m/
