@@ -1,0 +1,22 @@
+{
+  "settlement_index": 65620.0,
+  "markets": [
+    {
+      "ticker": "KXBTC15M-26NOV141530-T65586.65",
+      "event_ticker": "KXBTC15M-26NOV141530",
+      "series_ticker": "KXBTC15M",
+      "title": "BTC 15min Target 65586.65",
+      "subtitle": "UP if settlement >= $65,586.65",
+      "yes_bid_dollars": "0.48",
+      "yes_ask_dollars": "0.54",
+      "no_bid_dollars": "0.46",
+      "no_ask_dollars": "0.52",
+      "last_price_dollars": "0.50",
+      "volume_fp": "1200",
+      "open_interest_fp": "800",
+      "close_time": "2026-11-14T15:30:00Z",
+      "open_time": "2026-11-14T15:15:00Z",
+      "updated_time": "2026-11-14T15:20:00Z"
+    }
+  ]
+}

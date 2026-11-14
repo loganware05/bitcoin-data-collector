@@ -1,0 +1,28 @@
+{
+  "strategy_id": "paper_kxbtc15m_v1",
+  "approved_for_execution": false,
+  "edge_counting_enabled": true,
+  "series": "KXBTC15M",
+  "state_dir": ".agent/evidence/execution-gate-evidence/paper-kxbtc15m",
+  "decision_inputs": "live_outputs/kxbtc15m",
+  "filters": {
+    "sides": ["BUY YES", "BUY NO"],
+    "min_confidence": 0.65,
+    "min_edge": 0.20,
+    "max_spread": 0.05,
+    "min_liquidity_score": 0.50,
+    "min_tte_seconds": 30,
+    "max_tte_seconds": 900,
+    "max_fill_price": 0.95
+  },
+  "fill_model": {
+    "fee_bps": 7.0,
+    "slippage_bps": 5.0,
+    "mode": "cross_spread_partial_nofill"
+  },
+  "notes": [
+    "Separate candidate from paper_buy_no_v1 — must not share day_clock.json.",
+    "Live Kalshi execution remains denied.",
+    "Dual-side with strict edge/confidence floors per approved plan defaults."
+  ]
+}
