@@ -78,6 +78,11 @@ def monitor_once(
             report["api_warnings"] = list(result.warnings)
         reports.append(report)
 
+    edge_ok_sources = {"kalshi_api", "cf_benchmarks", "fixture"}
+    for report in reports:
+        src = str(report.get("settlement_index_source") or "unavailable")
+        report["counts_as_edge_evidence"] = src in edge_ok_sources
+
     out = {
         "timestamp": _now_iso(),
         "series": "KXBTC15M",
@@ -86,6 +91,8 @@ def monitor_once(
         "count": len(reports),
         "decisions": reports,
         "approved_for_execution": False,
+        "settlement_index_source": source,
+        "counts_as_edge_evidence": source in edge_ok_sources,
         "note": "Paper monitor tick only; live money denied; does not advance paper_buy_no_v1 clock.",
     }
     path = output_dir / f"kxbtc15m_tick_{ts}.json"

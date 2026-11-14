@@ -1,0 +1,12 @@
+{
+  "schema": "bdc.execution_gate.kxbtc15m_paper_continuity_alert.v1",
+  "created_at": "2026-11-14T19:11:24Z",
+  "event": "soft_skip_no_kxbtc15m_feed",
+  "reason": "explicit_dir_empty",
+  "strategy_id": "paper_kxbtc15m_v1",
+  "approved_for_execution": false,
+  "day_clock_advanced": false,
+  "remote_decision_dir": ".agent/evidence/kxbtc15m-live-readiness/wave-2/empty-decisions",
+  "local_decision_dir": "/tmp/kxbtc15m-local-missing/live_outputs/kxbtc15m",
+  "note": "Soft-skip avoids false continuity; does not touch paper_buy_no_v1."
+}

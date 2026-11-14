@@ -2,36 +2,45 @@
 
 ## Current status (2026-11-14)
 
-- Plan **`kxbtc15m-decision-engine`**: **DONE** — merged PR [#22](https://github.com/loganware05/bitcoin-data-collector/pull/22) @ `f14e8cd`; issue [#21](https://github.com/loganware05/bitcoin-data-collector/issues/21) closed
-- Rollback retained: `rollback/pre-kxbtc15m-decision-engine` @ `addc982`
+- **Primary goal:** Plan **`kxbtc15m-live-readiness`** — **APPROVED** / implementing
+  on `feature/24-kxbtc15m-live-readiness` ([#24](https://github.com/loganware05/bitcoin-data-collector/issues/24))
+- Rollback: `rollback/pre-kxbtc15m-live-readiness` @ `b4d9027`
+- Prior **`kxbtc15m-decision-engine`**: DONE (PR #22 / docs #23)
 - Live execution: **DENIED**
-- Hourly paper strategy: **`paper_buy_no_v1`** (untouched by 15m work)
-- New paper candidate on default branch: **`paper_kxbtc15m_v1`** (separate state dir)
-- Evidence: `.agent/evidence/kxbtc15m-decision-engine/`
 
 ## Phase scoreboard
 
-| Phase | Status |
-|---|---|
-| A CPCV/DSR (`paper_buy_no_v1`) | **PASS** (prior) |
-| B Live paper hourly | Continues on host LaunchAgent |
-| KXBTC15M Wave A–D | **Merged** (#22) |
-| D Security/packet | Live still denied |
-| Agensi promo | Merged (#20) |
+| Track | Phase | Status |
+|---|---|---|
+| Hourly | A CPCV/DSR | **PASS** (`paper_buy_no_v1`) |
+| Hourly | B Live paper 30d | In progress (LaunchAgent @ 23:45) |
+| KXBTC15M | Decision engine | Merged (#22) |
+| KXBTC15M | Live-readiness pipeline | In progress (#24) |
+| Security | Live money | **DENIED** |
 
-## Next
+## Primary next
 
-- [ ] Optional Captain-local live `KXBTC15M` read-only smoke
-- [ ] Let hourly `paper_buy_no_v1` ticks continue to 30d
+- [ ] Merge #24 PR; run `./scripts/verdant/ensure_verdant_jobs.sh` on host to load new agents
+- [ ] Captain-local live read-only `KXBTC15M` smoke (prefer kalshi index over spot-proxy for edge)
+- [ ] Accumulate `paper_kxbtc15m_v1` days without calendar gaps
+- [ ] Re-run Phase A on non-fixture returns when labels exist
+
+## Standing next steps (do not bury)
+
+- [ ] Let hourly `paper_buy_no_v1` ticks continue to 30d / OOS floors (no further calendar gaps)
 - [ ] Keep live money denied
-- [ ] Evaluate `paper_kxbtc15m_v1` separately before any live discussion
+- [ ] Run Sellbird train + first ≤50 outbound cohort from `docs/promotion/`
+- [ ] Supply live Compass `experiment.json` when available
+- [ ] Separate future plan required before any live order client
 
 ## Commands
 
 ```bash
+./scripts/verdant/ensure_verdant_jobs.sh --check
+./scripts/verdant/ensure_verdant_jobs.sh          # install/reload including 15m jobs
+./scripts/execution-gate/paper_tick_daily.sh      # hourly paper_buy_no_v1
+./scripts/execution-gate/paper_tick_kxbtc15m_daily.sh
+./scripts/verdant/kxbtc15m_monitor.sh
+./scripts/execution-gate/phase_a_kxbtc15m.sh
 python3 -m pytest tests/ -q
-python3 kxbtc15m_decision_engine.py --fixture tests/fixtures/kxbtc15m/market_pack.json
-python3 kxbtc15m_monitor.py --once --spot-proxy 65000 --output-dir live_outputs/kxbtc15m
-python3 scripts/execution-gate/phase_b_kxbtc15m_paper_tick.py
-./scripts/execution-gate/paper_tick_daily.sh
 ```

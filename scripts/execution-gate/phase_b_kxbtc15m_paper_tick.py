@@ -120,6 +120,12 @@ def main() -> int:
     payload = load_json(tick_file, {})
     decisions = list(payload.get("decisions") or [])
     candidates = [d for d in decisions if passes_strategy(d, filters)]
+    edge_candidates = [
+        d
+        for d in candidates
+        if d.get("counts_as_edge_evidence", False)
+        or str(d.get("settlement_index_source") or "") in {"kalshi_api", "cf_benchmarks", "fixture"}
+    ]
 
     prev = load_json(metrics_path, {})
     portfolio = PortfolioState(
@@ -136,7 +142,9 @@ def main() -> int:
     model = ConservativeFillModel()
     fills: list[dict[str, Any]] = []
     if gates_ok:
-        for row in candidates[:3]:
+        # Prefer settlement-aligned edge candidates; fall back to continuity-only fills.
+        fill_pool = edge_candidates[:3] if edge_candidates else candidates[:3]
+        for row in fill_pool:
             side_rec = str(row.get("recommendation") or "").upper()
             side = "buy" if side_rec == "BUY YES" else "sell"
             yes = float(row.get("yes_ask") or row.get("model_probability_up") or 0.5)
@@ -146,6 +154,11 @@ def main() -> int:
             fill = model.simulate(side, bid=bid, ask=ask, qty=args.qty, rng_u=rng.random())
             fill["contract_ticker"] = row.get("contract_ticker")
             fill["recommendation"] = side_rec
+            fill["counts_as_edge_evidence"] = bool(
+                row.get("counts_as_edge_evidence")
+                or str(row.get("settlement_index_source") or "")
+                in {"kalshi_api", "cf_benchmarks", "fixture"}
+            )
             fills.append(fill)
             if fill["filled_qty"]:
                 portfolio.position_contracts += int(fill["filled_qty"])
@@ -183,6 +196,7 @@ def main() -> int:
         "source_tick": str(tick_file),
         "n_decisions": len(decisions),
         "n_candidates": len(candidates),
+        "n_edge_candidates": len(edge_candidates),
         "n_fills_attempted": len(fills),
         "filters": filters,
         "day_clock": asdict(clock),

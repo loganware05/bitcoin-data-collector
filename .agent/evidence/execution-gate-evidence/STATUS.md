@@ -1,7 +1,22 @@
 # STATUS — Execution Gate Evidence
 
-**Updated:** 2026-11-12  
+**Updated:** 2026-11-14  
 **Live execution authority:** **DENIED**
+
+## Dual-track readiness (Captain board)
+
+| Track | Strategy | Day clock | Monitor / tick jobs | Phase A | Live GO? |
+|---|---|---|---|---|---|
+| Hourly | `paper_buy_no_v1` | Separate `paper/` | `execution-gate-paper-tick` @ 23:45 | **PASS** (prior) | **NO** |
+| KXBTC15M | `paper_kxbtc15m_v1` | Separate `paper-kxbtc15m/` | `kxbtc15m-monitor` @ 15s + paper tick @ 23:50 | Fixture harness only (not live GO) | **NO** |
+
+**Edge evidence rule (15m):** `counts_as_edge_evidence=true` only when `settlement_index_source` ∈ `{kalshi_api, cf_benchmarks, fixture}`. Spot-proxy ticks keep continuity but do not count toward live-readiness edge.
+
+### Update 2026-11-14 (live-readiness pipeline)
+
+- Plan `kxbtc15m-live-readiness` (#24): monitor + daily 15m paper LaunchAgents wired into `ensure_verdant_jobs.sh`
+- Does **not** reset hourly `paper_buy_no_v1` clock
+- Live orders still absent; `approved_for_execution` remains false
 
 ## Repo inventory
 

@@ -53,6 +53,8 @@ labels=(
   com.verdant.btc-kalshi.hourly-scan
   com.verdant.btc-kalshi.sync-staging
   com.verdant.btc-kalshi.execution-gate-paper-tick
+  com.verdant.btc-kalshi.kxbtc15m-monitor
+  com.verdant.btc-kalshi.kxbtc15m-paper-tick
 )
 
 echo "=== ensure Verdant jobs: $(date -u +%Y-%m-%dT%H:%M:%SZ) ==="

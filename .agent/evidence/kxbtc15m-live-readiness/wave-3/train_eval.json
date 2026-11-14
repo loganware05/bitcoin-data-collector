@@ -1,0 +1,25 @@
+{
+  "n_train": 14,
+  "n_eval": 6,
+  "fitted_vol": 0.3,
+  "train_calibration": {
+    "n": 14,
+    "brier": 0.07183224623146932,
+    "mean_prob": 0.5000567697107258,
+    "mean_outcome": 0.6428571428571429,
+    "calibration_gap": 0.14280037314641714
+  },
+  "eval_calibration": {
+    "n": 6,
+    "brier": 0.07264609567834272,
+    "mean_prob": 0.516687868759021,
+    "mean_outcome": 0.6666666666666666,
+    "calibration_gap": 0.14997879790764568
+  },
+  "notes": [
+    "Time-ordered split; no shuffle.",
+    "Vol grid-fit on train Brier only.",
+    "approved_for_execution remains false."
+  ],
+  "approved_for_execution": false
+}

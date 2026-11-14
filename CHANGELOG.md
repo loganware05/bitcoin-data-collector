@@ -4,6 +4,9 @@
 
 ### Added
 
+- **KXBTC15M live-readiness pipeline** (paper-only) (#24 / ADR-008): 15s monitor
+  LaunchAgent, daily `paper_kxbtc15m_v1` tick @ 23:50, dual-mode edge evidence,
+  Phase A fixture harness, dual-track STATUS — live money still DENIED
 - Dedicated **KXBTC15M** 15-minute decision engine (paper-only) (#21 / ADR-007):
   series discovery, settlement-aligned probability, 10s monitor, contract-specific
   ML train/eval fixtures, and separate `paper_kxbtc15m_v1` paper tick state dir

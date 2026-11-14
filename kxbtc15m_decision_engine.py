@@ -174,6 +174,9 @@ def build_decision_report(
             "Paper recommendation only; approved_for_execution=false; live money denied"
         )
 
+    edge_ok_sources = {"kalshi_api", "cf_benchmarks", "fixture"}
+    counts_as_edge = settlement_index_source in edge_ok_sources
+
     return {
         "series": parsed.series,
         "contract_ticker": parsed.contract_ticker,
@@ -203,6 +206,7 @@ def build_decision_report(
         "drivers": drivers,
         "fee_per_contract": cfg.fee_per_contract,
         "approved_for_execution": False,
+        "counts_as_edge_evidence": counts_as_edge,
         "timestamp": now.isoformat(),
     }
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.verdant.btc-kalshi.kxbtc15m-monitor</string>
+  <!-- StartInterval + --once (not KeepAlive): crash isolation, matches other Verdant jobs.
+       15s cadence ≈ 60 samples per 15m contract. Read-only; no live orders. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>REPO_ROOT_PLACEHOLDER/scripts/verdant/kxbtc15m_monitor.sh</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>BTC_KALSHI_REMOTE_ROOT</key>
+    <string>/Volumes/Verdant_AI/btc_kalshi</string>
+  </dict>
+  <key>StartInterval</key>
+  <integer>15</integer>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/kxbtc15m_monitor.stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/kxbtc15m_monitor.stderr.log</string>
+  <key>WorkingDirectory</key>
+  <string>REPO_ROOT_PLACEHOLDER</string>
+</dict>
+</plist>
