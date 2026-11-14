@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT))
 
 from kxbtc15m_decision_engine import decide_from_raw_market  # noqa: E402
 from kxbtc15m_index_provider import (  # noqa: E402
+    from_latest_snapshot,
     counts_as_edge_evidence,
     from_operator_value,
     resolve_index_cascade,
@@ -97,3 +98,19 @@ def test_monitor_shell_runs_without_spot_env():
     )
     assert proc2.returncode == 0
     assert "ok" in proc2.stdout
+
+
+def test_from_latest_snapshot_reads_price_data_spot(tmp_path):
+    snap = tmp_path / "btc_market_intel_20260101T000000Z.json"
+    snap.write_text(
+        json.dumps(
+            {
+                "market_data": {"candles_15m": []},
+                "price_data": {"spot_price_usd": 65432.1, "ohlc_last_close_usd": 65000.0},
+            }
+        )
+    )
+    q = from_latest_snapshot(tmp_path)
+    assert q.value == 65432.1
+    assert q.source == "exchange_spot_proxy"
+    assert "snapshot:" in q.detail

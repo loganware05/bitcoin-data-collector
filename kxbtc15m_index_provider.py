@@ -136,11 +136,20 @@ def from_latest_snapshot(snapshots_dir: Path | None) -> SettlementIndexQuote:
     except (OSError, json.JSONDecodeError) as exc:
         return SettlementIndexQuote(None, "unavailable", f"snapshot_error:{exc}")
     price = None
-    md = raw.get("market_data") if isinstance(raw, dict) else None
-    if isinstance(md, dict):
-        price = md.get("price_usd") or md.get("spot") or md.get("btc_price")
-    if price is None and isinstance(raw, dict):
-        price = raw.get("btc_price") or raw.get("price_usd")
+    if isinstance(raw, dict):
+        pd = raw.get("price_data")
+        if isinstance(pd, dict):
+            price = (
+                pd.get("spot_price_usd")
+                or pd.get("ohlc_last_close_usd")
+                or pd.get("price_usd")
+                or pd.get("spot")
+            )
+        md = raw.get("market_data")
+        if price is None and isinstance(md, dict):
+            price = md.get("price_usd") or md.get("spot") or md.get("btc_price")
+        if price is None:
+            price = raw.get("btc_price") or raw.get("price_usd")
     return from_spot_proxy(_parse_float(price), detail=f"snapshot:{candidates[-1].name}")
 
 
