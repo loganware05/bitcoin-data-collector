@@ -1,12 +1,12 @@
 # Implementation Plan — KXBTC15M Decision Engine
 
-- Status: **APPROVED**
+- Status: **COMPLETE** (merged PR #22)
 
 ## Metadata
 
 | Field | Value |
 |---|---|
-| Status | **APPROVED** |
+| Status | **COMPLETE** (merged PR #22) |
 | Plan ID | `kxbtc15m-decision-engine` |
 | Repo | `bitcoin-data-collector` only |
 | Source brief | ChatGPT assessment *Assess Kalshi Decisions* (2026-11-14) — attach `assess-kalshi-decisions-6af89d8c.md` |
