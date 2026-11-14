@@ -1,12 +1,12 @@
 # Implementation Plan — KXBTC15M Real-Market Validation (Paper Only)
 
-- Status: **APPROVED**
+- Status: **COMPLETE** (merged PR #28)
 
 ## Metadata
 
 | Field | Value |
 |---|---|
-| Status | **APPROVED** |
+| Status | **COMPLETE** (merged PR #28 @ `e05a415`) |
 | Plan ID | `kxbtc15m-real-market-validation` |
 | Baseline | `778156d` |
 | Branch | `feature/27-kxbtc15m-real-market-validation` |
@@ -51,3 +51,15 @@ Live orders; `approved_for_execution: true`; reset `paper_buy_no_v1`.
 ## Approval Boundary
 
 Implementation may begin. Live money remains DENIED.
+
+
+## Completion record
+
+| Field | Value |
+|---|---|
+| Merged PR | [#28](https://github.com/loganware05/bitcoin-data-collector/pull/28) |
+| Merge commit | `e05a415` |
+| Issue | [#27](https://github.com/loganware05/bitcoin-data-collector/issues/27) closed |
+| Completed | 2026-11-14 |
+| Live execution | DENIED |
+| Residual | Ops dual-floor accumulation (index feed) |

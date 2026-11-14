@@ -2,26 +2,26 @@
 
 ## Current status (2026-11-14)
 
-- Plan **`kxbtc15m-real-market-validation`**: **APPROVED** / implementing on
-  `feature/27-kxbtc15m-real-market-validation` ([#27](https://github.com/loganware05/bitcoin-data-collector/issues/27))
-- Rollback: `rollback/pre-kxbtc15m-real-market-validation` @ `778156d`
-- Monitor hotfix verified live: tick written; LaunchAgent `last_exit=0`
+- Plan **`kxbtc15m-real-market-validation`**: **DONE** (code) — PR [#28](https://github.com/loganware05/bitcoin-data-collector/pull/28) @ `e05a415`; issue [#27](https://github.com/loganware05/bitcoin-data-collector/issues/27) closed
+- Rollback retained: `rollback/pre-kxbtc15m-real-market-validation` @ `778156d`
 - Live execution: **DENIED**
+- Ops remaining: verified settlement index → edge-eligible days (≥14) + settled labels (≥50)
 
 ## Phase scoreboard
 
 | Track | Status |
 |---|---|
-| Hourly `paper_buy_no_v1` | Phase A pass; 30d in progress |
-| KXBTC15M jobs | Loaded; monitor green after Wave 0 |
-| KXBTC15M validation floors | 0 edge days / labels accumulating |
+| Hourly `paper_buy_no_v1` | 30d paper in progress |
+| KXBTC15M validation code | **Merged** (#28) |
+| KXBTC15M dual floor | Not met (need live index for edge days) |
 | Live money | **DENIED** |
 
-## Primary next
+## Primary next (ops / follow-on)
 
-- [ ] Merge #27 PR
-- [ ] Provide CF/Kalshi index (or honest file drop) so edge-eligible ticks accumulate
-- [ ] Hit dual floor (≥14 edge days + ≥50 settled labels) then non-fixture Phase A
+- [ ] Supply CF/Kalshi index or `KXBTC15M_INDEX_FILE` / ensure snapshots feed spot cascade
+- [ ] Confirm monitor ticks with non-`unavailable` source
+- [ ] Accumulate dual floor; then non-fixture Phase A
+- [ ] Keep LaunchAgents loaded (`ensure_verdant_jobs.sh --check`)
 
 ## Standing next steps (do not bury)
 
@@ -37,7 +37,6 @@
 ./scripts/verdant/ensure_verdant_jobs.sh --check
 ./scripts/verdant/kxbtc15m_monitor.sh
 python3 scripts/execution-gate/kxbtc15m_validation_status.py \
-  --decision-dir "$BTC_KALSHI_ROOT/live_outputs/kxbtc15m" \
-  --out .agent/evidence/kxbtc15m-real-market-validation/wave-2/validation_status.json
-python3 -m pytest tests/ -q
+  --decision-dir /Volumes/Verdant_AI/btc_kalshi/live_outputs/kxbtc15m \
+  --out .agent/evidence/kxbtc15m-real-market-validation/validation_status.json
 ```
