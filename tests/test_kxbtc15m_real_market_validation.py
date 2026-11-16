@@ -114,3 +114,26 @@ def test_from_latest_snapshot_reads_price_data_spot(tmp_path):
     assert q.value == 65432.1
     assert q.source == "exchange_spot_proxy"
     assert "snapshot:" in q.detail
+
+
+def test_from_latest_snapshot_skips_null_spot_rows(tmp_path):
+    older = tmp_path / "btc_market_intel_20260101T000000Z.json"
+    newer = tmp_path / "btc_market_intel_20260101T010000Z.json"
+    older.write_text(
+        json.dumps({"price_data": {"spot_price_usd": 64000.0, "ohlc_last_close_usd": 63900.0}})
+    )
+    newer.write_text(
+        json.dumps(
+            {
+                "price_data": {
+                    "spot_price_usd": None,
+                    "ohlc_last_close_usd": None,
+                    "market_cap_usd": 1.0,
+                }
+            }
+        )
+    )
+    q = from_latest_snapshot(tmp_path)
+    assert q.value == 64000.0
+    assert q.source == "exchange_spot_proxy"
+    assert "20260101T000000Z" in q.detail

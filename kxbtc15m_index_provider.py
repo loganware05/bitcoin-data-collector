@@ -126,32 +126,54 @@ def from_spot_proxy(value: float | None, *, detail: str = "spot_proxy") -> Settl
     return SettlementIndexQuote(v, "exchange_spot_proxy", detail)
 
 
-def from_latest_snapshot(snapshots_dir: Path | None) -> SettlementIndexQuote:
+def _spot_from_snapshot_raw(raw: Any) -> float | None:
+    if not isinstance(raw, dict):
+        return None
+    price = None
+    pd = raw.get("price_data")
+    if isinstance(pd, dict):
+        price = (
+            pd.get("spot_price_usd")
+            or pd.get("ohlc_last_close_usd")
+            or pd.get("price_usd")
+            or pd.get("spot")
+        )
+    md = raw.get("market_data")
+    if price is None and isinstance(md, dict):
+        price = md.get("price_usd") or md.get("spot") or md.get("btc_price")
+    if price is None:
+        price = raw.get("btc_price") or raw.get("price_usd")
+    return _parse_float(price)
+
+
+def from_latest_snapshot(
+    snapshots_dir: Path | None,
+    *,
+    max_lookback: int = 50,
+) -> SettlementIndexQuote:
+    """Newest snapshot with a usable spot; skip null/incomplete price_data rows."""
     if snapshots_dir is None or not snapshots_dir.is_dir():
         return SettlementIndexQuote(None, "unavailable", "no_snapshots_dir")
     candidates = sorted(snapshots_dir.glob("btc_market_intel_*.json"))
     if not candidates:
         return SettlementIndexQuote(None, "unavailable", "no_snapshots")
-    try:
-        raw = json.loads(candidates[-1].read_text())
-    except (OSError, json.JSONDecodeError) as exc:
-        return SettlementIndexQuote(None, "unavailable", f"snapshot_error:{exc}")
-    price = None
-    if isinstance(raw, dict):
-        pd = raw.get("price_data")
-        if isinstance(pd, dict):
-            price = (
-                pd.get("spot_price_usd")
-                or pd.get("ohlc_last_close_usd")
-                or pd.get("price_usd")
-                or pd.get("spot")
-            )
-        md = raw.get("market_data")
-        if price is None and isinstance(md, dict):
-            price = md.get("price_usd") or md.get("spot") or md.get("btc_price")
-        if price is None:
-            price = raw.get("btc_price") or raw.get("price_usd")
-    return from_spot_proxy(_parse_float(price), detail=f"snapshot:{candidates[-1].name}")
+    last_error = ""
+    for path in reversed(candidates[-max(1, int(max_lookback)) :]):
+        try:
+            raw = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError) as exc:
+            last_error = f"snapshot_error:{exc}"
+            continue
+        price = _spot_from_snapshot_raw(raw)
+        if price is not None:
+            return from_spot_proxy(price, detail=f"snapshot:{path.name}")
+    if last_error:
+        return SettlementIndexQuote(None, "unavailable", last_error)
+    return SettlementIndexQuote(
+        None,
+        "unavailable",
+        f"snapshot_no_spot_in_last_{max_lookback}",
+    )
 
 
 def from_cf_brti(
