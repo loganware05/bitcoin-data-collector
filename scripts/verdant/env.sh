@@ -13,3 +13,12 @@ fi
 
 # Legacy scripts expect BTC_KALSHI_ROOT; hourly_scan resolves via verdant_staging.sh.
 # Do not hard-exit when the external drive is unplugged.
+
+# Optional local Kalshi credentials (never commit ~/.config/kalshi/)
+KALSHI_CONFIG_ENV="${KALSHI_CONFIG_ENV:-$HOME/.config/kalshi/env}"
+if [[ -f "$KALSHI_CONFIG_ENV" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$KALSHI_CONFIG_ENV"
+  set +a
+fi
