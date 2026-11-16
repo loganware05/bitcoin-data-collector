@@ -1,12 +1,12 @@
 # Implementation Plan — KXBTC15M Verified Index + Live Labels (Paper Only)
 
-- Status: **APPROVED**
+- Status: **COMPLETE** (merged PR #32)
 
 ## Metadata
 
 | Field | Value |
 |---|---|
-| Status | **APPROVED** |
+| Status | **COMPLETE** (merged PR #32) |
 | Plan ID | `kxbtc15m-verified-index-labels` |
 | Issue | #31 (https://github.com/loganware05/bitcoin-data-collector/issues/31) |
 | Baseline | `origin/cursor/kalshi-live-decision-system` @ `c6359cd` (re-pin at branch create) |
@@ -221,4 +221,15 @@ Approve Waves **A+B+C**. Wave A can start growing the label floor immediately wi
 |---|---|---|
 | A Live labels | done | harvester + LaunchAgent + status wiring |
 | B CF BRTI signing | done | soft-fail without creds |
-| C Ops closeout | in progress | edge days await host credentials |
+| C Ops closeout | done (code) | edge days await host credentials |
+
+## Completion record
+
+| Field | Value |
+|---|---|
+| Merged PR | [#32](https://github.com/loganware05/bitcoin-data-collector/pull/32) |
+| Merge commit | `642880e` |
+| Issue | [#31](https://github.com/loganware05/bitcoin-data-collector/issues/31) |
+| Completed | 2026-11-16 |
+| Live execution | DENIED |
+| Residual | Install Kalshi API creds + CF entitlement for edge days |
