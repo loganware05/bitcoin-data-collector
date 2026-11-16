@@ -1,6 +1,6 @@
 # STATUS — Execution Gate Evidence
 
-**Updated:** 2026-11-14 (real-market validation)  
+**Updated:** 2026-11-16 (verified index + live labels)  
 **Live execution authority:** **DENIED**
 
 ## Dual-track readiness (Captain board)
@@ -8,17 +8,18 @@
 | Track | Strategy | Day clock | Monitor / tick jobs | Phase A | Live GO? |
 |---|---|---|---|---|---|
 | Hourly | `paper_buy_no_v1` | Separate `paper/` | `execution-gate-paper-tick` @ 23:45 | **PASS** (prior) | **NO** |
-| KXBTC15M | `paper_kxbtc15m_v1` | Separate `paper-kxbtc15m/` | `kxbtc15m-monitor` @ 15s + paper tick @ 23:50 | Non-fixture dual floor not met | **NO** |
+| KXBTC15M | `paper_kxbtc15m_v1` | Separate `paper-kxbtc15m/` | monitor @ 15s + paper tick @ 23:50 + **labels @ 15m** | Labels floor met; edge days pending CF auth | **NO** |
 
 **Edge evidence rule (15m):** `counts_as_edge_evidence=true` only for verified live sources `{kalshi_api, cf_benchmarks}`. Fixtures require `COMPASS_KXBTC15M_ALLOW_FIXTURE_EDGE=1` (tests only). Operator/manual numeric → `operator_supplied` (never mislabeled as `kalshi_api`). Spot-proxy / file_drop keep continuity but are not readiness edge.
 
 **Non-fixture Phase A dual floor:** ≥14 edge-eligible calendar days **and** ≥50 settled labels.
 
-### Update 2026-11-14 (live-readiness pipeline)
+### Update 2026-11-16 (verified index + labels)
 
-- Plan `kxbtc15m-live-readiness` (#24): monitor + daily 15m paper LaunchAgents wired into `ensure_verdant_jobs.sh`
-- Does **not** reset hourly `paper_buy_no_v1` clock
-- Live orders still absent; `approved_for_execution` remains false
+- Live finalize label harvester: `kxbtc15m_live_labels.py` / `scripts/verdant/kxbtc15m_labels.sh`
+- Kalshi request signing + CF BRTI passthrough soft-fail path in `KalshiClient`
+- Cascade prefers `cf_benchmarks` before spot when auth succeeds
+- Evidence: `.agent/evidence/kxbtc15m-verified-index-labels/`
 
 ## Repo inventory
 

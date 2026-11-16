@@ -111,4 +111,10 @@ rm -f "$ALERT_PATH"
   --state-dir "$STATE_DIR" \
   --strategy "$STRATEGY"
 
+# Refresh live finalize labels + dual-floor status (public API; paper only).
+if [[ -x "$REPO_ROOT/scripts/verdant/kxbtc15m_labels.sh" ]]; then
+  KXBTC15M_OUTPUT_DIR="$DECISION_DIR" "$REPO_ROOT/scripts/verdant/kxbtc15m_labels.sh" || \
+    echo "WARN: kxbtc15m_labels.sh failed (non-fatal)" >&2
+fi
+
 echo "=== kxbtc15m paper tick done $(date -u +%Y-%m-%dT%H:%M:%SZ) source=$DECISION_SOURCE ==="

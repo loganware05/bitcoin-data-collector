@@ -1,11 +1,12 @@
 """Settlement-index acquisition with honest provenance (paper-only).
 
-Cascade (approved plan):
+Cascade (approved plan + verified-index follow-on):
 1. Explicit operator value (caller-supplied) → operator_supplied
-2. Index file drop → file_drop
-3. Kalshi market / event metadata fields when present → kalshi_api
-4. Spot proxy (env or latest snapshot) → exchange_spot_proxy
-5. Else unavailable
+2. Index file drop → file_drop (cf_* keys → cf_benchmarks)
+3. CF Benchmarks BRTI via Kalshi passthrough → cf_benchmarks
+4. Kalshi market / event metadata fields when present → kalshi_api
+5. Spot proxy (env or latest snapshot) → exchange_spot_proxy
+6. Else unavailable
 """
 
 from __future__ import annotations
@@ -153,10 +154,23 @@ def from_latest_snapshot(snapshots_dir: Path | None) -> SettlementIndexQuote:
     return from_spot_proxy(_parse_float(price), detail=f"snapshot:{candidates[-1].name}")
 
 
+def from_cf_brti(
+    value: float | None,
+    *,
+    detail: str = "cf_brti",
+) -> SettlementIndexQuote:
+    v = _parse_float(value)
+    if v is None:
+        return SettlementIndexQuote(None, "unavailable", detail)
+    return SettlementIndexQuote(v, "cf_benchmarks", detail)
+
+
 def resolve_index_cascade(
     *,
     operator_value: float | None = None,
     index_file: Path | None = None,
+    cf_brti_value: float | None = None,
+    cf_brti_detail: str = "cf_brti",
     market_raw: dict[str, Any] | None = None,
     spot_proxy: float | None = None,
     snapshots_dir: Path | None = None,
@@ -165,6 +179,9 @@ def resolve_index_cascade(
     steps = [
         from_operator_value(operator_value) if operator_value is not None else None,
         from_index_file(index_file) if index_file is not None else None,
+        from_cf_brti(cf_brti_value, detail=cf_brti_detail)
+        if cf_brti_value is not None
+        else None,
         from_kalshi_market_raw(market_raw),
         from_spot_proxy(spot_proxy) if spot_proxy is not None else None,
         from_latest_snapshot(snapshots_dir),
@@ -185,6 +202,7 @@ __all__ = [
     "resolve_index_cascade",
     "from_operator_value",
     "from_index_file",
+    "from_cf_brti",
     "from_kalshi_market_raw",
     "from_spot_proxy",
 ]

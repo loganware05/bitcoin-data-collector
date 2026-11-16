@@ -3,6 +3,16 @@
 ## Unreleased
 
 ### Added
+- KXBTC15M live settlement label harvester + 15m LaunchAgent (`kxbtc15m-labels`)
+- Kalshi RSA/Ed25519 request signing and CF Benchmarks BRTI REST passthrough (soft-fail without creds)
+- Index cascade prefers `cf_benchmarks` before spot for edge-eligible paper ticks (#31)
+
+### Notes
+- Live money remains DENIED; label floor can accumulate without CF auth; edge days require Kalshi API credentials + CF entitlement
+
+## Unreleased
+
+### Added
 
 - **KXBTC15M real-market validation** (#27 / ADR-009): monitor bash 3.2 hotfix,
   honest index provenance cascade, forecast vs mapping confidence, dual Phase A

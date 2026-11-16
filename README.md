@@ -310,16 +310,26 @@ For general multi-contract scanning (all `KXBTC`/`KXBTCD` markets, 12h/24h proxi
 
 #### Kalshi credentials (optional)
 
-Public market data works without credentials. For future authenticated endpoints, set in `.env`:
+Public market data and **live settlement label harvest** work without credentials.
+Signed credentials unlock CF Benchmarks **BRTI** via Kalshi’s `/cfbenchmarks/values` passthrough
+(edge-eligible `cf_benchmarks` ticks). Set in `.env` or LaunchAgent env (never commit secrets):
 
 | Variable | Description |
 |----------|-------------|
 | `KALSHI_API_BASE` | API base URL (default: `https://api.elections.kalshi.com/trade-api/v2`) |
-| `KALSHI_API_KEY_ID` | API key ID (optional) |
-| `KALSHI_PRIVATE_KEY_PATH` | Path to RSA private key PEM (optional) |
+| `KALSHI_API_KEY_ID` | API key ID (optional; required for CF BRTI) |
+| `KALSHI_PRIVATE_KEY_PATH` | Path to RSA or Ed25519 private key PEM (optional; required for CF BRTI) |
 | `KALSHI_BTC_SERIES_TICKER` | Optional single series filter; default scans `KXBTC` and `KXBTCD` (15m uses `fetch_kxbtc15m_markets`) |
 
-If credentials are missing, the client logs once and continues with public `GET /markets`.
+If credentials are missing, the client soft-fails CF fetch and continues with public `GET /markets`
+plus spot/snapshot cascade (`exchange_spot_proxy`, not edge-eligible). CF passthrough also requires
+Kalshi account entitlement for Benchmarks data.
+
+Label harvest / dual-floor status:
+
+```bash
+./scripts/verdant/kxbtc15m_labels.sh
+```
 
 #### Edge and NO TRADE (general Kalshi scan)
 

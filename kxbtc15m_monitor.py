@@ -46,6 +46,8 @@ def resolve_settlement_index(
     index_file: Path | None = None,
     market_raw: dict[str, Any] | None = None,
     snapshots_dir: Path | None = None,
+    cf_brti_value: float | None = None,
+    cf_brti_detail: str = "cf_brti",
 ) -> tuple[float | None, str]:
     """Backward-compatible wrapper with honest provenance.
 
@@ -56,6 +58,8 @@ def resolve_settlement_index(
     quote = resolve_index_cascade(
         operator_value=explicit if explicit_source in (None, "operator_supplied") else None,
         index_file=index_file,
+        cf_brti_value=cf_brti_value,
+        cf_brti_detail=cf_brti_detail,
         market_raw=market_raw,
         spot_proxy=spot_proxy,
         snapshots_dir=snapshots_dir,
@@ -89,6 +93,14 @@ def monitor_once(
     if not markets and result.markets:
         markets = list(result.markets)
 
+    # One CF BRTI fetch per tick (soft-fail when unauthenticated / entitlement missing).
+    cf_value, cf_source, cf_detail = client.fetch_cf_brti()
+    cf_brti_value = cf_value if cf_source == "cf_benchmarks" else None
+    if cf_source != "cf_benchmarks" and cf_detail not in {"cf_brti_auth_missing"}:
+        # Surface non-auth soft-failures on the tick envelope via warnings.
+        if cf_detail and cf_detail not in result.warnings:
+            result.warnings.append(cf_detail)
+
     tick_sources: list[str] = []
     for market in markets:
         index, source = resolve_settlement_index(
@@ -98,6 +110,8 @@ def monitor_once(
             index_file=index_file,
             market_raw=market.raw,
             snapshots_dir=snapshots_dir,
+            cf_brti_value=cf_brti_value,
+            cf_brti_detail=cf_detail,
         )
         tick_sources.append(source)
         report = build_decision_report(
