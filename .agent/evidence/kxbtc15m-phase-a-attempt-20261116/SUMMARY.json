@@ -1,0 +1,59 @@
+{
+  "schema": "bdc.kxbtc15m.phase_a_attempt.v1",
+  "as_of": "2026-11-16",
+  "approved_for_execution": false,
+  "live_money": "DENIED",
+  "dual_floor": {
+    "edge_eligible_calendar_days": 1,
+    "min_edge_days": 14,
+    "n_settled_labels": 10353,
+    "min_labels": 50,
+    "phase_a_non_fixture_ready": false
+  },
+  "returns_meta": {
+    "created_at": "2026-11-16T20:48:29.156365+00:00",
+    "n_label_rows": 10353,
+    "n_actionable": 2780,
+    "n_edge_actionable": 18,
+    "labels_path": "/Volumes/Verdant_AI/btc_kalshi/live_outputs/kxbtc15m/labels/settled_labels.json",
+    "approved_for_execution": false,
+    "live_money": "DENIED"
+  },
+  "reports": {
+    "all_actionable": {
+      "phase_a_pass": false,
+      "cpcv_pass": false,
+      "cpcv_reject_rate": 0.9333333333333333,
+      "dsr_pass": false,
+      "dsr": 0.0,
+      "n_obs": 2780,
+      "data_class": "live_forward_paper",
+      "blocker_if_any": null
+    },
+    "edge_only": {
+      "phase_a_pass": true,
+      "cpcv_pass": true,
+      "cpcv_reject_rate": 0.4666666666666667,
+      "dsr_pass": true,
+      "dsr": 0.9856945787683616,
+      "n_obs": 18,
+      "data_class": "live_forward_paper",
+      "blocker_if_any": null
+    }
+  },
+  "verdict": {
+    "readiness_gate": "FAIL",
+    "reason": "Dual floor not met: edge days 1/14 (labels 10353/50). CPCV/DSR numbers below are exploratory attempt only; do not unlock live trading.",
+    "live_go": false,
+    "edge_only_caveat": "edge_only CPCV/DSR pass uses only 18 returns \u2014 far below a durable sample; do not treat as readiness evidence until dual floor and larger edge n."
+  },
+  "artifacts": [
+    "SUMMARY.md",
+    "paper_returns_all_actionable.csv",
+    "paper_returns_edge_only.csv",
+    "phase_a_report_all_actionable.json",
+    "phase_a_report_edge_only.json",
+    "returns_meta.json",
+    "validation_status.json"
+  ]
+}

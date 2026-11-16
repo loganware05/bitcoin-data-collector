@@ -1,0 +1,9 @@
+{
+  "created_at": "2026-11-16T20:48:29.156365+00:00",
+  "n_label_rows": 10353,
+  "n_actionable": 2780,
+  "n_edge_actionable": 18,
+  "labels_path": "/Volumes/Verdant_AI/btc_kalshi/live_outputs/kxbtc15m/labels/settled_labels.json",
+  "approved_for_execution": false,
+  "live_money": "DENIED"
+}
