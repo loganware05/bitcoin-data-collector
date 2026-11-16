@@ -1,0 +1,223 @@
+{
+  "schema": "bdc.execution_gate.phase_a.v1",
+  "created_at": "2026-11-16T20:48:30+00:00",
+  "approved_for_execution": false,
+  "recommend_approved_for_execution": false,
+  "data_class": "live_forward_paper",
+  "source": ".agent/evidence/kxbtc15m-phase-a-attempt-20261116/paper_returns_all_actionable.csv",
+  "n_obs": 2780,
+  "bars": {
+    "max_is_oos_sharpe_gap": 1.5,
+    "max_is_oos_sharpe_ratio": 3.0,
+    "dsr_pass_threshold": 0.95
+  },
+  "config": {
+    "n_groups": 6,
+    "n_test_groups": 2,
+    "purge": 1,
+    "embargo": 1,
+    "n_trials": 25
+  },
+  "full_sample_sharpe": -44.53281766093241,
+  "skew": 1.6895299574892055,
+  "kurtosis": 3.854511477253477,
+  "cpcv": {
+    "n_splits": 15,
+    "reject_rate": 0.9333333333333333,
+    "median_oos_sharpe": -26.021550791929386,
+    "pass": false,
+    "splits": [
+      {
+        "train_sharpe": -36.07792664371312,
+        "test_sharpe": -26.021550791929386,
+        "gap": 10.056375851783734,
+        "ratio": 1.3864633561694844,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1852,
+        "n_test": 926
+      },
+      {
+        "train_sharpe": -42.636295322513476,
+        "test_sharpe": -19.002276160210435,
+        "gap": 23.63401916230304,
+        "ratio": 2.2437467471287036,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1847,
+        "n_test": 927
+      },
+      {
+        "train_sharpe": -34.16549855680038,
+        "test_sharpe": -29.2599577871673,
+        "gap": 4.905540769633081,
+        "ratio": 1.1676537199853558,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1848,
+        "n_test": 926
+      },
+      {
+        "train_sharpe": -33.11767468201966,
+        "test_sharpe": -31.288859846470952,
+        "gap": 1.8288148355487088,
+        "ratio": 1.0584493920367308,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1848,
+        "n_test": 926
+      },
+      {
+        "train_sharpe": -36.83054006158701,
+        "test_sharpe": -25.181839394508028,
+        "gap": 11.64870066707898,
+        "ratio": 1.4625833913315909,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1849,
+        "n_test": 927
+      },
+      {
+        "train_sharpe": -42.438637067385066,
+        "test_sharpe": -19.218479316985096,
+        "gap": 23.22015775039997,
+        "ratio": 2.208220347063476,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1849,
+        "n_test": 927
+      },
+      {
+        "train_sharpe": -33.91720524445082,
+        "test_sharpe": -29.614069947553595,
+        "gap": 4.303135296897224,
+        "ratio": 1.1453071227466558,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1846,
+        "n_test": 926
+      },
+      {
+        "train_sharpe": -32.876820519492505,
+        "test_sharpe": -31.68059410728707,
+        "gap": 1.1962264122054336,
+        "ratio": 1.0377589639939953,
+        "rejected": false,
+        "reject_reasons": [],
+        "n_train": 1846,
+        "n_test": 926
+      },
+      {
+        "train_sharpe": -36.56208857041332,
+        "test_sharpe": -25.47100558075538,
+        "gap": 11.091082989657941,
+        "ratio": 1.4354395414226524,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1847,
+        "n_test": 927
+      },
+      {
+        "train_sharpe": -39.73201863354603,
+        "test_sharpe": -21.505153931906605,
+        "gap": 18.22686470163943,
+        "ratio": 1.847557974211788,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1849,
+        "n_test": 927
+      },
+      {
+        "train_sharpe": -38.352179875760065,
+        "test_sharpe": -22.87403998855735,
+        "gap": 15.478139887202715,
+        "ratio": 1.676668393294127,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1845,
+        "n_test": 927
+      },
+      {
+        "train_sharpe": -42.86677944725064,
+        "test_sharpe": -18.611286527763557,
+        "gap": 24.255492919487086,
+        "ratio": 2.3032679327838905,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1846,
+        "n_test": 928
+      },
+      {
+        "train_sharpe": -31.005099067986635,
+        "test_sharpe": -36.07861448789103,
+        "gap": 5.073515419904396,
+        "ratio": 0.8593761015515935,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1850,
+        "n_test": 926
+      },
+      {
+        "train_sharpe": -34.332449747543905,
+        "test_sharpe": -28.611938187723066,
+        "gap": 5.720511559820839,
+        "ratio": 1.1999344302468617,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1847,
+        "n_test": 927
+      },
+      {
+        "train_sharpe": -33.38722415313771,
+        "test_sharpe": -30.57112298568799,
+        "gap": 2.8161011674497196,
+        "ratio": 1.0921163795248245,
+        "rejected": true,
+        "reject_reasons": [
+          "is_oos_gap>1.5"
+        ],
+        "n_train": 1851,
+        "n_test": 927
+      }
+    ]
+  },
+  "dsr": {
+    "dsr": 0.0,
+    "sr_benchmark": 1.4631067399656192,
+    "z_score": -62.78472563346215,
+    "pass": false
+  },
+  "phase_a_pass": false,
+  "notes": [
+    "Replay / settlement aggregate metrics are plumbing only \u2014 not edge proof.",
+    "Simulated trade counts as evidence only after CPCV+DSR pass on non-fixture data.",
+    "approved_for_execution remains false regardless of phase_a_pass."
+  ],
+  "blocker_if_any": null
+}

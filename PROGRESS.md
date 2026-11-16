@@ -2,15 +2,23 @@
 
 ## Current status (2026-11-16)
 
-- Plan **`kxbtc15m-verified-index-labels`**: **DONE** (PRs #32/#33/#34)
-- Kalshi CF BRTI credentials installed locally under `~/.config/kalshi/` (not in git)
-- Live smoke: tick `settlement_index_source=cf_benchmarks`, `counts_as_edge_evidence=true`
-- Dual floor: labels **met**; edge days **accumulating from today** (need ≥14 calendar days)
+- KXBTC15M verified index + labels: **shipped** (PRs #32–#35)
+- CF BRTI edge ticks accruing (`cf_benchmarks`)
+- Phase A **attempt** recorded: dual floor **FAIL** (edge days 1/14; labels met)
 - Live execution: **DENIED**
+
+## Dual floor
+
+| Floor | Required | Observed |
+|---|---:|---:|
+| Edge-eligible calendar days | 14 | 1 |
+| Settled labels | 50 | ≥10k |
+
+Evidence: `.agent/evidence/kxbtc15m-phase-a-attempt-20261116/`
 
 ## Standing next steps (do not bury)
 
-- [ ] Accumulate ≥14 edge-eligible calendar days; then non-fixture Phase A report only
+- [ ] Continue edge-day accrual to ≥14; re-run Phase A
 - [ ] Hourly `paper_buy_no_v1` → 30d / OOS
 - [ ] Keep live money denied
 - [ ] Sellbird train + ≤50 outbound from `docs/promotion/`
