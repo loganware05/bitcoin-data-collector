@@ -140,3 +140,10 @@ Record architectural and process decisions here (ADR style).
   2. Run paper-only Phase 1 with `--min-confidence 0.48` (keep `min_edge=0.10`) via `hourly_scan.sh`, waiving the calibration gate for paper recommendations only.
   3. Defer changing `FairValueConfig` / CLI defaults from 0.65 until actionable calibration gap &lt;12% over 2+ weeks.
 - **Consequences:** Paper scans can emit BUY YES/NO for review. Production code defaults stay conservative. Rollback = remove paper flags from `hourly_scan.sh` and/or revert soft-land commit.
+
+## ADR: Verified CF BRTI via Kalshi passthrough (2026-11-16)
+
+- **Status:** Accepted
+- **Context:** Dual-floor Phase A needs edge-eligible ticks; open market payloads lack live BRTI; spot proxy must not be mislabeled.
+- **Decision:** Sign Kalshi Trade API requests; fetch `GET /cfbenchmarks/values?id=BRTI`; label `cf_benchmarks`; soft-fail to spot cascade without creds. Harvest public finalized `expiration_value` for labels independently.
+- **Consequences:** Label floor can clear immediately; edge days require Captain-installed API key + CF entitlement. No live orders.

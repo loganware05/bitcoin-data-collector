@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.verdant.btc-kalshi.kxbtc15m-labels</string>
+  <!-- Harvest public finalized settlement labels; paper only. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>REPO_ROOT_PLACEHOLDER/scripts/verdant/kxbtc15m_labels.sh</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>BTC_KALSHI_REMOTE_ROOT</key>
+    <string>/Volumes/Verdant_AI/btc_kalshi</string>
+  </dict>
+  <key>StartInterval</key>
+  <integer>900</integer>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/kxbtc15m_labels.stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>HOME_PLACEHOLDER/Library/Logs/verdant/kxbtc15m_labels.stderr.log</string>
+  <key>WorkingDirectory</key>
+  <string>REPO_ROOT_PLACEHOLDER</string>
+</dict>
+</plist>
